@@ -1,0 +1,177 @@
+---
+title: "Data Cleaning"
+author: "mk4995"
+date: "2024-11-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+Import the data.
+
+```{r}
+diabetes_data = read_csv("data/diabetes_data.csv")
+```
+
+The initial data contains 433,323 rows and 34 columns.
+
+We want to start by recoding the values that are not clear answers, "don't knows", refusals, and missing ALL as missing data. We will also recode numeric variables into factor variables.
+
+```{r}
+# Define a helper function for recoding
+recode_binary = function(var) {
+  case_when(
+    var == 1 ~ 1,
+    var == 2 ~ 0,
+    var %in% c(7, 9, NA) ~ NA
+  )
+}
+```
+
+
+```{r}
+diabetes_recoded_data = 
+  diabetes_data |> 
+  mutate(
+    has_diabetes = case_when( # yes = 2, no = 0, pre-diabetes = 1, gestational = 3
+      diabete4 == 1 ~ 2,
+      diabete4 == 3 ~ 0,
+      diabete4 == 4 ~ 1,
+      diabete4 == 2 ~ 3,
+      diabete4 %in% c(7, 9, NA) ~ NA
+    ),
+    age_onset = case_when(
+      diabage4 >= 1 & diabage4 <= 97 ~ diabage4, 
+      diabage4 %in% c(98, 99, NA) ~ NA
+    ),
+    diab_type = case_when(
+      diabtype == 1 ~ diabtype,
+      diabtype == 2 ~ diabtype, 
+      diabtype %in% c(7, 9, NA) ~ NA
+    ),
+    prediabetic = case_when( # yes = 1, no = 0, gestational = 2
+      prediab2 == 1 ~ 1,
+      prediab2 == 2 ~ 2,
+      prediab2 == 3 ~ 1,
+      prediab2 %in% c(7, 9, NA) ~ NA
+    ),
+    insulin = recode_binary(insulin1),
+    high_chol = recode_binary(toldhi3),
+    covid_test = recode_binary(covidpo1),
+    high_bp = case_when( # yes = 2, borderline = 1, no = 0, gestational = 3
+      bphigh6 == 1 ~ 2,
+      bphigh6 == 4 ~ 1,
+      bphigh6 == 3 ~ 0,
+      bphigh6 == 2 ~ 3, 
+      bphigh6 %in% c(7, 9, NA) ~ NA
+    ),
+    high_bs = case_when(
+      pdiabts1 %in% c(1, 2, 3, 4, 5, 6) ~ 1,
+      pdiabts1 == 8 ~ 0,
+      pdiabts1 %in% c(7, 9, NA) ~ NA
+    ),
+    a1c_check = case_when(
+      chkhemo3 <= 76 ~ 1,
+      chkhemo3 == 88 ~ 0,
+      chkhemo3 %in% c(77, 98, 99, NA) ~ NA
+    ),
+    any_exercise = case_when(
+      exerany2 == 1 ~ 1,
+      exerany2 == 2 ~ 0,
+      exerany2 == 9 ~ NA
+    ),
+    heart_attack = recode_binary(cvdinfr4),
+    chd = recode_binary(cvdcrhd4),
+    stroke = recode_binary(cvdstrk3),
+    asthma_ever = recode_binary(asthma3),
+    asthma_now = recode_binary(asthnow),
+    bronchitis = recode_binary(chccopd3),
+    depression = recode_binary(addepev3),
+    kidney_disease = recode_binary(chckdny2),
+    pregnant = recode_binary(pregnant),
+    arthritis = recode_binary(havarth4),
+    smoker = recode_binary(smoke100),
+    state = cdlTools::fips(state, to = "Name"),
+    educa = ifelse(educa == 9, NA, educa),
+    education = factor(educa,
+      levels = c(1, 2, 3, 4, 5, 6),
+      labels = c(
+        "Kindergarten or less",
+        "Elementary",
+        "Some high school",
+        "High school graduate",
+        "Some college or technical school",
+        "College graduate"
+      )
+    ),
+    sex_at_birth = ifelse(sexvar == 1, 1,       # Male = 1
+                        ifelse(sexvar == 2, 0, NA)),
+    weight_lbs = case_when(
+      weight2 >= 50 & weight2 <= 776 ~ weight2, # Pounds are already in the range
+      weight2 >= 9023 & weight2 <= 9352 ~ (weight2 - 9000) * 2.20462, # Convert kg to lbs
+      weight2 %in% c(7777, 9999, NA) ~ NA, # Don’t know/Not sure
+    ),
+    height = case_when(
+      height3 >= 200 & height3 <= 711 ~ height3,
+      height3 >= 9061 & height3 <= 9998 ~ {
+        cm_height <- height3 - 9000                       # Extract cm
+        total_inches <- round(cm_height * 0.393701)       # Convert to inches
+        feet <- floor(total_inches / 12)                 # Get feet
+        inches <- total_inches %% 12                     # Get remaining inches
+        as.numeric(sprintf("%d%02d", feet, inches))     
+      },
+      height3 %in% c(7777, 9999, NA) ~ NA,
+    ),
+    urbrural = case_when(
+      urbstat == 1 ~ 1,
+      urbstat == 2 ~ 0,
+      urbstat == NA ~ NA
+    ),
+    smoker_now = case_when( # now = 1, former = 2, never = 0
+      smoker3 %in% c(1, 2) ~ 1,
+      smoker3 == 3 ~ 2,
+      smoker3 == 4 ~ 0,
+      smoker3 == 9 ~ NA
+    ),
+    ageg5yr = ifelse(ageg5yr == 14, NA, ageg5yr),
+    age_category = factor(
+      ageg5yr,
+      levels = c(1:13),  # Define the levels in the natural order
+      labels = c(
+        "18-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64",
+        "65-69", "70-74", "75-79", "80+"),
+      ordered = TRUE  # Specify that this is an ordered factor
+    )
+  ) |> 
+  select(has_diabetes, age_onset, diab_type, prediabetic, insulin, high_chol, covid_test, high_bp, high_bs, a1c_check, any_exercise, heart_attack, chd, stroke, asthma_ever, asthma_now, bronchitis, depression, kidney_disease, pregnant, arthritis, smoker, state, education, sex_at_birth, weight_lbs, height, urbrural, smoker_now, age_category)
+  
+```
+
+The final dataset has the following variables.
+
+```{r}
+colnames(diabetes_recoded_data)
+```
+
+We can also check that our code ran as expected by checking if there are any columns that contain only NA values.
+
+```{r}
+all_na_columns <- colnames(diabetes_recoded_data)[colSums(is.na(diabetes_recoded_data)) == nrow(diabetes_recoded_data)]
+
+# Print the names of columns with all NA values
+if (length(all_na_columns) > 0) {
+  cat("Columns with all NA values:\n")
+  print(all_na_columns)
+} else {
+  cat("No columns with all NA values found.\n")
+}
+```
+
+Export the cleaned dataset (in case it's needed in other pages).
+
+```{r}
+write_csv(diabetes_recoded_data, "data/cleaned_diabetes_data.csv")
+```
+
