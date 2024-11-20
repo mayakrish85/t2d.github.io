@@ -1,0 +1,350 @@
+row_id,sas_variable_name,label,question,section_name,type_of_variable
+227,ACEADNED,Did an adult make sure basic needs were met," For how much of your childhood was there an adult in your household who tried hard to make sure your basic needs were met? Would you say never, a little of the time, some of the time, most of the time, or all of the time?",Adverse Childhood Experiences,Num
+226,ACEADSAF,Did an adult make you feel safe and protected," For how much of your childhood was there an adult in your household who made you feel safe and protected? Would you say never, a little of the time, some of the time, most of the time, or all of the time?",Adverse Childhood Experiences,Num
+215,ACEDEPRS,"Live With Anyone Depressed, Mentally Ill, Or Suicidal?"," Did you live with anyone who was depressed, mentally ill, or suicidal?",Adverse Childhood Experiences,Num
+219,ACEDIVRC,Were Your Parents Divorced/Seperated?, Were your parents separated or divorced?,Adverse Childhood Experiences,Num
+216,ACEDRINK,Live With a Problem Drinker/Alcoholic?, Did you live with anyone who was a problem drinker or alcoholic?,Adverse Childhood Experiences,Num
+217,ACEDRUGS,Live With Anyone Who Used Illegal Drugs or Abused Prescriptions?, Did you live with anyone who used illegal street drugs or who abused prescription medications?,Adverse Childhood Experiences,Num
+221,ACEHURT1,How Often Did A Parent Physically Hurt You In Any Way?," Not including spanking, (before age 18), how often did a parent or adult in your home ever hit, beat, kick, or physically hurt you in any way? Was it—",Adverse Childhood Experiences,Num
+225,ACEHVSEX,How Often Did Anyone Ever Force You to Have Sex?," How often did anyone at least 5 years older than you or an adult, force you to have sex?",Adverse Childhood Experiences,Num
+218,ACEPRISN,Live With Anyone Who Served TIme in Prison or Jail?," Did you live with anyone who served time or was sentenced to serve time in a prison, jail, or other correctional facility?",Adverse Childhood Experiences,Num
+220,ACEPUNCH,How Often Did Your Parents Beat Each Other Up?," How often did your parents or adults in your home ever slap, hit, kick, punch or beat each other up?",Adverse Childhood Experiences,Num
+222,ACESWEAR,How Often Did A Parent Swear At You?," How often did a parent or adult in your home ever swear at you, insult you, or put you down?",Adverse Childhood Experiences,Num
+223,ACETOUCH,How Often Did Anyone Ever Touch You Sexually?," How often did anyone at least 5 years older than you or an adult, ever touch you sexually?",Adverse Childhood Experiences,Num
+224,ACETTHEM,How Often Did Anyone Make You Touch Them Sexually?," How often did anyone at least 5 years older than you or an adult, try to make you touch them sexually?",Adverse Childhood Experiences,Num
+284,ACTIN13_,Estimated Activity Intensity for First Activity, Estimated Activity Intensity for First Activity,Calculated Variables,Num
+285,ACTIN23_,Estimated Activity Intensity for Second Activity, Estimated Activity Intensity for Second Activity,Calculated Variables,Num
+61,ADDEPEV3,(Ever told) you had a depressive disorder," (Ever told) (you had) a depressive disorder (including depression, major depression, dysthymia, or minor depression)?",Chronic Health Conditions,Num
+91,ALCDAY4,Days in past 30 had alcoholic beverage," During the past 30 days, how many days per week or per month did you have at least one drink of any alcoholic beverage?  (A 40 ounce beer would count as 3 drinks, or a cocktail drink with 2 shots would count as 2 drinks.)",Alcohol Consumption,Num
+118,ARTHDIS2,Does Arthritis Affect Whether You Work," Do arthritis or joint symptoms now affect whether you work, the type of work you do or the amount of work you do?",Arthritis,Num
+116,ARTHEDU,Ever Taken Class in Managing Arthritis or Joint Symptoms, Have you ever taken an educational course or class to teach you how to manage problems related to your arthritis or joint symptoms?,Arthritis,Num
+115,ARTHEXER,Dr. Suggest Use of Physical Activity or Exercise for Arthritis or Joint Symptoms," Has a doctor or other health professional ever suggested physical activity or exercise to help your arthritis or joint symptoms?  (If the respondent is unclear about whether this means an increase or decrease in physical activity, this means increase.)",Arthritis,Num
+204,ASPIRIN,How often do you take an aspirin," How often do you take an aspirin to prevent or control heart disease, heart attacks or stroke?  Would you say….",Aspirin for CVD Prevention,Num
+56,ASTHMA3,Ever Told Had Asthma, (Ever told) (you had) asthma?,Chronic Health Conditions,Num
+57,ASTHNOW,Still Have Asthma, Do you still have asthma?,Chronic Health Conditions,Num
+92,AVEDRNK3,Avg alcoholic drinks per day in past 30," One drink is equivalent to a 12-ounce beer, a 5-ounce glass of wine, or a drink with one shot of liquor. During the past 30 days, on the days when you drank, about how many drinks did you drink on the average?  (A 40 ounce beer would count as 3 drinks, or a cocktail drink with 2 shots would count as 2 drinks.)",Alcohol Consumption,Num
+205,BIRTHSEX,Are you male or female?, What was your sex at birth? Was it male or female?,Sex at Birth,Num
+149,BLDSTFIT,Was test part of Cologuard test?, Was the blood stool or FIT (you reported earlier) conducted as part of a Cologuard test?,Colorectal Cancer Screening,Num
+80,BLIND,Blind or Difficulty seeing," Are you blind or do you have serious difficulty seeing, even when wearing glasses?",Disability,Num
+48,BPHIGH6,Ever Told Blood Pressure High," Have you ever been told by a doctor, nurse or other health professional that you have high blood pressure?  (If ´Yes´ and respondent is female, ask ´Was this only when you were pregnant?´.)",Hypertension Awareness,Num
+49,BPMEDS1,Currently Taking Prescription Blood Pressure Medication, Are you currently taking prescription medicine for your high blood pressure?,Hypertension Awareness,Num
+23,CADULT1,Are you 18 years of age or older?, Are you 18 years of age or older?,Cell Phone Introduction,Num
+268,CAGEG,Four level child age, Four level child age,Child Weighting Variables,Num
+174,CAREGIV1,Provided regular care for family or friend," During the past 30 days, did you provide regular care or assistance to a friend or family member who has a health problem or disability?",Caregiver,Num
+254,CASTHDX2,Hlth pro ever said child has asthma," Has a doctor, nurse or other health professional EVER said that the child has asthma?",Childhood Asthma Prevalence,Num
+255,CASTHNO2,Child still have asthma?, Does the child still have asthma?,Childhood Asthma Prevalence,Num
+27,CCLGHOUS,Do you live in college housing?, Do you live in college housing?,Cell Phone Introduction,Num
+171,CDDISCU1,Have you discussed your difficulties with thinking with a health care provider?, Have you or anyone else discussed your difficulties with thinking or memory with a health care provider?,Cognitive Decline,Num
+172,CDHOUS1,Given up day-to-day chores due to difficulties with thinking or memory," During the past 12 months, have your difficulties with thinking or memory interfered with day-to-day activities, such as managing medications, paying bills, or keeping track of appointments?",Cognitive Decline,Num
+173,CDSOCIA1,Does difficulties with thinking or memory interfere with work or social activities," During the past 12 months, have your difficulties with thinking or memory interfered with your ability to work or volunteer?",Cognitive Decline,Num
+170,CDWORRY,Are you worried about these difficulties with thinking or memory?, Are you worried about these difficulties with thinking or memory?,Cognitive Decline,Num
+22,CELLFON5,Is this a cell phone?, Is this a cell phone?,Cell Phone Introduction,Num
+24,CELLSEX2,Are you male or female?, Are you?,Cell Phone Introduction,Num
+14,CELPHON1,Cellular Telephone, Is this a cell telephone?,Land Line Introduction,Num
+25,CELSXBRT,What was your sex at birth?, What was your sex at birth? Was it male or female?,Cell Phone Introduction,Num
+128,CERVSCRN,Have you ever had a cervical cancer screening test?, Have you ever had a cervical cancer screening test?,Breast and Cervical Cancer Screening,Num
+60,CHCCOPD3,Ever told you had C.O.P.D. emphysema or chronic bronchitis?," (Ever told) (you had) C.O.P.D. (chronic obstructive pulmonary disease), emphysema or chronic bronchitis?",Chronic Health Conditions,Num
+62,CHCKDNY2,Ever told you have kidney disease?," Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?",Chronic Health Conditions,Num
+59,CHCOCNC1,(Ever told) (you had)  melanoma or any other types of cancer?, (Ever told) (you had) melanoma or any other types of cancer?,Chronic Health Conditions,Num
+58,CHCSCNC1,(Ever told) (you had) skin cancer that is not melanoma?, (Ever told) (you had) skin cancer that is not melanoma?,Chronic Health Conditions,Num
+39,CHECKUP1,Length of time since last routine checkup, About how long has it been since you last visited a doctor for a routine checkup?,Health Care Access,Num
+74,CHILDREN,Number of Children in Household, How many children less than 18 years of age live in your household?,Demographics,Num
+110,CHKHEMO3,Times Checked for Glycosylated Hemoglobin," About how many times in the past 12 months has a doctor, nurse, or other health professional checked you for A-one-C?",Diabetes,Num
+50,CHOLCHK3,How Long since Cholesterol Checked, About how long has it been since you last had your cholesterol checked?,Cholesterol Awareness,Num
+52,CHOLMED3,Currently taking medicine for high cholesterol, Are you currently taking medicine prescribed by your doctor or other health professional for your cholesterol?,Cholesterol Awareness,Num
+169,CIMEMLO1,Have you experienced difficulties with thinking or memory that is happening more often or is getting worse?," During the past 12 months, have you experienced difficulties with thinking or memory that are happening more often or are getting worse?",Cognitive Decline,Num
+152,CNCRAGE,Age Told Had Cancer," At what age were you told that you had cancer?  (If Response = 2 (Two) or 3 (Three or more), ask: “At what age was your first diagnosis of cancer?”)",Cancer Survivorship: Type of Cancer,Num
+151,CNCRDIFF,How Many Types of Cancer?, How many different types of cancer have you had?,Cancer Survivorship: Type of Cancer,Num
+153,CNCRTYP2,Type of Cancer, What kind of cancer is it?,Cancer Survivorship: Type of Cancer,Num
+12,COLGHOUS,Do you live in college housing?, Do you live in college housing?,Land Line Introduction,Num
+143,COLNCNCR,Ever had any other kind of test for colorectal cancer," Have you ever had any other kind of test for colorectal cancer, such as virtual colonoscopy, CT colonography, blood stool test, FIT DNA, or Cologuard test?",Colorectal Cancer Screening,Num
+139,COLNSIGM,"Ever had a colonoscopy, sigmoidoscopy, or both"," Have you had a colonoscopy, a sigmoidoscopy, or both?",Colorectal Cancer Screening,Num
+140,COLNTES1,How long since you had colonoscopy, How long has it been since your most recent colonoscopy?,Colorectal Cancer Screening,Num
+233,COVACGE1,Will you get COVID-19 vaccination?," Would you say you will definitely get a vaccine, will probably get a vaccine, will probably not get a vaccine, will definitely not get a vaccine, or are you not sure?",COVID Vaccination,Num
+105,COVIDACT,Do long-term symptoms reduce ability to carry out activities?, Do these long-term symptoms reduce your ability to carry out day-to-day activities compared with the time before you COVID-19?,Long-term COVID Effects,Num
+234,COVIDNU2,Number of COVID-19 vaccinations received, How many COVID-19 vaccinations have you received?,COVID Vaccination,Num
+103,COVIDPO1,Have you ever tested positive for COVID-19?," Have you ever tested positive for COVID-19 (using a rapid point-of-care test, self-test, or laboratory test) or been told by a doctor or other health care provider that you have or had COVID-19?",Long-term COVID Effects,Num
+104,COVIDSM1,Do you currently have Covid-19 symptoms?, Do you currently have symptoms lasting 3 months or longer that you did not have prior to having coronavirus or COVID-19?,Long-term COVID Effects,Num
+232,COVIDVA1,Received at least one COVID-19 vaccination, Have you received at least one dose of a  COVID-19 vaccination?,COVID Vaccination,Num
+71,CPDEMO1,Do you have a cell phone for your personal use?, How many cell phones do you have for your personal use?  (Last question needed for partial complete.),Demographics,Num
+179,CRGVALZD,Does Person Being Cared For Have Alzheimer´s Disease?," Does the person you care for also have Alzheimer´s disease, dementia or other cognitive impairment disorder?",Caregiver,Num
+182,CRGVEXPT,Do you expect to have a relative you will need to provide care for?," In the next 2 years, do you expect to provide care or assistance to a friend or family member who has a health problem or disability?",Caregiver,Num
+181,CRGVHOU1,Managed household tasks," In the past 30 days, did you provide care for this person by managing household tasks such as cleaning, managing money, or preparing meals?",Caregiver,Num
+177,CRGVHRS1,How Many Hours Do You Provide Care For Person?," In an average week, how many hours do you provide care or assistance?",Caregiver,Num
+176,CRGVLNG1,How Long Provided Care For Person., For how long have you provided care for that person?,Caregiver,Num
+180,CRGVPER1,Managed personal care," In the past 30 days, did you provide care for this person by managing personal care such as giving medications, feeding, dressing, or bathing?",Caregiver,Num
+178,CRGVPRB3,"What Is The Major Health Problem, Illness, Disability For Care For Person?"," What is the main health problem, long-term illness, or disability that the person you care for has?",Caregiver,Num
+175,CRGVREL4,Relationship Of Person To Whom You Are Giving Care?, What is his or her relationship to you?,Caregiver,Num
+129,CRVCLCNC,Time since last cervical cancer screening test, How long has it been since you had your last cervical cancer screening test?,Breast and Cervical Cancer Screening,Num
+131,CRVCLHPV,Have an H.P.V. test and recent cervical cancer screening," At your most recent cervical cancer screening, did you have an H.P.V. test?",Breast and Cervical Cancer Screening,Num
+130,CRVCLPAP,Have a PAP test and recent cervical cancer screening," At your most recent cervical cancer screening, did you have a Pap test?",Breast and Cervical Cancer Screening,Num
+161,CSRVCLIN,Participate In Clinical Trial As Part Of Cancer Treatment?, Did you participate in a clinical trial as part of your cancer treatment?,Cancer Survivorship: Course of Treatment,Num
+163,CSRVCTL2,Is Pain Under Control?, Would you say your pain is currently under control…?,Cancer Survivorship: Pain Management,Num
+160,CSRVDEIN,Ever Denied Insurance Coverage Because Of Your Cancer?, Were you ever denied health insurance or life insurance coverage because of your cancer?,Cancer Survivorship: Course of Treatment,Num
+155,CSRVDOC1,What Type of Doctor Provides Majority of Your Care, What type of doctor provides the majority of your health care? Is it a….,Cancer Survivorship: Course of Treatment,Num
+159,CSRVINSR,Did Health Insurance Pay For All Of Your Cancer Treatment," With your most recent diagnosis of cancer, did you have health insurance that paid for all or part of your cancer treatment?  (“Health insurance” also includes Medicare, Medicaid, or other types of state health programs.)",Cancer Survivorship: Course of Treatment,Num
+158,CSRVINST,Instructions Written or Printed, Were these instructions written down or printed on paper for you?,Cancer Survivorship: Course of Treatment,Num
+162,CSRVPAIN,Currently Have Physical Pain From Cancer Or Treatment?, Do you currently have physical pain caused by your cancer or cancer treatment?,Cancer Survivorship: Pain Management,Num
+157,CSRVRTRN,Ever Receive Instructions From A Doctor For Follow-Up Check-Ups," Have you ever received instructions from a doctor, nurse, or other health professional about where you should return or who you should see for routine cancer check-ups after completing treatment for cancer?",Cancer Survivorship: Course of Treatment,Num
+156,CSRVSUM,Did You Receive a Summary of Cancer Treatments Received," Did any doctor, nurse, or other health professional ever give you a written summary of all the cancer treatments that you received?",Cancer Survivorship: Course of Treatment,Num
+154,CSRVTRT3,Currently Receiving Treatment for Cancer, Are you currently receiving treatment for cancer?,Cancer Survivorship: Course of Treatment,Num
+28,CSTATE1,Do you currently live in  ____(state)____?, Do you currently live in  ____(state)____?,Cell Phone Introduction,Num
+10,CTELENM1,Correct telephone number?, Is this     (phone number)     ?,Land Line Introduction,Num
+21,CTELNUM1,Correct Phone Number?, Is this     (phone number)     ?,Cell Phone Introduction,Num
+54,CVDCRHD4,Ever Diagnosed with Angina or Coronary Heart Disease, (Ever told) (you had) angina or coronary heart disease?,Chronic Health Conditions,Num
+53,CVDINFR4,Ever Diagnosed with Heart Attack," (Ever told) you had a heart attack, also called a myocardial infarction?",Chronic Health Conditions,Num
+55,CVDSTRK3,Ever Diagnosed with a Stroke, (Ever told) (you had) a stroke.,Chronic Health Conditions,Num
+79,DEAF,Are you deaf or do you have serious difficulty hearing?, Are you deaf or do you have serious difficulty hearing?,Disability,Num
+81,DECIDE,Difficulty Concentrating or Remembering," Because of a physical, mental, or emotional condition, do you have serious difficulty concentrating, remembering, or making decisions?",Disability,Num
+65,DIABAGE4,Age When First Told You Had Diabetes, How old were you when you were first told you had diabetes?,Chronic Health Conditions,Num
+113,DIABEDU1,When was the last time you took a course or class in how to manage your diabetes?, When was the last time you took a course or class in how to manage your diabetes yourself?,Diabetes,Num
+64,DIABETE4,(Ever told) you had diabetes," (Ever told) (you had) diabetes?  (If ´Yes´ and respondent is female, ask ´Was this only when you were pregnant?´. If Respondent says pre-diabetes or borderline diabetes, use response code 4.)",Chronic Health Conditions,Num
+112,DIABEYE1,When was the last time a they took a photo of the back of your eye?," When was the last time a doctor, nurse or other health professional took a photo of the back of your eye with a specialized camera?",Diabetes,Num
+108,DIABTYPE,What type of diabetes do you have?," According to your doctor or other health professional, what type of diabetes do you have?",Diabetes,Num
+84,DIFFALON,Difficulty Doing Errands Alone," Because of a physical, mental, or emotional condition, do you have difficulty doing errands alone such as visiting a doctor´s office or shopping?",Disability,Num
+83,DIFFDRES,Difficulty Dressing or Bathing, Do you have difficulty dressing or bathing?,Disability,Num
+82,DIFFWALK,Difficulty Walking or Climbing Stairs, Do you have serious difficulty walking or climbing stairs?,Disability,Num
+7,DISPCODE,Final Disposition, Final Disposition,Record Identification,Num
+93,DRNK3,Binge Drinking," Considering all types of alcoholic beverages, how many times during the past 30 days did you have 5 or more drinks for men or 4 or more drinks for women on an occasion?",Alcohol Consumption,Num
+339,DRNKANY6,Drink any alcoholic beverages in past 30 days, Adults who reported having had at least one drink of alcohol in the past 30 days.,Calculated Variables,Num
+102,DRNKDRI2,Did you drive after having too much to drink in the past 30 days?," During the past 30 days, how many times have you driven when you’ve had perhaps too much to drink?",Seatbelt Use and Drinking and Driving,Num
+340,DROCDY4_,Computed drink-occasions-per-day, Drink-occasions-per-day,Calculated Variables,Num
+90,ECIGNOW2,"Do you now use e-cigarettes, or vaping products every day, some days, or not at all?"," Would you say you have never used e-cigarettes or other electronic vaping products in your entire life or now use them every day, use them some days, or used them in the past but do not currently use them at all?",Tobacco Use,Num
+67,EDUCA,Education Level, What is the highest grade or year of school you completed?,Demographics,Num
+73,EMPLOY1,Employment Status, Are you currently…?,Demographics,Num
+236,EMTSUPRT,How often get emotional support needed, How often do you get the social and emotional support you need?,Social Determinants and Health Equity,Num
+40,EXERANY2,Exercise in Past 30 Days," During the past month, other than your regular job, did you participate in any physical activities or exercises such as running, calisthenics, golf, gardening, or walking for exercise?",Exercise (Physical Activity)Core Section Number: 4,Num
+43,EXERHMM1,"Minutes or Hours Walking, Running, Jogging, or Swimming"," And when you took part in this activity, for how many minutes or hours did you usually keep at it?",Exercise (Physical Activity)Core Section Number: 4,Num
+46,EXERHMM2,"Minutes or Hours Walking, Running, Jogging, or Swimming"," And when you took part in this activity, for how many minutes or hours did you usually keep at it?",Exercise (Physical Activity)Core Section Number: 4,Num
+42,EXEROFT1,"How Many Times Walking, Running, Jogging, or Swimming", How many times per week or per month did you take part in this activity during the past month?,Exercise (Physical Activity)Core Section Number: 4,Num
+45,EXEROFT2,"How Many Times Walking, Running, Jogging, or Swimming", How many times per week or per month did you take part in this activity during the past month?,Exercise (Physical Activity)Core Section Number: 4,Num
+41,EXRACT12,Type of Physical Activity, What type of physical activity or exercise did you spend the most time doing during the past month?,Exercise (Physical Activity)Core Section Number: 4,Num
+44,EXRACT22,Other Type of Physical Activity Giving Most Exercise During Past Month, What other type of physical activity gave you the next most exercise during the past month?,Exercise (Physical Activity)Core Section Number: 4,Num
+111,EYEEXAM1,Last Eye Exam Where Pupils Were Dilated," When was the last time you had an eye exam in which the pupils were dilated, making you temporarily sensitive to bright light?",Diabetes,Num
+85,FALL12,Had Fall Past Twelve Months," In the past 12 months, how many times have you fallen?",Falls,Num
+86,FALLINJ5,Injured in Fall or Had to see Doctor, How many of these falls caused an injury that limited your regular activities for at least a day or caused you to go to see a doctor?,Falls,Num
+283,FC601_,Estimated Functional Capacity, Estimated Functional Capacity,Calculated Variables,Num
+114,FEETSORE,Ever Had Feet Sores or Irritations Lasting More Than Four Weeks, Have you ever had any sores or irritations on your feet that took more than four weeks to heal?,Diabetes,Num
+188,FIREARM5,Any Firearms in Home, Are any firearms now kept in or around your home?,Firearm Safety,Num
+203,FIRSTAID,First Aid for Heart Attack and Stroke," If you thought someone was having a heart attack or a stroke, what is the first thing you would do?",Heart Attack and Stroke,Num
+96,FLSHTMY3,When did you receive your most recent seasonal flu shot/spray?, During what month and year did you receive your most recent flu vaccine that was sprayed in your nose or flu shot injected into your arm?,Immunization,Num
+95,FLUSHOT7,Adult flu shot/spray past 12 mos," During the past 12 months, have you had either flu vaccine that was sprayed in your nose or flu shot injected into your arm?",Immunization,Num
+2,FMONTH,File Month, File Month,Record Identification,Num
+239,FOODSTMP,During the past 12 months have you received food stamps," During the past 12 months, have you received food stamps, also called SNAP, the Supplemental Nutrition Assistance Program on an EBT card?",Social Determinants and Health Equity,Num
+32,GENHLTH,General Health, Would you say that in general your health is:,Health Status,Num
+189,GUNLOAD,Any Firearms Loaded, Are any of these firearms now loaded?,Firearm Safety,Num
+132,HADHYST2,Had Hysterectomy, Have you had a hysterectomy?  (A hysterectomy is an operation to remove the uterus (womb).),Breast and Cervical Cancer Screening,Num
+126,HADMAM,Have You Ever Had a Mammogram, Have you ever had a mammogram?,Breast and Cervical Cancer Screening,Num
+138,HADSIGM4,Ever Had Sigmoidoscopy/Colonoscopy, Colonoscopy and sigmoidoscopy are exams to check for colon cancer. Have you ever had either of these exams?,Colorectal Cancer Screening,Num
+191,HASYMP1,Heart Attack Symptoms - Jaw/Back/Neck Pain," (Do you think) pain or discomfort in the jaw, neck, or back (are symptoms of a heart attack)?",Heart Attack and Stroke,Num
+192,HASYMP2,Heart Attack Symptoms - Weak/Light-headed/Faint," (Do you think) feeling weak, lightheaded, or faint (are symptoms of a heart attack)?",Heart Attack and Stroke,Num
+193,HASYMP3,Heart Attack Symptoms - Chest Pain/Discomfort, (Do you think) chest pain or discomfort (are symptoms of a heart attack)?,Heart Attack and Stroke,Num
+194,HASYMP4,Heart Attack Symptoms - Vision Problems, (Do you think) sudden trouble seeing in one or both eyes (are symptoms of a heart attack)?,Heart Attack and Stroke,Num
+195,HASYMP5,Heart Attack Symptoms - Pain or Discomfort in Arms/Shoulder, (Do you think) pain or discomfort in the arms or shoulder (are symptoms of a heart attack)?,Heart Attack and Stroke,Num
+196,HASYMP6,Heart Attack Symptoms - Shortness of Breath, (Do you think) shortness of breath (is a symptom of a heart attack)?,Heart Attack and Stroke,Num
+63,HAVARTH4,Told Had Arthritis," (Ever told) (you had) some form of arthritis, rheumatoid arthritis, gout, lupus, or fibromyalgia?  (Arthritis diagnoses include: rheumatism, polymyalgia rheumatica; osteoarthritis (not osteporosis); tendonitis, bursitis, bunion, tennis elbow; carpal tunnel syndrome, tarsal tunnel syndrome; joint infection, etc.)",Chronic Health Conditions,Num
+187,HEATTBCO,Have you heard of heated tobacco products?," Before today, have you heard of heated tobacco products?",Other Tobacco Use,Num
+78,HEIGHT3,Reported Height in Feet and Inches," About how tall are you without shoes?  (If respondent answers in metrics, put a 9 in the first column)[Round fractions down.]",Demographics,Num
+30,HHADULT,Number of Adults in Household," How many members of your household, including yourself, are 18 years of age or older?",Cell Phone Introduction,Num
+99,HIVTST7,Ever tested H.I.V.," Including fluid testing from your mouth, but not including tests you may have had for blood donation, have you ever been tested for H.I.V?",HIV/AIDSCore Section Number: 14,Num
+100,HIVTSTD3,Month and Year of Last HIV Test," Not including blood donations, in what month and year was your last H.I.V. test?  (If response is before January 1985, code ´777777´.)",HIV/AIDSCore Section Number: 14,Num
+127,HOWLONG,How Long since Last Mammogram, How long has it been since you had your last mammogram?,Breast and Cervical Cancer Screening,Num
+230,HPVADSHT,How many HPV shots did you receive?, How many HPV shots did you receive?,HPV Vaccination,Num
+229,HPVADVC4,Have you ever had an H.P.V. vaccination?, Have you ever had an H.P.V. vaccination?,HPV Vaccination,Num
+327,HTIN4,Computed Height in Inches, Reported height in inches,Calculated Variables,Num
+328,HTM4,Computed Height in Meters, Reported height in meters,Calculated Variables,Num
+3,IDATE,Interview Date, Interview Date,Record Identification,Char
+5,IDAY,Interview Day, Interview Day,Record Identification,Char
+228,IMFVPLA4,Where did you get your last flu shot/vaccine?, At what kind of place did you get your last flu shot or vaccine?,Place of Flu Vaccination,Num
+4,IMONTH,Interview Month, Interview Month,Record Identification,Char
+75,INCOME3,Income Level," Is your annual household income from all sources:  (If respondent refuses at any income level, code ´Refused.´)",Demographics,Num
+164,INDORTAN,Times used an indoor tanning device," Not including spray-on tans, during the past 12 months, how many times have you used an indoor tanning device such as a sunlamp, tanning bed, or booth?",Indoor Tanning,Num
+109,INSULIN1,Now Taking Insulin, Are you now taking insulin?,Diabetes,Num
+6,IYEAR,Interview Year, Interview Year,Record Identification,Char
+119,JOINPAI2,How Bad Was Joint Pain," During the past 30 days, how bad was your joint pain on average on a scale of 0 to 10 where 0 is no pain and 10 is pain or aching as bad as it can be?",Arthritis,Num
+15,LADULT1,Are you 18 years of age or older?, Are you 18 years of age or older?,Land Line Introduction,Num
+29,LANDLINE,Do you also have a landline telephone?, Do you also have a landline telephone in your home that is used to make and receive calls?,Cell Phone Introduction,Num
+18,LANDSEX2,Are you male or female?, Are you?,Land Line Introduction,Num
+142,LASTSIG4,Time Since Last Sigmoidoscopy/Colonoscopy, How long has it been since your most recent colonoscopy or sigmoidoscopy?,Colorectal Cancer Screening,Num
+183,LASTSMK2,Interval Since Last Smoked," How long has it been since you last smoked a cigarette, even one or two puffs?",Tobacco Cessation,Num
+123,LCSCTSC1,Did you have a CT or CAT scan?, Have you ever had a CT or CAT scan of your chest area?,Lung Cancer Screening,Num
+125,LCSCTWHN,When did you have your most recent CT or CAT scan?, When did you have your most recent CT or CAT scan of your chest area mainly to check or screen for lung cancer?,Lung Cancer Screening,Num
+120,LCSFIRST,How old when you first started smoking?, How old were you when you first started to smoke cigarettes regularly,Lung Cancer Screening,Num
+121,LCSLAST,How old when you last smoked?, How old were you when you last smoked cigarettes regularly?,Lung Cancer Screening,Num
+122,LCSNUMCG,"On average, how many cigarettes do you smoke each day?"," On average, when you {smoke/smoked} regularly, about how many cigarettes {do/did} you usually smoke each day?",Lung Cancer Screening,Num
+124,LCSSCNCR,Were any CT or CAT scans done to check for lung cancer?, Were any of the CT or CAT scans of your chest area done mainly to check or screen for lung cancer?,Lung Cancer Screening,Num
+117,LMTJOIN3,Limited Because of Joint Symptoms, Are you now limited in any way in any of your usual activities because of arthritis or joint symptoms?,Arthritis,Num
+19,LNDSXBRT,What was your sex at birth?, What was your sex at birth? Was it male or female?,Land Line Introduction,Num
+190,LOADULK2,Any Loaded Firearms Also Unlocked, Are any of these loaded firearms also unlocked?,Firearm Safety,Num
+235,LSATISFY,Satisfaction with life," In general, how satisfied are you with your life?",Social Determinants and Health Equity,Num
+209,MARIJAN1,"During the past 30 days, on how many days did you use marijuana or hashish?"," During the past 30 days, on how many days did you use marijuana or cannabis?",Marijuana Use,Num
+66,MARITAL,Marital Status, Are you: (marital status),Demographics,Num
+213,MARJDAB,Did you dab marijuana or cannabis?," Did you dab it (for example, using a dabbing rig, knife, or dab pen)?",Marijuana Use,Num
+211,MARJEAT,Did you eat marijuana or cannabis?," Did you eat it or drink it (for example, in brownies, cakes, cookies, or candy, or in tea, cola, or alcohol)?",Marijuana Use,Num
+214,MARJOTHR,Did you use marijuana or cannabis some other way?, Did you use it in some other way?,Marijuana Use,Num
+210,MARJSMOK,Did you smoke marijuana or cannabis?," During the past 30 days, did you smoke it (for example, in a joint, bong, pipe, or blunt)?",Marijuana Use,Num
+212,MARJVAPE,Did you vape marijuana or cannabis?," Did you vaporize it (for example, in an e-cigarette-like vaporizer or another vaporizing device)",Marijuana Use,Num
+94,MAXDRNKS,Most drinks on single occasion past 30 days," During the past 30 days, what is the largest number of drinks you had on any occasion?",Alcohol Consumption,Num
+282,MAXVO21_,Estimated Age-Gender Specific Maximum Oxygen Consumption, Estimated Age-Gender Specific Maximum Oxygen Consumption,Calculated Variables,Num
+38,MEDCOST1,Could Not Afford To See Doctor, Was there a time in the past 12 months when you needed to see a doctor but could not because you could not afford it?,Health Care Access,Num
+185,MENTCIGS,Do you usually smoke menthol cigarettes?," Currently, when you smoke cigarettes, do you usually smoke menthol cigarettes?",Other Tobacco Use,Num
+186,MENTECIG,Do you usually use menthol e-cigarettes?," Currently, when you use e-cigarettes, do you usually use menthol e-cigarettes?",Other Tobacco Use,Num
+34,MENTHLTH,Number of Days Mental Health Not Good," Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?",Healthy Days,Num
+280,METVL12_,Activity MET Value for First Activity, Activity MET Value for First Activity,Calculated Variables,Num
+281,METVL22_,Activity MET Value for Second Activity, Activity MET Value for Second Activity,Calculated Variables,Num
+260,MSCODE,Metropolitan Status Code, Metropolitan Status Code,Weighting Variables,Num
+16,NUMADULT,Number of Adults in Household," I need to randomly select one adult who lives in your household to be interviewed. Excluding adults living away from home, such as students away at college, how many members of your household, including yourself, are 18 years of age or older?",Land Line Introduction,Num
+165,NUMBURN3,Number Of Sunburns In Past 12 Months," During the past 12 months, how many times have you had a sunburn?",Excess Sun Exposure,Num
+69,NUMHHOL4,Household Landline Telephones," Not including cell phones or numbers used for computers, fax machines or security systems, do you have more than one landline telephone number in your household?",Demographics,Num
+70,NUMPHON4,Residential Landline Phones, How many of these landline telephone numbers are residential numbers?,Demographics,Num
+296,PA3,Minutes of total Physical Activity per week, Minutes of total Physical Activity per week,Calculated Variables,Num
+299,PA3,Minutes of total Vigorous Physical Activity per week, Minutes of total Vigorous Physical Activity per week,Calculated Variables,Num
+286,PADUR1_,Minutes of First Activity, Minutes of First Activity,Calculated Variables,Num
+287,PADUR2_,Minutes of Second Activity, Minutes of Second Activity,Calculated Variables,Num
+288,PAFRE,Physical Activity Frequency per Week for First Activity, Physical Activity Frequency per Week for First Activity,Calculated Variables,Num
+289,PAFRE,Physical Activity Frequency per Week for Second Activity, Physical Activity Frequency per Week for Second Activity,Calculated Variables,Num
+294,PAMIN13_,Minutes of Physical Activity per week for First Activity, Minutes of Physical Activity per week for First Activity,Calculated Variables,Num
+295,PAMIN23_,Minutes of Physical Activity per week for Second Activity, Minutes of Physical Activity per week for Second Activity,Calculated Variables,Num
+293,PAMISS3_,Missing Physical Activity Data, Missing Physical Activity Data,Calculated Variables,Num
+297,PAVIG13_,Minutes of Vigorous Physical Activity per week for First Activity, Minutes of Vigorous Physical Activity per week for First Activity,Calculated Variables,Num
+298,PAVIG23_,Minutes of Vigorous Physical Activity per week for Second Activity, Minutes of Vigorous Physical Activity per week for Second Activity,Calculated Variables,Num
+135,PCPSARS2,What was the MAIN reason you had this PSA test?, What was the main reason you had this P.,Prostate Cancer Screening,Num
+137,PCSTALK2,Did you talk about the advantages or disadvantages of P.," When you met with a doctor, nurse, or other health professional, did they ever talk about the advantages, the disadvantages, or both advantages and disadvantages of the prostate-specific antigen or P.",Prostate Cancer Screening,Num
+106,PDIABTS1,When was your last blood test for high blood sugar?," When was the last time you had a blood test for high blood sugar or diabetes by a doctor, nurse, or other health professional?",Pre-Diabetes,Num
+37,PERSDOC3,Have Personal Health Care Provider?, Do you have one person (or a group of doctors) that you think of as your personal health care provider?,Health Care Access,Num
+33,PHYSHLTH,Number of Days Physical Health Not Good," Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good?",Healthy Days,Num
+97,PNEUVAC4,Pneumonia shot ever, Have you ever had a pneumonia shot also known as a pneumococcal vaccine?,Immunization,Num
+35,POORHLTH,Poor Physical or Mental Health," During the past 30 days, for about how many days did poor physical or mental health keep you from doing your usual activities, such as self-care, work, or recreation?",Healthy Days,Num
+107,PREDIAB2,Ever been told by a doctor or other health professional that you have pre-diabetes or borderline diabetes?," Has a doctor or other health professional ever told you that you had prediabetes or borderline diabetes?  (If “Yes” and respondent is female, ask: “Was this only when you were pregnant?”)",Pre-Diabetes,Num
+76,PREGNANT,Pregnancy Status," To your knowledge, are you now pregnant?",Demographics,Num
+36,PRIMINS1,What is Current Primary Source of Health Insurance?, What is the current source of your primary health insurance?,Health Care Access,Num
+136,PSASUGS1,Who first suggested this P., Who first suggested (a or this) P.,Prostate Cancer Screening,Num
+133,PSATEST1,Ever Had PSA Test, Have you ever had a P.,Prostate Cancer Screening,Num
+134,PSATIME1,Time Since Most Recent PSA Test, About how long has it been since your most recent P.,Prostate Cancer Screening,Num
+11,PVTRESD1,Private Residence?," Is this a private residence?   [READ ONLY IF NECESSARY: “By private residence, we mean someplace like a house or apartment.”]",Land Line Introduction,Num
+26,PVTRESD3,Do you live in a private residence?," Do you live in a private residence?  (By private residence, we mean someplace like a house or apartment.)",Cell Phone Introduction,Num
+257,QSTLANG,Language identifier, Language identifier,Questionnaire Language,Num
+256,QSTVER,Questionnaire Version Identifier, Questionnaire Version Identifier,Questionnaire Version,Num
+251,RCSGEND1,Gender of child, Is the child a boy or a girl?,Random Child Selection,Num
+253,RCSRLTN2,Relationship to child, How are you related to the child?,Random Child Selection,Num
+252,RCSXBRTH,Child´s sex at birth, What was the child´s sex on their original birth certificate?,Random Child Selection,Num
+68,RENTHOM1,Own or Rent Home, Do you own or rent your home?,Demographics,Num
+17,RESPSLC1,Respondent selection, The person in your household that I need to speak with is the adult with the most recent birthday. Are you the adult with the most recent birthday?,Land Line Introduction,Num
+248,RRATWRK2,How do you feel you were treated at work compared to people of other races in past 12 months?," Within the past 12 months at work, do you feel you were treated worse than, the same as, or better than people of other races?",Reactions to Race,Num
+245,RRCLASS3,How do other people usually classify you in this country?," How do other people usually classify you in this country? Would you say White, Black or African American, Hispanic or Latino, Asian, Native Hawaiian or Other Pacific Islander, American Indian or Alaska Native, or some other group?",Reactions to Race,Num
+246,RRCOGNT2,How often do you think about your race?," How often do you think about your race? Would you say never, once a year, once a month, once a week, once a day, once an hour, or constantly?",Reactions to Race,Num
+249,RRHCARE4,"When seeking health care past 12 months, was experience worse, same, better than people of other races?"," Within the past 12 months when seeking health care, do you feel your experiences were worse than, the same as, or better than for people of other races?",Reactions to Race,Num
+250,RRPHYSM2,Times past 30 days felt physical symptoms because of treatment due to your race," Within the past 30 days, have you experienced any physical symptoms, for example, a headache, an upset stomach, tensing of your muscles, or a pounding heart, as a result of how you were treated based on your race?",Reactions to Race,Num
+247,RRTREAT,"Were you treated worse than, the same, or better than people of other races?"," Within the past 12 months, do you feel that in general you were treated worse than, the same as, or better than people of other races?",Reactions to Race,Num
+20,SAFETIME,Safe time to talk, Is this a safe time to talk with you?,Cell Phone Introduction,Num
+241,SDHBILLS,Were you not able to pay your bills?," During the last 12 months, was there a time when you were not able to pay your mortgage, rent or utility bills?",Social Determinants and Health Equity,Num
+238,SDHEMPLY,Have you lost employment or had hours reduced?, In the past 12 months have you lost employment or had hours reduced?,Social Determinants and Health Equity,Num
+240,SDHFOOD1,"How often did the food that you bought not last, and you didn’t have money to get more?"," During the past 12 months how often did the food that you bought not last, and you didn’t have money to get more? Was that…",Social Determinants and Health Equity,Num
+244,SDHSTRE1,How often have you felt this kind of stress?," Within the last 30 days, how often have you felt this kind of stress?",Social Determinants and Health Equity,Num
+243,SDHTRNSP,"Has a lack of reliable transportation kept you from appointments, meetings, work, or getting things needed"," During the past 12 months has a lack of reliable transportation kept you from medical appointments, meetings, work, or from getting things needed for daily living?",Social Determinants and Health Equity,Num
+242,SDHUTILS,Were you not able to pay utility bills or threatened to lose service?," During the last 12 months was there a time when an electric, gas, oil, or water company threatened to shut off services?",Social Determinants and Health Equity,Num
+237,SDLONELY,How often do you feel lonely?, How often do you feel lonely?  Is it…,Social Determinants and Health Equity,Num
+150,SDNATES1,How long since you had stool DNA, How long has it been since you had this test?,Colorectal Cancer Screening,Num
+8,SE,Annual Sequence Number, Annual Sequence Number,Record Identification,Char
+101,SEATBELT,How often use seatbelts in car?, How often do you use seat belts when you drive or ride in a car? Would you say—,Seatbelt Use and Drinking and Driving,Num
+31,SEXVAR,Sex of Respondent, Sex of Respondent,Respondent Sex,Num
+98,SHINGLE2,Have you ever had the shingles or zoster vaccine?, Have you ever had the shingles or zoster vaccine?,Immunization,Num
+141,SIGMTES1,How long since you had sigmoidoscopy, How long has it been since your most recent sigmoidoscopy?,Colorectal Cancer Screening,Num
+146,SMALSTOL,Ever had stool test?, One stool test uses a special kit to obtain a small amount of stool at home and returns the kit to the doctor or the lab. Have you ever had this test?,Colorectal Cancer Screening,Num
+88,SMOKDAY2,Frequency of Days Now Smoking," Do you now smoke cigarettes every day, some days, or not at all?",Tobacco Use,Num
+87,SMOKE100,Smoked at Least 100 Cigarettes, Have you smoked at least 100 cigarettes in your entire life?   [Note:  5 packs = 100 cigarettes],Tobacco Use,Num
+207,SOFEMALE,Sexual orientation, Which of the following best represents how you think of yourself?,Sexual Orientation and Gender Identity (SOGI)Module Number: 22,Num
+206,SOMALE,Sexual orientation, Which of the following best represents how you think of yourself?,Sexual Orientation and Gender Identity (SOGI)Module Number: 22,Num
+13,STATERE1,Resident of State, Do you currently live in  ____(state)____?,Land Line Introduction,Num
+147,STOLTEST,How long since you had stool test?, How long has it been since you had this test?,Colorectal Cancer Screening,Num
+148,STOOLDN2,Ever had stool DNA test?, Another stool test uses a special kit to obtain an entire bowel movement at home and returns the kit to a lab.   Have you ever had this test?,Colorectal Cancer Screening,Num
+184,STOPSMK2,Stopped Smoking in past 12 months," During the past 12 months, have you stopped smoking for one day or longer because you were trying to quit smoking?",Tobacco Cessation,Num
+47,STRENGTH,How many times did you do physical activities or exercises to STRENGTHEN your muscles?," During the past month, how many times per week or per month did you do physical activities or exercises to STRENGTHEN your muscles?   [Do NOT count aerobic activities like walking, running, or bicycling. Count activities using your own body weight like yoga, sit-ups or push-ups and those using weight machines, free weights, or elastic bands.]",Exercise (Physical Activity)Core Section Number: 4,Num
+292,STRFRE,Strength Activity Frequency per Week, Strength Activity Frequency per Week,Calculated Variables,Num
+197,STRSYMP1,Stroke Symptoms - Confusion/Trouble speaking, (Do you think) sudden confusion or trouble speaking (are symptoms of a stroke?),Heart Attack and Stroke,Num
+198,STRSYMP2,Stroke Symptoms - Numbness or Weakness of Face/Arm/Leg," (Do you think) sudden numbness or weakness of face, arm, or leg, especially on one side (are symptoms of a stroke?)",Heart Attack and Stroke,Num
+199,STRSYMP3,Stroke Symptoms - Vision Problems, (Do you think) sudden trouble seeing in one or both eyes (is a symptom of a stroke?),Heart Attack and Stroke,Num
+200,STRSYMP4,Stroke Symptoms - Chest Pain/Discomfort, (Do you think) sudden chest pain or discomfort (are symptoms of a stroke?),Heart Attack and Stroke,Num
+201,STRSYMP5,Stroke Symptoms - Trouble Walking/Dizziness/Loss of Balance," (Do you think) sudden trouble walking, dizziness, or loss of balance (are symptoms of a stroke?)",Heart Attack and Stroke,Num
+202,STRSYMP6,Stroke Symptoms - Severe Headache, (Do you think) severe headache with no known cause (is a symptom of a stroke?),Heart Attack and Stroke,Num
+166,SUNPRTCT,How often protect yourself from the sun," When you go outside on a warm sunny day for more than one hour, how often do you protect yourself from the sun? Is that….",Excess Sun Exposure,Num
+231,TETANUS1,Received Tetanus Shot Since 2005?," Have you received a tetanus shot in the past 10 years?  (If yes, ask: “Was this Tdap, the tetanus shot that also has pertussis or whooping cough vaccine?”)",Tetanus Diphtheria (Tdap) (Adults)Module Number: 27,Num
+51,TOLDHI3,Ever Told Cholesterol Is High," Have you ever been told by a doctor, nurse or other health professional that your cholesterol is high?",Cholesterol Awareness,Num
+208,TRNSGNDR,Do you consider yourself to be transgender?," Do you consider yourself to be transgender?  (If yes, ask “Do you consider yourself to be male-to-female, female-to-male, or gender non-conforming?)",Sexual Orientation and Gender Identity (SOGI)Module Number: 22,Num
+89,USENOW3,Use of Smokeless Tobacco Products," Do you currently use chewing tobacco, snuff, or snus every day, some days, or not at all?  (Snus (Swedish for snuff) is a moist smokeless tobacco, usually sold in small pouches that are placed under the lip against the gum.)",Tobacco Use,Num
+145,VCLNTES2,How long since you had  virtual colonoscopy, When was your most recent CT colonography or virtual colonoscopy?,Colorectal Cancer Screening,Num
+72,VETERAN3,Are You A Veteran," Have you ever served on active duty in the United States Armed Forces, either in the regular military or in a National Guard or military reserve unit?",Demographics,Num
+144,VIRCOLO1,Ever had a virtual colonoscopy, A virtual colonoscopy uses a series of X-rays to take pictures of inside the colon.  Have you ever had a virtual colonoscopy?,Colorectal Cancer Screening,Num
+77,WEIGHT2,Reported Weight in Pounds," About how much do you weigh without shoes?  (If respondent answers in metrics, put a 9 in the first column)[Round fractions up.]",Demographics,Num
+167,WKDAYOUT,How often outside on weekdays," On weekdays, in the summer, how long are you outside per day between 10am and 4pm?",Excess Sun Exposure,Num
+168,WKENDOUT,How often outside on weekends," On weekends in the summer, how long are you outside each day between 10am and 4pm?",Excess Sun Exposure,Num
+329,WTKG3,Computed Weight in Kilograms, Reported weight in kilograms,Calculated Variables,Num
+324,_AGE65,Reported age in two age groups calculated variable, Two-level age category,Calculated Variables,Num
+325,_AGE80,Imputed Age value collapsed above 80, Imputed Age value collapsed above 80,Calculated Variables,Num
+323,_AGEG5,Reported age in five-year age categories calculated variable, Fourteen-level age category,Calculated Variables,Num
+326,_AGE_G,Imputed age in six groups, Six-level imputed age category,Calculated Variables,Num
+346,_AIDTST4,Ever been tested for HIV calculated variable, Adults who have ever been tested for HIV,Calculated Variables,Num
+314,_ASTHMS1,Computed Asthma Status, Computed asthma status,Calculated Variables,Num
+330,_BMI5,Computed body mass index, Body Mass Index (BMI),Calculated Variables,Num
+331,_BMI5,Computed body mass index categories, Four-categories of Body Mass Index (BMI),Calculated Variables,Num
+313,_CASTHM1,Current Asthma Calculated Variable, Adults who have been told they currently have asthma,Calculated Variables,Num
+266,_CHISPNC,"Child Hispanic, Latino/a, or Spanish origin calculated variable"," Child Hispanic, Latino/a, or Spanish origin calculated variable",Child Demographic Variables,Num
+333,_CHLDCNT,Computed number of children in household, Number of children in household,Calculated Variables,Num
+309,_CHOLCH3,Cholesterol Checked Calculated Variable, Cholesterol check within past five years,Calculated Variables,Num
+269,_CLLCPWT,Final child weight: Land-line and Cell-Phone data, Final child weight: Land-line and Cell-Phone data  (Raking derived weight),Child Weighting Variables,Num
+267,_CRACE1,Child Non-Hispanic Race including Multiracial, Child multiracial race categorization,Child Demographic Variables,Num
+338,_CURECI2,Current E-cigarette User Calculated Variable, Adults who are current e-cigarette users,Calculated Variables,Num
+315,_DRDXAR2,Respondents diagnosed with arthritis, Respondents who have had a doctor diagnose them as having some form of arthritis,Calculated Variables,Num
+349,_DRNKDRV,Drinking and Driving, Drinking and Driving  (Reported having driven at least once when perhaps had too much to drink),Calculated Variables,Num
+342,_DRNKWK2,Computed number of drinks of alcohol beverages per week, Calculated total number of alcoholic beverages consumed per week,Calculated Variables,Num
+271,_DUALCOR,Dual Phone Use Correction Factor, Dual phone use correction factor,Weighting Variables,Num
+270,_DUALUSE,Dual Phone Use Categories, Dual Phone Use Categories,Weighting Variables,Num
+334,_EDUCAG,Computed level of education completed categories, Level of education completed,Calculated Variables,Num
+344,_FLSHOT7,Flu Shot Calculated Variable, Adults aged 65+ who have had a flu shot within the past year,Calculated Variables,Num
+278,_HCVU653,Respondents aged 18-64 with health insurance, Respondents aged 18-64 who have any form of health insurance,Calculated Variables,Num
+317,_HISPANC,"Hispanic, Latino/a, or Spanish origin calculated variable"," Hispanic, Latino/a, or Spanish origin calculated variable",Calculated Race Variables,Num
+277,_HLTHPL1,Have any health insurance, Adults who had some form of health insurance,Calculated Variables,Num
+265,_IMPRACE,Imputed race/ethnicity value," Imputed race/ethnicity value  (This value is the reported race/ethnicity or an imputed race/ethnicity, if the respondent refused to give a race/ethnicity. The value of the imputed race/ethnicity will be the most common race/ethnicity response for that region of the state)",Weighting Variables,Num
+335,_INCOMG1,Computed income categories, Income categories,Calculated Variables,Num
+273,_LLCPWT,Final weight: Land-line and cell-phone data, Final weight assigned to each  respondent: Land-line and cell-phone data  (Raking derived weight),Weighting Variables,Num
+272,_LLCPWT2,Truncated design weight used in adult combined land line and cell phone raking, Truncated design weight used in adult combined land line and cell phone raking,Weighting Variables,Num
+312,_LTASTH1,Lifetime Asthma Calculated Variable, Adults who have ever been told they have asthma,Calculated Variables,Num
+276,_MENT14,Computed Mental Health Status," 3 level not good mental health status: 0 days, 1-13 days, 14-30 days",Calculated Variables,Num
+258,_METSTAT,Metropolitan Status, Metropolitan Status,Urban Rural,Num
+311,_MICHD,Ever had CHD or MI, Respondents that have ever reported having coronary heart disease (CHD) or myocardial infarction (MI),Calculated Variables,Num
+290,_MINAC12,Minutes of Physical Activity per week for First Activity, Minutes of Physical Activity per week for First Activity,Calculated Variables,Num
+291,_MINAC22,Minutes of Physical Activity per week for Second Activity, Minutes of Physical Activity per week for Second Activity,Calculated Variables,Num
+316,_MRACE1,Calculated non-Hispanic Race including multiracial, Calculated multiracial race categorization,Calculated Race Variables,Num
+302,_PA150,150 Minute Physical Activity Calculated Variable, Adults that participated in 150 minutes (or vigorous equivalent minutes) of physical activity per week.,Calculated Variables,Num
+303,_PA300,300 Minute Physical Activity Calculated Variable, Adults that participated in greater than 300 minutes  (or vigorous equivalent minutes) of physical activity per week.,Calculated Variables,Num
+304,_PA30023,300 Minute Physical Activity 2-Level Calculated Variable, Adults that participated in greater than 300 minutes  (or vigorous equivalent minutes) of physical activity per week (2-levels).,Calculated Variables,Num
+300,_PACAT3,Physical Activity Categories, Physical Activity Categories,Calculated Variables,Num
+301,_PAINDX3,Physical Activity Index, Physical Activity Index,Calculated Variables,Num
+306,_PAREC3,Aerobic and Strengthening Guideline, Aerobic and Strengthening Guideline,Calculated Variables,Num
+307,_PASTAE3,Aerobic and Strengthening (2-level), Aerobic and Strengthening (2-level),Calculated Variables,Num
+305,_PASTRNG,Muscle Strengthening Recommendation, Muscle Strengthening Recommendation,Calculated Variables,Num
+275,_PHYS14,Computed Physical Health Status," 3 level not good physical health status: 0 days, 1-13 days, 14-30 days",Calculated Variables,Num
+345,_PNEUMO3,Pneumonia Vaccination Calculated Variable, Adults aged 65+ who have ever had a pneumonia vaccination,Calculated Variables,Num
+9,_PSU,Primary Sampling Unit, Primary Sampling Unit (Equal to Annual Sequence Number),Record Identification,Num
+318,_RACE,Computed Race-Ethnicity grouping, Race/ethnicity categories,Calculated Race Variables,Num
+319,_RACEG21,Create Computed Non-Hispanic Whites/All Others Race Categories Race/Ethnic Group Codes Used In Post-Stratification Variable, White non-Hispanic race group,Calculated Race Variables,Num
+320,_RACEGR3,Computed Five level race/ethnicity category., Five-level race/ethnicity category,Calculated Race Variables,Num
+321,_RACEPRV,Computed race groups used for internet prevalence tables, Computed race groups used for internet prevalence tables,Calculated Race Variables,Num
+263,_RAWRAKE,Raw weighting factor used in raking," Raw weighting factor used in raking  (Number of adults in the household (NUMADULT, maximum of 5) divided by the imputed number of phones (_IMPNPH, maximum of 3).)",Weighting Variables,Num
+341,_RFBING6,Binge Drinking Calculated Variable," Binge drinkers (males having five or more drinks on one occasion, females having four or more drinks on one occasion)",Calculated Variables,Num
+332,_RFBMI5,Overweight or obese calculated variable, Adults who have a body mass index greater than 25.00 (Overweight or Obese),Calculated Variables,Num
+310,_RFCHOL3,High Cholesterol Calculated Variable," Adults who have had their cholesterol checked and have been told by a doctor, nurse, or other health professional that it was high",Calculated Variables,Num
+343,_RFDRHV8,Heavy Alcohol Consumption  Calculated Variable, Heavy drinkers (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week),Calculated Variables,Num
+274,_RFHLTH,Adults with good or better health, Adults with good or better health,Calculated Variables,Num
+308,_RFHYPE6,High Blood Pressure Calculated Variable," Adults who have been told they have high blood pressure by a doctor, nurse, or other health professional",Calculated Variables,Num
+347,_RFSEAT2,Always or Nearly Always Wear Seat Belts, Always or Nearly Always Wear Seat Belts Calculated Variable,Calculated Variables,Num
+348,_RFSEAT3,Always Wear Seat Belts, Always Wear Seat Belts Calculated Variable,Calculated Variables,Num
+337,_RFSMOK3,Current Smoking Calculated Variable, Adults who are current smokers,Calculated Variables,Num
+322,_SEX,Calculated sex variable, Calculated sex variable,Calculated Variables,Num
+336,_SMOKER3,Computed Smoking Status," Four-level smoker status:  Everyday smoker, Someday smoker, Former smoker, Non-smoker",Calculated Variables,Num
+1,_STATE,State FIPS Code, State FIPS Code,Record Identification,Num
+262,_STRWT,Stratum weight, Stratum weight  (Number of records in a stratum (NRECSTR) divided by the number of records selected (NRECSEL).),Weighting Variables,Num
+261,_STSTR,Sample Design Stratification Variable," Sample Design Stratification Variable  (Prior to 2011:  _STSTR is a five digit number that combines the values for _STATE (first two characters), _GEOSTR (third and fourth character), and _DENSTR2 (final character).)",Weighting Variables,Num
+279,_TOTINDA,Leisure Time Physical Activity Calculated Variable, Adults who reported doing physical activity or exercise during the past 30 days other than their regular job,Calculated Variables,Num
+259,_URBSTAT,Urban/Rural Status, Urban/Rural Status,Urban Rural,Num
+264,_WT2,Design weight use in raking, Design weight used in raking  (Stratum weight (_STRWT) multiplied by the raw weighting factor (_RAWRAKE).),Weighting Variables,Num

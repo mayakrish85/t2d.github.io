@@ -1,0 +1,117 @@
+---
+title: "Exploratory Data Analysis"
+author: "ak5357"
+date: "2024-11-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(haven)
+library(rvest)
+library(dplyr)
+library(stringr)
+library(purrr)
+
+# Do not eval anything, when the file is knit
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## Import diabetes data
+
+```{r import_data}
+data_xpt = read_xpt("data/raw_data/LLCP2023.XPT")
+
+variables = c("_AGEG5YR", "_SMOKER3", "_STATE", "_URBSTAT", "ADDEPEV3", "ASTHMA3", "ASTHNOW", "BPHIGH6", "CHCCOPD3", "CHCKDNY2", "CHKHEMO3", "COVIDPO1", "CVDCRHD4", "CVDINFR4", "CVDSTRK3", "DIABAGE4", "DIABETE4", "DIABTYPE", "EDUCA", "EXERANY2", "EXEROFT1", "HAVARTH4", "HEIGHT3", "INSULIN1", "PDIABTS1", "PREDIAB2", "PREGNANT", "SEXVAR", "SMOKE100", "TOLDHI3", "WEIGHT2")
+
+diabetes_df = data_xpt |> 
+  select(!!variables) |> 
+  janitor::clean_names()
+```
+
+```{r export_data}
+write_csv(diabetes_df, "data/diabetes_data.csv")
+```
+
+## Import metadata
+
+_Note: The output .csv file has a bunch of random instances of the Â character. Ignore these or remove manually._
+```{r import_metadata}
+# Read in HTML
+codebook_html = read_html("data/raw_data/USCODE23_LLCP_091024.HTML")
+
+# Remove all junk tables
+metadata_tables = codebook_html |> 
+  html_table(header = TRUE) |> 
+  keep(~ (nrow(.x) > 0 & ncol(.x) > 1))
+
+# Convert the list of tables into metadata table
+metadata_list = metadata_tables |>
+  lapply(names) |> 
+  map(~ .x[[1]]) |> 
+  unlist() |>
+  str_replace_all(pattern = "([A-Z0-9])([Q])", replacement = "\\1&&\\2") |> 
+  str_replace_all(pattern = "([a-z0-9])([A-Z])", replacement = "\\1&&\\2") |> 
+  str_replace_all(pattern = "([\\_|\\.|?|\\:])([Q])", replacement = "\\1&&\\2") |> 
+  str_replace_all(pattern = "([\\.|?|\\:])([S])", replacement = "\\1&&\\2") |> 
+  str_replace_all(pattern = "MISection", replacement = "MI&&Section") |> 
+  str_replace_all(pattern = "DNASection", replacement = "DNA&&Section") |> 
+  str_replace_all(pattern = "\\)Section", replacement = "\\)&&Section") |> 
+  str_replace_all("Question\\sPrologue:Question", "Question") |> 
+  str_split("&&") |> 
+  map(~ str_split(.x, ":\\s", n = 2))  # Split by ": " into key-value pairs
+  
+metadata_list = metadata_list[2:length(metadata_list)]
+
+# Create Metadata Dataframe through for loop
+metadata_df = tibble(row_id = 0)
+
+for (i in 1:349){
+  # Create temp tibble, new_row
+  new_row = tibble(row_id = i)
+  
+  for (j in 1:(length(metadata_list[[i]]))){
+    # Pull out name and value from metadata_list
+    name_value_pair = metadata_list[[i]][[j]]
+    
+    # Colname
+    col = name_value_pair[[1]]
+    
+    if(length(metadata_list[[i]][[j]]) > 1){
+      # Value
+      val = name_value_pair[[2]]
+      
+      # Add to new_row
+      new_row =
+        new_row |> 
+        mutate(!!col := val)
+    }
+  }
+  
+  # Add new row (temp_tibble) to metadata_df
+  metadata_df = metadata_df |> 
+    bind_rows(janitor::clean_names(new_row))
+}
+
+# Clean metadata df
+metadata_df = metadata_df |> 
+  slice(-1) |> 
+  select(row_id, sas_variable_name, label, question, section_name, type_of_variable) |> 
+  #filter(sas_variable_name %in% variables) |> 
+  arrange(sas_variable_name)
+```
+
+```{r export_metadata}
+# Save metadata df to csv
+write_csv(metadata_df, "data/metadata.csv")
+```
+
+To look up metadata of some variable, can use this block. Just change the var_name variable.
+```{r var_metadata_search}
+var_name = "diab"
+
+metadata_df |> 
+  filter(str_detect(sas_variable_name, str_to_upper(var_name))) |> 
+  view()
+
+```
