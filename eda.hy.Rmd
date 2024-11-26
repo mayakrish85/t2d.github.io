@@ -1,0 +1,95 @@
+---
+title: "local"
+author: "Helen Yousaf"
+date: "2024-11-20"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+cleaned_diabetes_data <- read_csv("data/cleaned_diabetes_data.csv")
+View(cleaned_diabetes_data)
+```
+Distribution Across Blood Pressure 
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readr)
+
+# EDA for has_diabetes
+cleaned_diabetes_data  %>%
+  mutate(has_diabetes = factor(has_diabetes, levels = c(0, 1, 2, 3), labels = c("No", "Type 1", "Type 2", "Other"))) %>%
+  ggplot(aes(x = has_diabetes)) +
+  geom_bar(aes(fill = has_diabetes)) +
+  labs(title = "Distribution of Diabetes Types", x = "Diabetes Status", y = "Count") +
+  theme_minimal()
+
+# EDA for high_bp
+cleaned_diabetes_data %>%
+  mutate(high_bp = factor(high_bp, levels = c(0, 1, 2), labels = c("No", "Yes, Mild", "Yes, Severe"))) %>%
+  ggplot(aes(x = high_bp)) +
+  geom_bar(aes(fill = high_bp)) +
+  labs(title = "Distribution of High Blood Pressure", x = "High Blood Pressure Status", y = "Count") +
+  theme_minimal()
+
+```
+Disitribution Across 
+```{r}
+# EDA for has_diabetes
+cleaned_diabetes_data%>%
+  group_by(has_diabetes) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = factor(has_diabetes), y = count, fill = factor(has_diabetes))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Distribution of has_diabetes", x = "Has Diabetes", y = "Count") +
+  theme_minimal()
+
+# EDA for high_bs
+cleaned_diabetes_data %>%
+  group_by(high_bs) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = factor(high_bs), y = count, fill = factor(high_bs))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Distribution of high_bs", x = "High Blood Sugar", y = "Count") +
+  theme_minimal()
+```
+```{r}
+# EDA for has_diabetes
+cleaned_diabetes_data%>%
+  group_by(has_diabetes) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = factor(has_diabetes), y = count, fill = factor(has_diabetes))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Distribution of has_diabetes", x = "Has Diabetes", y = "Count") +
+  theme_minimal()
+
+# EDA for high_bs
+cleaned_diabetes_data %>%
+  group_by(aic1_check) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = factor(a1c_check), y = count, fill = factor(a1c_check))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Distribution of A1C Checks", x = "Had a A1C Check", y = "Count") +
+  theme_minimal()
+```
+
+
+
+
+
+
+
+
+
+
+
