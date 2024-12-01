@@ -1,0 +1,187 @@
+---
+title: "eda_gokul"
+author: "Gokul Pareek"
+date: "2024-12-01"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load_data, message = FALSE}
+# Load and wrangle the overall data.
+
+diabetes_df = read_csv("data/cleaned_diabetes_data.csv")
+
+diabetes_df = 
+  diabetes_df |> 
+  mutate(
+    has_diabetes = case_match(
+      has_diabetes,
+      0 ~ "Not diabetic",
+      1 ~ "Pre-diabetic",
+      2 ~ "Diabetic",
+      3 ~ "Diabetic while pregnant",
+      NA ~ NA),
+    sex_at_birth = 
+      case_match(
+        sex_at_birth,
+        1 ~ "male", 
+        0 ~ "female"),
+    sex_at_birth = fct_infreq(sex_at_birth),
+    age_category = factor(age_category, levels = c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"), order = TRUE),
+    type = case_when(
+      sex_at_birth == "male" & !(age_category %in% c("18-24", "25-29")) & has_diabetes == "Diabetic" ~ 2,
+      sex_at_birth == "female" & (
+        (!(age_category %in% c("18-24", "25-29")) & pregnant == 0) | 
+        !(age_category %in% c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49"))
+        ) & has_diabetes == "Diabetic" ~ 2,
+      age_category %in% c("18-24", "25-29") & has_diabetes == "Diabetic" ~ 1,
+      # If any of the conditions are not met (or NA), assign NA
+      (is.na(sex_at_birth) | is.na(age_category) | is.na(pregnant)) & is.na(has_diabetes) ~ NA,
+      TRUE ~ 0
+    ),
+    type = as.factor(type),
+    diab_type = as.factor(diab_type),
+    has_diabetes = as.factor(has_diabetes)
+  ) 
+```
+
+# Distribution of Different Diabetes Variables {.tabset}
+
+There are three variables that we are interested in understanding -- `has_diabetes`, `diab_type`, and `type`. 
+
+`has_diabetes`: This variable describes the people in the survey who responded after being asked the question, "Have you ever been told you had diabetes?" Overall, 432,339 people responded to this question.
+
+`diab_type`: This variable comes directly from the dataset, where respondents who were diabetic per the `has_diabetes` question were asked "What type of diabetes do you have?" Only 22,027 participants answered this question out of the 59,786 people who responded that they had diabetes. Since there are over 60% of respondents unaccounted for, this measure may not tell us enough about risk factors or comorbidities of T2D in the general population.
+
+`type`: Due to the missing data for `diab_type`, we created another variable `type` that describes the person's diabetes type by using other demographic information from this dataset. We used [this paper](https://www.cdc.gov/pcd/issues/2019/19_0109.htm) published by the CDC that used the same BRFSS survey from 2014 to classify T2D diagnosis. In this paper, they classified a survey respondent to have type II diabetes if the respondent was older than 30, not pregnant, and answered yes to the question “Have you ever been told you have diabetes?” 
+
+We then classified a respondent to have type II diabetes if the respondent was older than 30, not pregnant, and were diabetic as per the `has_diabetes` question. We classified a respondent to have type I diabetes if the respondent was younger than 30 and were diabetic as per the `has_diabetes` question.
+
+## Diabetes Status (`has_diabetes`) {.tabset}
+
+
+```{r diabetes_distributions}
+diabetes_dist = function(df, var) {
+  df |> 
+    group_by({{ var }}) |> 
+    summarize(count = n()) |> 
+    knitr::kable()
+}
+
+diabetes_plot = function(df, var) {
+  diabetes_df |> 
+    ggplot(aes(x = {{ var }})) +
+    geom_bar(aes(fill = factor({{ var }})), na.rm = FALSE) + 
+    geom_text(
+      stat = "count",  # Use the count statistic for frequencies
+      aes(label = ..count..),  # Access the count directly
+      vjust = -0.5,  # Adjust position of labels above the bars
+      na.rm = FALSE
+    ) + 
+    labs(
+      title = "Distribution of Diabetes", 
+      x = "Diabetes Status", 
+      y = "Count", 
+      fill = as.character(rlang::ensym(var))) +
+    theme_minimal() +
+    theme(legend.position="bottom")
+}
+```
+
+# By Urban/Rural
+
+```{r urban_rural_distribution}
+
+diabetes_df <- diabetes_df |> 
+  mutate(
+    urbrural = case_when(
+      urbrural == 1 ~ "Urban",
+      urbrural == 0 ~ "Rural",
+      TRUE ~ "Unknown"
+    )
+  )
+
+# Distribution table for Urban/Rural areas
+diabetes_dist(diabetes_df, urbrural)
+
+# Plot for Urban/Rural areas
+diabetes_plot(diabetes_df, urbrural)
+
+```
+
+# By Age of Onset
+
+```{r}
+
+# Distribution table for Age of Onset
+diabetes_dist(diabetes_df, age_onset)
+
+# Plot for Age of Onset
+diabetes_plot(diabetes_df, age_onset)
+
+```
+
+# By State
+
+```{r}
+
+# Distribution table for State
+diabetes_dist(diabetes_df, state)
+
+# Plot for State
+diabetes_plot(diabetes_df, state)
+
+```
+
+# By Gender, Age, Weight
+
+```{r}
+
+# Group by sex, age, and weight, and calculate the count for each combination
+distribution_data <- diabetes_df %>%
+  filter(!is.na(sex_at_birth), !is.na(age_category), !is.na(weight_lbs)) %>%
+  group_by(sex_at_birth, age_category, weight_lbs) %>%
+  summarise(count = n(), .groups = 'drop')
+
+# View the distribution data (Optional)
+head(distribution_data)
+
+# Plotting weight by age category and gender
+ggplot(diabetes_df, aes(x = age_category, y = weight_lbs, color = sex_at_birth)) +
+  geom_jitter(alpha = 0.3, size = 1.5) +  # Use jitter to avoid overlap
+  facet_wrap(~ sex_at_birth, scales = "free_y") +  # Separate plots for each gender
+  theme_minimal(base_size = 14) +  # Increase base size for readability
+  labs(title = "Distribution of Weight by Age and Gender",
+       subtitle = "Weight distribution across age categories",
+       x = "Age Category",
+       y = "Weight (lbs)",
+       color = "Gender") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for clarity
+
+```
+
+# By Education
+
+```{r}
+
+# Distribution table for Education
+diabetes_dist(diabetes_df, education)
+
+# Plot for Education
+diabetes_plot(diabetes_df, education)
+
+```
+
+
+
+
