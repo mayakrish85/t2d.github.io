@@ -32,57 +32,50 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ```{r load_data, message = FALSE}
 # Load and wrangle the overall data.
-
 diabetes_df = read_csv("data/cleaned_diabetes_data.csv")
 
+# Binary helper function
+recode_factor = function(var) {
+  factor(var, levels = c("No", "Yes"))
+}
+
+# Clean the diabetes variables
 diabetes_df = 
   diabetes_df |> 
   mutate(
-    has_diabetes = case_match(
-      has_diabetes,
-      0 ~ "Not diabetic",
-      1 ~ "Pre-diabetic",
-      2 ~ "Diabetic",
-      3 ~ "Diabetic while pregnant",
-      NA ~ NA),
-    sex_at_birth = 
-      case_match(
-        sex_at_birth,
-        1 ~ "male", 
-        0 ~ "female"),
+    has_diabetes = factor(has_diabetes, levels = c("Not diabetic", "Pre-diabetic", "Diabetic", "Gestational")),
     sex_at_birth = fct_infreq(sex_at_birth),
     age_category = factor(age_category, levels = c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"), order = TRUE),
-    type = case_when(
-      sex_at_birth == "male" & !(age_category %in% c("18-24", "25-29")) & has_diabetes == "Diabetic" ~ 2,
-      sex_at_birth == "female" & (
-        (!(age_category %in% c("18-24", "25-29")) & pregnant == 0) | 
+    pregnant = recode_factor(pregnant),
+    eval_type = case_when(
+      sex_at_birth == "Male" & !(age_category %in% c("18-24", "25-29")) & has_diabetes == "Diabetic" ~ "Type 2",
+      sex_at_birth == "Female" & (
+        (!(age_category %in% c("18-24", "25-29")) & pregnant == "No") | 
         !(age_category %in% c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49"))
-        ) & has_diabetes == "Diabetic" ~ 2,
-      age_category %in% c("18-24", "25-29") & has_diabetes == "Diabetic" ~ 1,
+        ) & has_diabetes == "Diabetic" ~ "Type 2",
+      age_category %in% c("18-24", "25-29") & has_diabetes == "Diabetic" ~ "Type 1",
       # If any of the conditions are not met (or NA), assign NA
       (is.na(sex_at_birth) | is.na(age_category) | is.na(pregnant)) & is.na(has_diabetes) ~ NA,
-      TRUE ~ 0
+      TRUE ~ "Not diabetic"
     ),
-    type = as.factor(type),
-    diab_type = as.factor(diab_type),
-    has_diabetes = as.factor(has_diabetes)
-  ) 
+    eval_type = factor(eval_type, levels = c("Not diabetic", "Type 1", "Type 2")),
+    diab_type = factor(diab_type, levels = c(1, 2), labels = c("Type 1", "Type 2"))
+  )
 ```
 
 # Defining Diabetes {.tabset}
 
-There are three variables that we are interested in understanding -- `has_diabetes`, `diab_type`, and `type`. 
+There are three variables that we are interested in understanding -- `has_diabetes`, `diab_type`, and `eval_type`. 
 
-`has_diabetes`: This variable describes the people in the survey who responded after being asked the question, "Have you ever been told you had diabetes?" Overall, 432,339 people responded to this question.
+**`has_diabetes`**: This variable describes the people in the survey who responded after being asked the question, "Have you ever been told you had diabetes?" Overall, 432,339 people responded to this question.
 
-`diab_type`: This variable comes directly from the dataset, where respondents who were diabetic per the `has_diabetes` question were asked "What type of diabetes do you have?" Only 22,027 participants answered this question out of the 59,786 people who responded that they had diabetes. Since there are over 60% of respondents unaccounted for, this measure may not tell us enough about risk factors or comorbidities of T2D in the general population.
+**`diab_type`**: This variable comes directly from the dataset, where respondents who were diabetic per the `has_diabetes` question were asked "What type of diabetes do you have?" Only 22,027 participants answered this question out of the 59,786 people who responded that they had diabetes. Since there are over 60% of respondents unaccounted for, this measure may not tell us enough about risk factors or comorbidities of T2D in the general population.
 
-`type`: Due to the missing data for `diab_type`, we created another variable `type` that describes the person's diabetes type by using other demographic information from this dataset. We used [this paper](https://www.cdc.gov/pcd/issues/2019/19_0109.htm) published by the CDC that used the same BRFSS survey from 2014 to classify T2D diagnosis. In this paper, they classified a survey respondent to have type II diabetes if the respondent was older than 30, not pregnant, and answered yes to the question “Have you ever been told you have diabetes?” 
+**`eval_type`**: Due to the missing data for `diab_type`, we created another variable `eval_type` that describes the person's diabetes type by using other demographic information from this dataset. We used [this paper](https://www.cdc.gov/pcd/issues/2019/19_0109.htm) published by the CDC that used the same BRFSS survey from 2014 to classify T2D diagnosis. In this paper, they classified a survey respondent to have type II diabetes if the respondent was older than 30, not pregnant, and answered yes to the question “Have you ever been told you have diabetes?” 
 
 We then classified a respondent to have type II diabetes if the respondent was older than 30, not pregnant, and were diabetic as per the `has_diabetes` question. We classified a respondent to have type I diabetes if the respondent was younger than 30 and were diabetic as per the `has_diabetes` question.
 
 ## Diabetes Status (`has_diabetes`) {.tabset}
-
 
 ```{r diabetes_distributions}
 diabetes_dist = function(df, var) {
@@ -95,7 +88,7 @@ diabetes_dist = function(df, var) {
 diabetes_plot = function(df, var) {
   diabetes_df |> 
     ggplot(aes(x = {{ var }})) +
-    geom_bar(aes(fill = factor({{ var }})), na.rm = FALSE) + 
+    geom_bar(aes(fill = factor({{ var }})), color = "black", na.rm = FALSE) + 
     geom_text(
       stat = "count",  # Use the count statistic for frequencies
       aes(label = ..count..),  # Access the count directly
@@ -106,9 +99,10 @@ diabetes_plot = function(df, var) {
       title = "Distribution of Diabetes", 
       x = "Diabetes Status", 
       y = "Count", 
-      fill = as.character(rlang::ensym(var))) +
+      fill = as.character(rlang::ensym(var))
+    ) +
     theme_minimal() +
-    theme(legend.position="bottom")
+    theme(legend.position="bottom", legend.title = element_blank())
 }
 ```
 
@@ -138,18 +132,18 @@ diabetes_dist(df = diabetes_df, var = diab_type)
 diabetes_plot(df = diabetes_df, var = diab_type)
 ```
 
-## Evaluated Type (`type`) {.tabset}
+## Evaluated Type (`eval_type`) {.tabset}
 
 ### Table
 
 ```{r}
-diabetes_dist(df = diabetes_df, var = type)
+diabetes_dist(df = diabetes_df, var = eval_type)
 ```
 
 ### Graph
 
 ```{r}
-diabetes_plot(df = diabetes_df, var = type)
+diabetes_plot(df = diabetes_df, var = eval_type)
 ```
 
 # Demographics
@@ -158,73 +152,48 @@ diabetes_plot(df = diabetes_df, var = type)
 
 
 
-
-
 ```{r}
 diabetes_comorbidities = 
   diabetes_df |> 
   mutate(
-    kidney_disease = case_match(kidney_disease, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    kidney_disease = as.factor(kidney_disease),
-    heart_attack = case_match(heart_attack, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    heart_attack = as.factor(heart_attack),
-    chd = case_match(chd, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    chd = as.factor(chd),
-    stroke = case_match(stroke, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    stroke = as.factor(stroke),
-    arthritis = case_match(arthritis, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    arthritis = as.factor(arthritis),
-    asthma_ever = case_match(asthma_ever, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    asthma_ever = as.factor(asthma_ever),
-    asthma_now = case_match(asthma_now, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    asthma_now = as.factor(asthma_now),
-    covid_test = case_match(covid_test, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    covid_test = as.factor(covid_test),
-    bronchitis = case_match(bronchitis, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    bronchitis = as.factor(bronchitis),
-    high_bp = case_match(high_bp,
-                         0 ~ "No", 1 ~ "Mild/Severe", 2 ~ "Yes, Severe", NA ~ NA),
-    high_bp = as.factor(high_bp),
-    high_bs = case_match(high_bs, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    high_bs = as.factor(high_bs),
-    a1c_check = case_match(a1c_check, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    a1c_check = as.factor(a1c_check),
-    high_chol = case_match(high_chol, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    high_chol = as.factor(high_chol),
-    smoker = case_match(smoker, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
-    smoker = as.factor(smoker),
-    type = as.factor(type),
-    diab_type = as.factor(diab_type)
+    kidney_disease = recode_factor(kidney_disease),
+    depression = recode_factor(depression),
+    arthritis = recode_factor(arthritis),
+    michd = recode_factor(michd),
+    blind = recode_factor(blind),
+    covid = recode_factor(covid),
+    stroke = recode_factor(stroke),
+    bronchitis = recode_factor(bronchitis),
+    asthma_ever = recode_factor(asthma_ever),
+    asthma_now = recode_factor(asthma_now)
   ) |> 
+  select(has_diabetes, diab_type, eval_type, kidney_disease, arthritis, depression, michd, blind, covid, stroke, bronchitis, asthma_ever, asthma_now) |> 
   rename(
     `History of Kidney Disease` = kidney_disease,
-    `History of Heart Attack` = heart_attack,
-    `History of CHD` = chd,
+    `History of MI/CHD` = michd,
+    `History of Depression` = depression,
+    `Blindness` = blind,
     `History of Stroke` = stroke,
     `History of Arthritis` = arthritis,
     `History of Asthma` = asthma_ever,
     `Currently Have Asthma` = asthma_now,
-    `Ever Had a Positive Covid Test` = covid_test,
+    `Ever Tested Positive for Covid-19` = covid,
     `History of Bronchitis` = bronchitis,
-    `High Blood Pressure` = high_bp,
-    `High Blood Sugar` = high_bs,
-    `Checked for A1C in the Past Year` = a1c_check,
-    `High Cholesterol` = high_chol,
-    `Ever Been a Smoker` = smoker,
     `Has Diabetes` = has_diabetes,
     `Reported Type` = diab_type,
-    `Evaluated Type` = type
-  ) |> 
-  select(`Has Diabetes`, `Reported Type`, `Evaluated Type`, everything())
+    `Evaluated Type` = eval_type
+  )
 ```
+
 
 # Comorbidities {.tabset}
 
 This section explores the distribution of comorbidities across diabetes diagnoses.
 
 - History of kidney disease
-- History of heart attack
-- History of coronary heart disease (CHD)
+- History of depression
+- Blindness
+- History of myocardial infarction (MI) or coronary heart disease (CHD)
 - History of stroke
 - History of arthritis
 - History of asthma
@@ -240,7 +209,7 @@ comorbidities_plot = function(df, comorbidity, diabetes) {
   comorbidity_sym <- rlang::sym(comorbidity)
   diabetes_sym <- rlang::sym(diabetes)
   
-  diabetes_comorbidities |> 
+  df |> 
     filter(!is.na(!!comorbidity_sym), !(is.na(!!diabetes_sym))) |> 
     group_by(!!comorbidity_sym, !!diabetes_sym) |> 
     summarize(n = n(), .groups = 'drop') %>%
@@ -277,22 +246,19 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
 ### `diab_type`
 
 ```{r}
-## Something is wrong with diab_type!
-
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
-## Convert to factor is being weird
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
 ```
 
-## Heart Attack/MI {.tabset}
+## Depression {.tabset}
 
 ```{r}
-comorbidity = "History of Heart Attack"
+comorbidity = "History of Depression"
 ```
 
 ### `has_diabetes` {.tabset}
@@ -307,16 +273,40 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
 ```
 
-## CHD {.tabset}
+## Blindness {.tabset}
 
 ```{r}
-comorbidity = "History of CHD"
+comorbidity = "Blindness"
+```
+
+### `has_diabetes` {.tabset}
+
+```{r}
+comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
+```
+
+### `eval_type`
+
+```{r}
+comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
+```
+
+## MI/CHD {.tabset}
+
+```{r}
+comorbidity = "History of MI/CHD"
 ```
 
 ### `has_diabetes`
@@ -331,7 +321,7 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
@@ -355,7 +345,7 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
@@ -379,7 +369,7 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
@@ -401,18 +391,17 @@ comorbidities_plot(diabetes_comorbidities, "History of Asthma", "Reported Type")
 comorbidities_plot(diabetes_comorbidities, "Currently Have Asthma", "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_comorbidities, "History of Asthma", "Evaluated Type")
 comorbidities_plot(diabetes_comorbidities, "Currently Have Asthma", "Evaluated Type")
 ```
 
-
 ## COVID-19 {.tabset}
 
 ```{r}
-comorbidity = "Ever Had a Positive Covid Test"
+comorbidity = "Ever Tested Positive for Covid-19"
 ```
 
 ### `has_diabetes` {.tabset}
@@ -427,7 +416,7 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
@@ -451,7 +440,7 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Has Diabetes")
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
@@ -460,13 +449,55 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
 
 # Associated Factors {.tabset}
 
+```{r}
+diabetes_factors = 
+  diabetes_df |> 
+  mutate(
+    high_bp = recode_factor(high_bp),
+    high_bs = recode_factor(high_bs),
+    a1c_check = case_match(a1c_check, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
+    a1c_check = recode_factor(a1c_check),
+    chol_meds = recode_factor(chol_meds),
+    chol_check = recode_factor(chol_check),
+    smoker = factor(smoker, levels = c("Current smoker (every day)", "Current smoker (some days)", "Former smoker", "Never smoked")),
+    ecigs = recode_factor(ecigs),
+    prediabetic = factor(prediabetic, levels = c("Yes", "No", "Gestational")),
+    obese = recode_factor(obese),
+    cancer = recode_factor(cancer),
+    heavy_drinking = recode_factor(heavy_drinking),
+    binge_drinking = recode_factor(binge_drinking)
+  ) |> 
+  select(high_bp, high_bs, a1c_check, chol_meds, chol_check, smoker, ecigs, prediabetic, obese, cancer, heavy_drinking, binge_drinking, has_diabetes, diab_type, eval_type) |> 
+  rename(
+    `High Blood Pressure` = high_bp,
+    `High Blood Sugar` = high_bs,
+    `High Cholesterol` = chol_check,
+    `Meds Usage for Cholesterol` = chol_meds,
+    `Checked A1C in the Past Year` = a1c_check,
+    `Smoking Status` = smoker,
+    `E-Cigarette Use` = ecigs,
+    `Prediabetes Diagnosis` = prediabetic,
+    `Overweight/Obese (Computed)` = obese,
+    `Cancer Diagnosis` = cancer,
+    `Heavy Drinking` = heavy_drinking,
+    `Binge Drinking` = binge_drinking,
+    `Has Diabetes` = has_diabetes,
+    `Reported Type` = diab_type,
+    `Evaluated Type` = eval_type
+  )
+```
+
 This section explores the distribution of related factors across diabetes diagnoses.
 
-- High blood presssure
+- High blood pressure
 - High blood sugar
-- Checked for A1C over the past year
 - High cholesterol
-- Ever been a smoker
+- Checked for A1C over the past year
+- Smoking status
+- Ever received a prediabetes diagnosis
+- Overweight/obese
+- Ever received a cancer diagnosis
+- Drinking behavior
 
 ## High BP {.tabset}
 
@@ -477,22 +508,22 @@ factor = "High Blood Pressure"
 ### `has_diabetes` {.tabset}
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Has Diabetes")
+comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
 ```
 
 ### `diab_type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Reported Type")
+comorbidities_plot(diabetes_factors, factor, "Reported Type")
 ```
 
 ### `type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Evaluated Type")
+comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
 ```
 
-## High blood sugar {.tabset}
+## High blood sugar {.tabset} - may not use
 
 ```{r}
 factor = "High Blood Sugar"
@@ -501,89 +532,158 @@ factor = "High Blood Sugar"
 ### `has_diabetes` {.tabset}
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Has Diabetes")
+comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
 ```
 
 ### `diab_type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Reported Type")
+comorbidities_plot(diabetes_factors, factor, "Reported Type")
 ```
 
 ### `type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Evaluated Type")
+comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
 ```
 
 ## High Cholesterol {.tabset}
 
-```{r}
-factor = "High Cholesterol"
-```
-
 ### `has_diabetes` {.tabset}
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Has Diabetes")
+comorbidities_plot(diabetes_factors, "High Cholesterol", "Has Diabetes")
+comorbidities_plot(diabetes_factors, "Meds Usage for Cholesterol", "Has Diabetes")
 ```
 
 ### `diab_type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Reported Type")
+comorbidities_plot(diabetes_factors, "High Cholesterol", "Reported Type")
+comorbidities_plot(diabetes_factors, "Meds Usage for Cholesterol", "Reported Type")
 ```
 
 ### `type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Evaluated Type")
+comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
 ```
 
 ## A1C Check {.tabset}
 
 ```{r}
-factor = "Checked for A1C in the Past Year"
+factor = "Checked A1C in the Past Year"
 ```
 
 ### `has_diabetes` {.tabset}
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Has Diabetes")
+comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
 ```
 
 ### `diab_type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Reported Type")
+comorbidities_plot(diabetes_factors, factor, "Reported Type")
 ```
 
 ### `type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Evaluated Type")
+comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
 ```
 
 ## Smoker {.tabset}
 
-```{r}
-factor = "Ever Been a Smoker"
-```
-
 ### `has_diabetes` {.tabset}
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Has Diabetes")
+comorbidities_plot(diabetes_factors, "Smoking Status", "Has Diabetes")
+comorbidities_plot(diabetes_factors, "E-Cigarette Use", "Has Diabetes")
 ```
 
 ### `diab_type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Reported Type")
+comorbidities_plot(diabetes_factors, "Smoking Status", "Reported Type")
+comorbidities_plot(diabetes_factors, "E-Cigarette Use", "Reported Type")
 ```
 
 ### `type`
 
 ```{r}
-comorbidities_plot(diabetes_comorbidities, factor, "Evaluated Type")
+comorbidities_plot(diabetes_factors, "Smoking Status", "Evaluated Type")
+comorbidities_plot(diabetes_factors, "E-Cigarette Use", "Evaluated Type")
 ```
+
+## Obesity {.tabset}
+
+```{r}
+factor = "Overweight/Obese (Computed)"
+```
+
+### `has_diabetes` {.tabset}
+
+```{r}
+comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_factors, factor, "Reported Type")
+```
+
+### `type`
+
+```{r}
+comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
+```
+
+## Cancer {.tabset}
+
+```{r}
+factor = "Cancer Diagnosis"
+```
+
+### `has_diabetes` {.tabset}
+
+```{r}
+comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_factors, factor, "Reported Type")
+```
+
+### `type`
+
+```{r}
+comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
+```
+
+## Drinking {.tabset}
+
+### `has_diabetes` {.tabset}
+
+```{r}
+comorbidities_plot(diabetes_factors, "Heavy Drinking", "Has Diabetes")
+comorbidities_plot(diabetes_factors, "Binge Drinking", "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_factors, "Heavy Drinking", "Reported Type")
+comorbidities_plot(diabetes_factors, "Binge Drinking", "Reported Type")
+```
+
+### `type`
+
+```{r}
+comorbidities_plot(diabetes_factors, "Heavy Drinking", "Evaluated Type")
+comorbidities_plot(diabetes_factors, "Binge Drinking", "Evaluated Type")
+```
+

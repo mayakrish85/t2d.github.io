@@ -43,7 +43,7 @@ diabetes_recoded =
       diabete4 == 2 ~ "Gestational",
       diabete4 %in% c(7, 9, NA) ~ NA
     ),
-    has_diabetes = factor(has_diabetes, levels = c("No", "Gestational", "Pre-diabetic", "Diabetic")),
+    has_diabetes = factor(has_diabetes, levels = c("Not diabetic", "Gestational", "Pre-diabetic", "Diabetic")),
     high_bp = case_when( # yes = 2, borderline = 1, no = 0, gestational = 3
       bphigh6 == 1 ~ "Yes",
       bphigh6 == 4 ~ "Borderline",
@@ -178,7 +178,7 @@ diabetes_recoded =
     stroke = recode_binary(cvdstrk3),
     pregnant = recode_binary(pregnant)
   ) |> 
-  select(has_diabetes, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant)
+  select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis)
 ```
 
 The final dataset has the following variables.
