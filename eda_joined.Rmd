@@ -69,7 +69,7 @@ diabetes_df =
   ) 
 ```
 
-# Distribution of Different Diabetes Variables {.tabset}
+# Defining Diabetes {.tabset}
 
 There are three variables that we are interested in understanding -- `has_diabetes`, `diab_type`, and `type`. 
 
@@ -124,7 +124,6 @@ diabetes_dist(df = diabetes_df, var = has_diabetes)
 diabetes_plot(df = diabetes_df, var = has_diabetes)
 ```
 
-
 ## Reported Type (`diab_type`) {.tabset}
 
 ### Table
@@ -153,7 +152,9 @@ diabetes_dist(df = diabetes_df, var = type)
 diabetes_plot(df = diabetes_df, var = type)
 ```
 
-# Distribution of Diabetes by Surveyed Demographics
+# Demographics
+
+## Distribution of Diabetes by Surveyed Demographics
 
 
 
@@ -217,7 +218,7 @@ diabetes_comorbidities =
   select(`Has Diabetes`, `Reported Type`, `Evaluated Type`, everything())
 ```
 
-# Measures of Diabetes and Different Comorbidities {.tabset}
+# Comorbidities {.tabset}
 
 This section explores the distribution of comorbidities across diabetes diagnoses.
 
@@ -457,7 +458,7 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
 ```
 
 
-# Measures of Diabetes and Highly Related Factors {.tabset}
+# Associated Factors {.tabset}
 
 This section explores the distribution of related factors across diabetes diagnoses.
 

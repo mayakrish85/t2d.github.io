@@ -359,16 +359,19 @@ display: none;
 
 <div id="import-diabetes-data" class="section level2">
 <h2>Import diabetes data</h2>
-<pre class="r"><code>data_xpt = read_xpt(&quot;data/raw_data/LLCP2023.XPT&quot;)
+<pre class="r"><code>data_xpt = read_xpt(&quot;/Users/mayakrishnamoorthy/Documents/Columbia Classes/P8105/data/LLCP2023.XPT&quot;)
 
-variables = c(&quot;_STATE&quot;, &quot;ADDEPEV3&quot;, &quot;ASTHMA3&quot;, &quot;ASTHNOW&quot;, &quot;BPHIGH6&quot;, &quot;CADULT1&quot;, &quot;CELSXBRT&quot;, &quot;CHCCOPD3&quot;, &quot;CHCKDNY2&quot;, &quot;CHKHEMO3&quot;, &quot;COVIDPO1&quot;, &quot;CVDCRHD4&quot;, &quot;CVDINFR4&quot;, &quot;CVDSTRK3&quot;, &quot;DIABAGE4&quot;, &quot;DIABEDU1&quot;, &quot;DIABETE4&quot;, &quot;DIABTYPE&quot;, &quot;DIFFWALK&quot;, &quot;EDUCA&quot;, &quot;EXERANY2&quot;, &quot;EXEROFT1&quot;, &quot;FLUSHOT7&quot;, &quot;HAVARTH4&quot;, &quot;HEIGHT3&quot;, &quot;INSULIN1&quot;, &quot;LADULT1&quot;, &quot;LNDSXBRT&quot;, &quot;PDIABTS1&quot;, &quot;PREDIAB2&quot;, &quot;PREGNANT&quot;, &quot;SMOKE100&quot;, &quot;TOLDHI3&quot;, &quot;WEIGHT2&quot;)
+variables = c(&quot;BPHIGH6&quot;, &quot;ADDEPEV3&quot;, &quot;HEIGHT3&quot;, &quot;_RFBMI5&quot;, &quot;_MICHD&quot;, &quot;CHCKDNY2&quot;, &quot;CHOLMED3&quot;, &quot;_RFHYPE6&quot;, &quot;BLIND&quot;, &quot;CNCRAGE&quot;, &quot;CNCRTYP2&quot;, &quot;HAVARTH4&quot;, &quot;PDIABTS1&quot;, &quot;PREDIAB2&quot;, &quot;CHKHEMO3&quot;, &quot;INSULIN1&quot;, &quot;COVIDPO1&quot;, &quot;DIABAGE4&quot;, &quot;_AGEG5YR&quot;, &quot;DIABETE4&quot;, &quot;DIABTYPE&quot;, &quot;SEXVAR&quot;, &quot;EDUCA&quot;, &quot;_RACE&quot;, &quot;_RFHLTH&quot;, &quot;_INCOMG1&quot;, &quot;_URBSTAT&quot;, &quot;_PACAT3&quot;, &quot;_SMOKER3&quot;, &quot;SMOKE100&quot;, &quot;_CURECI2&quot;, &quot;_RFDRHV8&quot;, &quot;_RFBING6&quot;, &quot;ASTHMA3&quot;, &quot;ASTHNOW&quot;, &quot;CHCCOPD3&quot;, &quot;CVDSTRK3&quot;, &quot;PREGNANT&quot;, &quot;_RFCHOL3&quot;)
 
 diabetes_df = data_xpt |&gt; 
   select(!!variables) |&gt; 
   janitor::clean_names()</code></pre>
+<pre class="r"><code>write_csv(diabetes_df, &quot;data/diabetes_data.csv&quot;)</code></pre>
 </div>
 <div id="import-metadata" class="section level2">
 <h2>Import metadata</h2>
+<div id="has-not-been-updated-with-new-variables." class="section level4">
+<h4><em>Has not been updated with new variables.</em></h4>
 <p><em>Note: The output .csv file has a bunch of random instances of the
 Â character. Ignore these or remove manually.</em></p>
 <pre class="r"><code># Read in HTML
@@ -431,7 +434,7 @@ for (i in 1:349){
 metadata_df = metadata_df |&gt; 
   slice(-1) |&gt; 
   select(row_id, sas_variable_name, label, question, section_name, type_of_variable) |&gt; 
-  filter(sas_variable_name %in% variables) |&gt; 
+  #filter(sas_variable_name %in% variables) |&gt; 
   arrange(sas_variable_name)</code></pre>
 <pre class="r"><code># Save metadata df to csv
 write_csv(metadata_df, &quot;data/metadata.csv&quot;)</code></pre>
@@ -442,6 +445,7 @@ the var_name variable.</p>
 metadata_df |&gt; 
   filter(str_detect(sas_variable_name, str_to_upper(var_name))) |&gt; 
   view()</code></pre>
+</div>
 </div>
 
 

@@ -20,9 +20,9 @@ knitr::opts_chunk$set(eval = FALSE)
 ## Import diabetes data
 
 ```{r import_data}
-data_xpt = read_xpt("data/raw_data/LLCP2023.XPT")
+data_xpt = read_xpt("/Users/mayakrishnamoorthy/Documents/Columbia Classes/P8105/data/LLCP2023.XPT")
 
-variables = c("_AGEG5YR", "_SMOKER3", "_STATE", "_URBSTAT", "ADDEPEV3", "ASTHMA3", "ASTHNOW", "BPHIGH6", "CHCCOPD3", "CHCKDNY2", "CHKHEMO3", "COVIDPO1", "CVDCRHD4", "CVDINFR4", "CVDSTRK3", "DIABAGE4", "DIABETE4", "DIABTYPE", "EDUCA", "EXERANY2", "EXEROFT1", "HAVARTH4", "HEIGHT3", "INSULIN1", "PDIABTS1", "PREDIAB2", "PREGNANT", "SEXVAR", "SMOKE100", "TOLDHI3", "WEIGHT2")
+variables = c("BPHIGH6", "ADDEPEV3", "HEIGHT3", "_RFBMI5", "_MICHD", "CHCKDNY2", "CHOLMED3", "_RFHYPE6", "BLIND", "CNCRAGE", "CNCRTYP2", "HAVARTH4", "PDIABTS1", "PREDIAB2", "CHKHEMO3", "INSULIN1", "COVIDPO1", "DIABAGE4", "_AGEG5YR", "DIABETE4", "DIABTYPE", "SEXVAR", "EDUCA", "_RACE", "_RFHLTH", "_INCOMG1", "_URBSTAT", "_PACAT3", "_SMOKER3", "SMOKE100", "_CURECI2", "_RFDRHV8", "_RFBING6", "ASTHMA3", "ASTHNOW", "CHCCOPD3", "CVDSTRK3", "PREGNANT", "_RFCHOL3")
 
 diabetes_df = data_xpt |> 
   select(!!variables) |> 
@@ -34,6 +34,8 @@ write_csv(diabetes_df, "data/diabetes_data.csv")
 ```
 
 ## Import metadata
+
+#### *Has not been updated with new variables.*
 
 _Note: The output .csv file has a bunch of random instances of the Â character. Ignore these or remove manually._
 ```{r import_metadata}
