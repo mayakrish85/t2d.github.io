@@ -181,6 +181,28 @@ diabetes_recoded =
   select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis)
 ```
 
+Create the type 2 variable:
+
+```{r}
+diabetes_recoded = 
+  diabetes_recoded |> 
+  mutate(
+    eval_type = case_when(
+      sex_at_birth == "Male" & !(age_category %in% c("18-24", "25-29")) & has_diabetes == "Diabetic" ~ "Type 2",
+      sex_at_birth == "Female" & (
+        (!(age_category %in% c("18-24", "25-29")) & pregnant == "No") | 
+        !(age_category %in% c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49"))
+        ) & has_diabetes == "Diabetic" ~ "Type 2",
+      age_category %in% c("18-24", "25-29") & has_diabetes == "Diabetic" ~ "Type 1",
+      # If any of the conditions are not met (or NA), assign NA
+      (is.na(sex_at_birth) | is.na(age_category) | is.na(pregnant)) & is.na(has_diabetes) ~ NA,
+      TRUE ~ "Not diabetic"
+    ),
+    eval_type = factor(eval_type, levels = c("Not diabetic", "Type 1", "Type 2"))
+  )
+```
+
+
 The final dataset has the following variables.
 
 ```{r}

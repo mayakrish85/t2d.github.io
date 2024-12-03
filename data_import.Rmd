@@ -35,7 +35,7 @@ write_csv(diabetes_df, "data/diabetes_data.csv")
 
 ## Import metadata
 
-#### *Has not been updated with new variables.*
+#### *Has not been updated with new variables as of 12/2/2024.*
 
 _Note: The output .csv file has a bunch of random instances of the Â character. Ignore these or remove manually._
 ```{r import_metadata}

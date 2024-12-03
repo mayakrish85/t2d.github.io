@@ -1,7 +1,5 @@
 ---
 title: "Type II Demographics"
-author: "mk4995"
-date: "2024-11-29"
 output: 
   html_document:
     toc: true
@@ -47,17 +45,6 @@ diabetes_df =
     sex_at_birth = fct_infreq(sex_at_birth),
     age_category = factor(age_category, levels = c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"), order = TRUE),
     pregnant = recode_factor(pregnant),
-    eval_type = case_when(
-      sex_at_birth == "Male" & !(age_category %in% c("18-24", "25-29")) & has_diabetes == "Diabetic" ~ "Type 2",
-      sex_at_birth == "Female" & (
-        (!(age_category %in% c("18-24", "25-29")) & pregnant == "No") | 
-        !(age_category %in% c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49"))
-        ) & has_diabetes == "Diabetic" ~ "Type 2",
-      age_category %in% c("18-24", "25-29") & has_diabetes == "Diabetic" ~ "Type 1",
-      # If any of the conditions are not met (or NA), assign NA
-      (is.na(sex_at_birth) | is.na(age_category) | is.na(pregnant)) & is.na(has_diabetes) ~ NA,
-      TRUE ~ "Not diabetic"
-    ),
     eval_type = factor(eval_type, levels = c("Not diabetic", "Type 1", "Type 2")),
     diab_type = factor(diab_type, levels = c(1, 2), labels = c("Type 1", "Type 2"))
   )
@@ -146,13 +133,247 @@ diabetes_dist(df = diabetes_df, var = eval_type)
 diabetes_plot(df = diabetes_df, var = eval_type)
 ```
 
-# Demographics
+# Demographics {.tabset}
+```{r demographics_df}
+diabetes_demographics = 
+  diabetes_df |> 
+  mutate(
+    good_health = recode_factor(good_health),
+    physical_activity = factor(
+      physical_activity,
+      levels = c(
+        "Highly Active",
+        "Active",
+        "Insufficiently Active",
+        "Inactive"
+      )
+    ),
+    urb_rural = factor(urb_rural, levels = c("Urban", "Rural")),
+    race = as.factor(race),
+    income = factor(
+      income,
+      levels = c(
+        "Less than 15K",
+        "15K=25K",
+        "25-35K",
+        "35K-50K",
+        "50K-100K",
+        "100K-200K",
+        "More than 200K"
+      )
+    ),
+    education = factor(education,
+      levels = c(
+        "Kindergarten or less",
+        "Elementary",
+        "Some high school",
+        "High school graduate",
+        "Some college or technical school",
+        "College graduate"
+      )
+    )
+  ) |> 
+  select(has_diabetes, diab_type, eval_type, good_health, physical_activity, urb_rural, race, income, education) |> 
+  rename(
+    `Has Diabetes` = has_diabetes,
+    `Reported Type` = diab_type,
+    `Evaluated Type` = eval_type,
+    `In Good Health` = good_health,
+    `Level of Physical Activity` = physical_activity,
+    `Urban/Rural Status` = urb_rural,
+    `Race/Ethnicity` = race,
+    `Income Level` = income,
+    `Educational Attainment` = education
+  )
+```
 
-## Distribution of Diabetes by Surveyed Demographics
+This section explores the distribution of demographic information among diabetes diagnoses.
 
+- Whether the respondent is in good health
+- Level of physical activity
+- Living in an urban vs. rural area
+- Race/Ethnicity
+- Income level
+- Educational attainment
 
+```{r diabetes_plots}
+# Define a function for the plot
+
+comorbidities_plot = function(df, comorbidity, diabetes) {
+  # Convert character strings to symbols
+  comorbidity_sym <- rlang::sym(comorbidity)
+  diabetes_sym <- rlang::sym(diabetes)
+  
+  df |> 
+    filter(!is.na(!!comorbidity_sym), !(is.na(!!diabetes_sym))) |> 
+    group_by(!!comorbidity_sym, !!diabetes_sym) |> 
+    summarize(n = n(), .groups = 'drop') %>%
+    group_by(!!diabetes_sym) %>%
+    mutate(Percent = n / sum(n) * 100) |> 
+    ggplot(aes(x = !!diabetes_sym, y = Percent, fill = !!comorbidity_sym)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    geom_text(aes(label = sprintf("%.1f", Percent)),
+              position = position_dodge(width = 0.9),
+              size = 2.5, 
+              vjust = -0.5) + 
+    labs(
+      title = str_c(diabetes, " by ", comorbidity), 
+      x = diabetes, 
+      y = "Percent (%)", 
+      fill = comorbidity) +
+    scale_fill_viridis_d(na.value = "gray50", option = "D") +
+    theme_minimal() +
+    theme(legend.position="bottom")
+}
+```
+
+## Good Health {.tabset}
 
 ```{r}
+demo = "In Good Health"
+```
+
+### `has_diabetes`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Reported Type")
+```
+
+### `eval_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Evaluated Type")
+```
+
+## Physical Activity {.tabset}
+
+```{r}
+demo = "Level of Physical Activity"
+```
+
+### `has_diabetes`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Reported Type")
+```
+
+### `eval_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Evaluated Type")
+```
+
+## Urban/Rural {.tabset}
+
+```{r}
+demo = "Urban/Rural Status"
+```
+
+### `has_diabetes`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Reported Type")
+```
+
+### `eval_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Evaluated Type")
+```
+
+## Race/Ethnicity {.tabset}
+
+```{r}
+demo = "Race/Ethnicity"
+```
+
+### `has_diabetes`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Reported Type")
+```
+
+### `eval_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Evaluated Type")
+```
+
+## Income {.tabset}
+
+```{r}
+demo = "Income Level"
+```
+
+### `has_diabetes`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Reported Type")
+```
+
+### `eval_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Evaluated Type")
+```
+
+## Education {.tabset}
+
+```{r}
+demo = "Educational Attainment"
+```
+
+### `has_diabetes`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Has Diabetes")
+```
+
+### `diab_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Reported Type")
+```
+
+### `eval_type`
+
+```{r}
+comorbidities_plot(diabetes_demographics, demo, "Evaluated Type")
+```
+
+# Comorbidities {.tabset}
+
+```{r comorbidities_df}
 diabetes_comorbidities = 
   diabetes_df |> 
   mutate(
@@ -185,10 +406,7 @@ diabetes_comorbidities =
   )
 ```
 
-
-# Comorbidities {.tabset}
-
-This section explores the distribution of comorbidities across diabetes diagnoses.
+This section explores the distribution of co-morbidities across diabetes diagnoses.
 
 - History of kidney disease
 - History of depression
@@ -200,36 +418,6 @@ This section explores the distribution of comorbidities across diabetes diagnose
 - Currently has asthma
 - Ever tested positive for COVID-19
 - History of bronchitis
-
-```{r}
-# Define a function for the plot
-
-comorbidities_plot = function(df, comorbidity, diabetes) {
-  # Convert character strings to symbols
-  comorbidity_sym <- rlang::sym(comorbidity)
-  diabetes_sym <- rlang::sym(diabetes)
-  
-  df |> 
-    filter(!is.na(!!comorbidity_sym), !(is.na(!!diabetes_sym))) |> 
-    group_by(!!comorbidity_sym, !!diabetes_sym) |> 
-    summarize(n = n(), .groups = 'drop') %>%
-    group_by(!!comorbidity_sym) %>%
-    mutate(Percent = n / sum(n) * 100) |> 
-    ggplot(aes(x = !!comorbidity_sym, y = Percent, fill = !!diabetes_sym)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    geom_text(aes(label = sprintf("%.1f%%", Percent)),
-              position = position_dodge(width = 0.9),
-              size = 3.5, 
-              vjust = -0.3) + 
-    labs(
-      title = str_c(diabetes, " by ", comorbidity), 
-      x = comorbidity, 
-      y = "Percent (%)", 
-      fill = diabetes) +
-    theme_minimal() +
-    theme(legend.position="bottom")
-}
-```
 
 ## Kidney disease {.tabset}
 
@@ -449,12 +637,11 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
 
 # Associated Factors {.tabset}
 
-```{r}
+```{r diabetes_factors}
 diabetes_factors = 
   diabetes_df |> 
   mutate(
     high_bp = recode_factor(high_bp),
-    high_bs = recode_factor(high_bs),
     a1c_check = case_match(a1c_check, 0 ~ "No", 1 ~ "Yes", NA ~ NA),
     a1c_check = recode_factor(a1c_check),
     chol_meds = recode_factor(chol_meds),
@@ -467,10 +654,9 @@ diabetes_factors =
     heavy_drinking = recode_factor(heavy_drinking),
     binge_drinking = recode_factor(binge_drinking)
   ) |> 
-  select(high_bp, high_bs, a1c_check, chol_meds, chol_check, smoker, ecigs, prediabetic, obese, cancer, heavy_drinking, binge_drinking, has_diabetes, diab_type, eval_type) |> 
+  select(high_bp, a1c_check, chol_meds, chol_check, smoker, ecigs, prediabetic, obese, cancer, heavy_drinking, binge_drinking, has_diabetes, diab_type, eval_type) |> 
   rename(
     `High Blood Pressure` = high_bp,
-    `High Blood Sugar` = high_bs,
     `High Cholesterol` = chol_check,
     `Meds Usage for Cholesterol` = chol_meds,
     `Checked A1C in the Past Year` = a1c_check,
@@ -517,31 +703,7 @@ comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
 comorbidities_plot(diabetes_factors, factor, "Reported Type")
 ```
 
-### `type`
-
-```{r}
-comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
-```
-
-## High blood sugar {.tabset} - may not use
-
-```{r}
-factor = "High Blood Sugar"
-```
-
-### `has_diabetes` {.tabset}
-
-```{r}
-comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
-```
-
-### `diab_type`
-
-```{r}
-comorbidities_plot(diabetes_factors, factor, "Reported Type")
-```
-
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
@@ -563,34 +725,11 @@ comorbidities_plot(diabetes_factors, "High Cholesterol", "Reported Type")
 comorbidities_plot(diabetes_factors, "Meds Usage for Cholesterol", "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
-comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
-```
-
-## A1C Check {.tabset}
-
-```{r}
-factor = "Checked A1C in the Past Year"
-```
-
-### `has_diabetes` {.tabset}
-
-```{r}
-comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
-```
-
-### `diab_type`
-
-```{r}
-comorbidities_plot(diabetes_factors, factor, "Reported Type")
-```
-
-### `type`
-
-```{r}
-comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
+comorbidities_plot(diabetes_factors, "High Cholesterol", "Evaluated Type")
+comorbidities_plot(diabetes_factors, "Meds Usage for Cholesterol", "Evaluated Type")
 ```
 
 ## Smoker {.tabset}
@@ -609,7 +748,7 @@ comorbidities_plot(diabetes_factors, "Smoking Status", "Reported Type")
 comorbidities_plot(diabetes_factors, "E-Cigarette Use", "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_factors, "Smoking Status", "Evaluated Type")
@@ -634,7 +773,7 @@ comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
 comorbidities_plot(diabetes_factors, factor, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
@@ -658,7 +797,7 @@ comorbidities_plot(diabetes_factors, factor, "Has Diabetes")
 comorbidities_plot(diabetes_factors, factor, "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_factors, factor, "Evaluated Type")
@@ -680,7 +819,7 @@ comorbidities_plot(diabetes_factors, "Heavy Drinking", "Reported Type")
 comorbidities_plot(diabetes_factors, "Binge Drinking", "Reported Type")
 ```
 
-### `type`
+### `eval_type`
 
 ```{r}
 comorbidities_plot(diabetes_factors, "Heavy Drinking", "Evaluated Type")
