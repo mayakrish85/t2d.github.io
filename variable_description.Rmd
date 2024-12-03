@@ -1,0 +1,57 @@
+---
+title: "Variable Descriptions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**This page can be used to refer to the coding of the variables in the `cleaned_diabetes_data.csv` file.**
+
+| **Variable Name**         | **Variable Description**          | **Variable Type**     | **Variable Coding**             |
+|-----------------------|-------------------------------|-------------------|-----------------------------|
+| has_diabetes    | Do you have diabetes?   | String    | Not diabetic <br> Pre-diabetic <br> Diabetic <br> Gestational <br> NA |
+| diab_type     | If you have diabetes, what type do you have? | String   | Type 1 <br> Type 2 <br> NA |
+| eval_type    | Evaluated diabetes type using has_diabetes variable (aka not in survey)     | String   | Not diabetic <br> Type 1 <br> Type 2 <br> NA |
+| state | State       | String    | Alabama, Alaska, ... |
+| sex_at_birth | Sex at birth     | String | Male <br> Female <br> NA |
+| age_category | Current age group (5 years) | String | 18-24 <br> 25-29 <br> 30-34 <br> 35-39 <br> 40-44 <br> 45-49 <br> 50-54 <br> 55-59 <br> 60-64 <br> 65-69 <br> 70-74 <br> 75-79 <br> 80+ <br> NA |
+| race | Race/ethnicity | String | White <br> Black <br> Hispanic <br> Native American <br> Asian <br> Native Hawaiian/Pacific Islander <br> Multiracial <br> Other <br> NA |
+| education     | Highest educational attainment    | String    | Kindergarten or less <br> Elementary <br> Some high school <br> High school graduate <br> Some college or technical school <br> College graduate <br> NA |
+| income    | Income level/group ($)    | String    | Less than 15K <br> 15K-25K <br> 25K-35K <br> 35K-50K <br> 50K-100K <br> 100K-200K <br> More than 200K <br> NA |
+| urb_rural | Whether respondent lives in an urban/rural county | String    | Urban <br> Rural <br> NA |
+| physical_activity | Computed level of physical activity by BRFSS | String     | Highly active <br> Active <br> Insufficiently active <br> Inactive <br> NA |
+| height    | Height of respondent in ft/in     | Numeric     | 200 = 2 ft, 0 in; ... 804 = 8 ft, 4 in |
+| good_health | Whether the respondent is in "good or better health" (calculated) | String    | No <br> Yes <br> NA |
+| pregnant    | Whether respondent is pregnant    | String    | No <br> Yes <br> NA |
+| smoker    | 4-level computed smoking status     | String    | Current smoker (every day) <br> Current smoker (some days) <br> Former smoker <br> Never smoker <br> NA |
+| ecigs | Adults who are current e-cigarette users | String     | No <br> Yes <br> NA |
+| depression    | Has a health professional ever told you that you had a depressive order (depression, major depression, dysthymia, or minor depression)? | String     | No <br> Yes <br> NA |
+| kidney_disease    | Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease? | String    | No <br> Yes <br> NA |
+| bronchitis    | Have you ever been told you had COPD (chronic obstructive pulmonary disease), emphysema, or chronic bronchitis? | String    | No <br> Yes <br> NA |
+| stroke    | Have you ever been told you had a stroke? | String    | No <br> Yes <br> NA |
+| arthritis | Have you ever been told you had some form of arthritis, rheumatoid arthritis, gout, lupus, or fibromyalgia? | String    | No <br> Yes <br> NA |
+| michd   | Calculated variable of respondents that have ever reported having coronary heart disease (CHD) or myocardial infarction (MI) | String     | No <br> Yes <br> NA |
+| obese     | Adults who have a body mass index greater than 25.00 (Overweight or Obese) | String     | No <br> Yes <br> NA |
+| heavy_drinking    | Computed heavy drinkers variable (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week) | String    | No <br> Yes <br> NA |
+| binge_drinking    | Computed binge drinkers variable (males having five or more drinks on one occasion, females having four or more drinks on one occasion) | String    | No <br> Yes <br> NA |
+| covid     | Have you ever tested positive for or been told by a health provider that you have or had COVID-19? | String    | No <br> Yes <br> NA |
+| cancer    | Have you ever been told you had melanoma or any other types of cancer? | String     | No <br> Yes <br> NA |
+| cncrage*   | At what age were you told that you had cancer? | String     | 1-97 <br> 98 = Don't know/not sure <br> 99 = Refused <br> NA |
+| cncrtyp2*    | What kind of cancer were you diagnosed with? | String     | 1 = Bladder, ... 30 = Other <br> 77 = Don't know/not sure <br> 99 = Refused <br> NA |
+| asthma_ever     | Have you ever been told you have asthma? | String     | No <br> Yes <br> NA |
+| asthma_now    | Do you still have asthma? (asked to those who said Yes to asthma_ever) | String    | No <br> Yes <br> NA |
+| prediabetic     | Has a health professional ever told you that you had prediabetes or borderline diabetes? | String    | No <br> Yes <br> NA |
+| age_onset | How old were you when you were first told you had diabetes? (only asked to those who responded as "Diabetic" to has_diabetes) | Numeric    | 1-97 <br> NA |
+| high_bp     | Adults who have been told they have high blood pressure by a health professional | String     | No <br> Yes <br> NA |
+| high_bs     | Adults who have ever had a test for high blood sugar or diabetes | String     | No <br> Yes <br> NA |
+| insulin     | Are you now taking insulin?     | String    | No <br> Yes <br> NA |
+| a1c_check   | Have you gotten your A1C levels checked in the past year? | String    | No <br> Yes <br> NA |
+| chol_check  | Have you ever been told you have high cholesterol by a health professional? | String    | No <br> Yes <br> NA |
+| chol_meds   | Are you currently taking medicine prescribed by a health professional for your cholesterol? | String    | No <br> Yes <br> NA |
+| blind     | Are you blind or do you have serious difficulty seeing, even when wearing glasses? | String   | No <br> Yes <br> NA |
+
+
+
+For more information on the coding of `cncrage` and `cncrtyp2`, please refer directly to the [BRFSS codebook](https://www.cdc.gov/brfss/annual_data/annual_2023.html).
