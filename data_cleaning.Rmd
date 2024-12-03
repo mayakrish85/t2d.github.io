@@ -155,9 +155,9 @@ diabetes_recoded =
     physical_activity = factor(
       physical_activity,
       levels = c(
-        "Highly Active",
+        "Highly active",
         "Active",
-        "Insufficiently Active",
+        "Insufficiently active",
         "Inactive"
       )
     ),
@@ -176,9 +176,10 @@ diabetes_recoded =
     asthma_now = recode_binary(asthnow),
     bronchitis = recode_binary(chccopd3),
     stroke = recode_binary(cvdstrk3),
-    pregnant = recode_binary(pregnant)
+    pregnant = recode_binary(pregnant),
+    state = cdlTools::fips(state, to = "Name")
   ) |> 
-  select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis)
+  select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis, state)
 ```
 
 Create the type 2 variable:

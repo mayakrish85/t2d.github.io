@@ -142,9 +142,9 @@ diabetes_demographics =
     physical_activity = factor(
       physical_activity,
       levels = c(
-        "Highly Active",
+        "Highly active",
         "Active",
-        "Insufficiently Active",
+        "Insufficiently active",
         "Inactive"
       )
     ),

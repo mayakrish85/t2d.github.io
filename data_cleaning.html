@@ -359,87 +359,106 @@ display: none;
 
 <p>Import the data.</p>
 <pre class="r"><code>diabetes_data = read_csv(&quot;data/diabetes_data.csv&quot;)</code></pre>
-<pre><code>## Rows: 433323 Columns: 31
+<pre><code>## Rows: 433323 Columns: 41
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
-## dbl (31): ageg5yr, smoker3, state, urbstat, addepev3, asthma3, asthnow, bphi...
+## dbl (41): bphigh6, addepev3, height3, rfbmi5, michd, chckdny2, cholmed3, rfh...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>The initial data contains 433,323 rows and 34 columns.</p>
+<p>The initial data contains 433,323 rows and 40 columns.</p>
 <p>We want to start by recoding the values that are not clear answers,
 “don’t knows”, refusals, and missing ALL as missing data. We will also
-recode numeric variables into factor variables.</p>
+recode variables into factor variables as needed.</p>
 <pre class="r"><code># Define a helper function for recoding
 recode_binary = function(var) {
   case_when(
-    var == 1 ~ 1,
-    var == 2 ~ 0,
+    var == 1 ~ &quot;Yes&quot;,
+    var == 2 ~ &quot;No&quot;,
     var %in% c(7, 9, NA) ~ NA
-  )
+  ) |&gt; 
+  factor(levels = c(&quot;No&quot;, &quot;Yes&quot;))
 }</code></pre>
-<pre class="r"><code>diabetes_recoded_data = 
+<pre class="r"><code>diabetes_recoded = 
   diabetes_data |&gt; 
   mutate(
     has_diabetes = case_when( # yes = 2, no = 0, pre-diabetes = 1, gestational = 3
-      diabete4 == 1 ~ 2,
-      diabete4 == 3 ~ 0,
-      diabete4 == 4 ~ 1,
-      diabete4 == 2 ~ 3,
+      diabete4 == 1 ~ &quot;Diabetic&quot;,
+      diabete4 == 3 ~ &quot;Not diabetic&quot;,
+      diabete4 == 4 ~ &quot;Pre-diabetic&quot;,
+      diabete4 == 2 ~ &quot;Gestational&quot;,
       diabete4 %in% c(7, 9, NA) ~ NA
     ),
+    has_diabetes = factor(has_diabetes, levels = c(&quot;Not diabetic&quot;, &quot;Gestational&quot;, &quot;Pre-diabetic&quot;, &quot;Diabetic&quot;)),
+    high_bp = case_when( # yes = 2, borderline = 1, no = 0, gestational = 3
+      bphigh6 == 1 ~ &quot;Yes&quot;,
+      bphigh6 == 4 ~ &quot;Borderline&quot;,
+      bphigh6 == 3 ~ &quot;No&quot;,
+      bphigh6 == 2 ~ &quot;Gestational&quot;, 
+      bphigh6 %in% c(7, 9, NA) ~ NA
+    ),
+    high_bp = factor(high_bp, levels = c(&quot;No&quot;, &quot;Borderline&quot;, &quot;Yes&quot;, &quot;Gestational&quot;)),
+    depression = recode_binary(addepev3),
+    height = case_when(
+      height3 &gt;= 200 &amp; height3 &lt;= 711 ~ height3,
+      height3 &gt;= 9061 &amp; height3 &lt;= 9998 ~ {
+        cm_height &lt;- height3 - 9000                       # Extract cm
+        total_inches &lt;- round(cm_height * 0.393701)       # Convert to inches
+        feet &lt;- floor(total_inches / 12)                 # Get feet
+        inches &lt;- total_inches %% 12                     # Get remaining inches
+        as.numeric(sprintf(&quot;%d%02d&quot;, feet, inches))     
+      },
+      height3 %in% c(7777, 9999, NA) ~ NA,
+    ),
+    obese = recode_binary(rfbmi5),
+    michd = recode_binary(michd),
+    kidney_disease = recode_binary(chckdny2),
+    chol_meds = recode_binary(cholmed3),
+    high_bp = recode_binary(rfhype6),
+    blind = recode_binary(blind),
+    cancer = recode_binary(chcocnc1),
+    chol_check = recode_binary(rfchol3),
+    arthritis = recode_binary(havarth4),
+    high_bs = case_when(
+      pdiabts1 %in% c(1, 2, 3, 4, 5, 6) ~ 1,
+      pdiabts1 == 8 ~ 0,
+      pdiabts1 %in% c(7, 9, NA) ~ NA
+    ),
+    high_bs = factor(high_bs, levels = c(0, 1), labels = c(&quot;No&quot;, &quot;Yes&quot;)),
+    prediabetic = case_when( # yes = 1, no = 0, gestational = 2
+      prediab2 == 1 ~ 1,
+      prediab2 == 2 ~ 2,
+      prediab2 == 3 ~ 0,
+      prediab2 %in% c(7, 9, NA) ~ NA
+    ),
+    prediabetic = factor(prediabetic, levels = c(0, 1, 2), labels = c(&quot;No&quot;, &quot;Yes&quot;, &quot;Gestational&quot;)),
+    a1c_check = case_when(
+      chkhemo3 &lt;= 76 ~ 1,
+      chkhemo3 == 88 ~ 0,
+      chkhemo3 %in% c(77, 98, 99, NA) ~ NA
+    ),
+    insulin = recode_binary(insulin1),
+    covid = recode_binary(covidpo1),
     age_onset = case_when(
       diabage4 &gt;= 1 &amp; diabage4 &lt;= 97 ~ diabage4, 
       diabage4 %in% c(98, 99, NA) ~ NA
+    ),
+    ageg5yr = ifelse(ageg5yr == 14, NA, ageg5yr),
+    age_category = factor(
+      ageg5yr,
+      levels = c(1:13),  # Define the levels in the natural order
+      labels = c(
+        &quot;18-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, &quot;40-44&quot;, &quot;45-49&quot;, &quot;50-54&quot;, &quot;55-59&quot;, &quot;60-64&quot;,
+        &quot;65-69&quot;, &quot;70-74&quot;, &quot;75-79&quot;, &quot;80+&quot;),
+      ordered = TRUE  # Specify that this is an ordered factor
     ),
     diab_type = case_when(
       diabtype == 1 ~ diabtype,
       diabtype == 2 ~ diabtype, 
       diabtype %in% c(7, 9, NA) ~ NA
     ),
-    prediabetic = case_when( # yes = 1, no = 0, gestational = 2
-      prediab2 == 1 ~ 1,
-      prediab2 == 2 ~ 2,
-      prediab2 == 3 ~ 1,
-      prediab2 %in% c(7, 9, NA) ~ NA
-    ),
-    insulin = recode_binary(insulin1),
-    high_chol = recode_binary(toldhi3),
-    covid_test = recode_binary(covidpo1),
-    high_bp = case_when( # yes = 2, borderline = 1, no = 0, gestational = 3
-      bphigh6 == 1 ~ 2,
-      bphigh6 == 4 ~ 1,
-      bphigh6 == 3 ~ 0,
-      bphigh6 == 2 ~ 3, 
-      bphigh6 %in% c(7, 9, NA) ~ NA
-    ),
-    high_bs = case_when(
-      pdiabts1 %in% c(1, 2, 3, 4, 5, 6) ~ 1,
-      pdiabts1 == 8 ~ 0,
-      pdiabts1 %in% c(7, 9, NA) ~ NA
-    ),
-    a1c_check = case_when(
-      chkhemo3 &lt;= 76 ~ 1,
-      chkhemo3 == 88 ~ 0,
-      chkhemo3 %in% c(77, 98, 99, NA) ~ NA
-    ),
-    any_exercise = case_when(
-      exerany2 == 1 ~ 1,
-      exerany2 == 2 ~ 0,
-      exerany2 == 9 ~ NA
-    ),
-    heart_attack = recode_binary(cvdinfr4),
-    chd = recode_binary(cvdcrhd4),
-    stroke = recode_binary(cvdstrk3),
-    asthma_ever = recode_binary(asthma3),
-    asthma_now = recode_binary(asthnow),
-    bronchitis = recode_binary(chccopd3),
-    depression = recode_binary(addepev3),
-    kidney_disease = recode_binary(chckdny2),
-    pregnant = recode_binary(pregnant),
-    arthritis = recode_binary(havarth4),
-    smoker = recode_binary(smoke100),
-    state = cdlTools::fips(state, to = &quot;Name&quot;),
+    sex_at_birth = case_match(sexvar, 1 ~ &quot;Male&quot;, 2 ~ &quot;Female&quot;, NA ~ NA),
+    sex_at_birth = as.factor(sex_at_birth),
     educa = ifelse(educa == 9, NA, educa),
     education = factor(educa,
       levels = c(1, 2, 3, 4, 5, 6),
@@ -452,63 +471,101 @@ recode_binary = function(var) {
         &quot;College graduate&quot;
       )
     ),
-    sex_at_birth = ifelse(sexvar == 1, 1,       # Male = 1
-                        ifelse(sexvar == 2, 0, NA)),
-    weight_lbs = case_when(
-      weight2 &gt;= 50 &amp; weight2 &lt;= 776 ~ weight2, # Pounds are already in the range
-      weight2 &gt;= 9023 &amp; weight2 &lt;= 9352 ~ (weight2 - 9000) * 2.20462, # Convert kg to lbs
-      weight2 %in% c(7777, 9999, NA) ~ NA, # Don’t know/Not sure
+    race = case_match(
+      race,
+      1 ~ &quot;White&quot;, 2 ~ &quot;Black&quot;, 3 ~ &quot;Native American&quot;, 4 ~ &quot;Asian&quot;, 5 ~ &quot;Native Hawaiian/Pacific Islander&quot;, 8 ~ &quot;Hispanic&quot;, 6 ~ &quot;Other&quot;, 7 ~ &quot;Multiracial&quot;, 9 ~ NA, NA ~ NA),
+    race = as.factor(race),
+    good_health = recode_binary(rfhlth),
+    income = case_match(
+      incomg1,
+      1 ~ &quot;Less than 15K&quot;,
+      2 ~ &quot;15K-25K&quot;,
+      3 ~ &quot;25K-35K&quot;,
+      4 ~ &quot;35K-50K&quot;,
+      5 ~ &quot;50K-100K&quot;,
+      6 ~ &quot;100K-200K&quot;,
+      7 ~ &quot;More than 200K&quot;,
+      9 ~ NA, NA ~ NA
     ),
-    height = case_when(
-      height3 &gt;= 200 &amp; height3 &lt;= 711 ~ height3,
-      height3 &gt;= 9061 &amp; height3 &lt;= 9998 ~ {
-        cm_height &lt;- height3 - 9000                       # Extract cm
-        total_inches &lt;- round(cm_height * 0.393701)       # Convert to inches
-        feet &lt;- floor(total_inches / 12)                 # Get feet
-        inches &lt;- total_inches %% 12                     # Get remaining inches
-        as.numeric(sprintf(&quot;%d%02d&quot;, feet, inches))     
-      },
-      height3 %in% c(7777, 9999, NA) ~ NA,
-    ),
-    urbrural = case_when(
-      urbstat == 1 ~ 1,
-      urbstat == 2 ~ 0,
+    income = as.factor(income),
+    urb_rural = case_when(
+      urbstat == 1 ~ &quot;Urban&quot;,
+      urbstat == 2 ~ &quot;Rural&quot;,
       urbstat == NA ~ NA
     ),
-    smoker_now = case_when( # now = 1, former = 2, never = 0
-      smoker3 %in% c(1, 2) ~ 1,
-      smoker3 == 3 ~ 2,
-      smoker3 == 4 ~ 0,
-      smoker3 == 9 ~ NA
+    urb_rural = as.factor(urb_rural),
+    physical_activity = case_match(
+      pacat3,
+      1 ~ &quot;Highly active&quot;, 2 ~ &quot;Active&quot;, 3 ~ &quot;Insufficiently active&quot;, 4 ~ &quot;Inactive&quot;, 9 ~ NA
     ),
-    ageg5yr = ifelse(ageg5yr == 14, NA, ageg5yr),
-    age_category = factor(
-      ageg5yr,
-      levels = c(1:13),  # Define the levels in the natural order
-      labels = c(
-        &quot;18-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, &quot;40-44&quot;, &quot;45-49&quot;, &quot;50-54&quot;, &quot;55-59&quot;, &quot;60-64&quot;,
-        &quot;65-69&quot;, &quot;70-74&quot;, &quot;75-79&quot;, &quot;80+&quot;),
-      ordered = TRUE  # Specify that this is an ordered factor
-    )
+    physical_activity = factor(
+      physical_activity,
+      levels = c(
+        &quot;Highly active&quot;,
+        &quot;Active&quot;,
+        &quot;Insufficiently active&quot;,
+        &quot;Inactive&quot;
+      )
+    ),
+    smoker = case_match(
+      smoker3,
+      1 ~ &quot;Current smoker (every day)&quot;,
+      2 ~ &quot;Current smoker (some days)&quot;,
+      3 ~ &quot;Former smoker&quot;,
+      4 ~ &quot;Never smoked&quot;,
+      9 ~ NA  # Code &quot;Don&#39;t know/Refused/Missing&quot; as NA
+    ),
+    ecigs = recode_binary(cureci2),
+    heavy_drinking = recode_binary(rfdrhv8),
+    binge_drinking = recode_binary(rfbing6),
+    asthma_ever = recode_binary(asthma3),
+    asthma_now = recode_binary(asthnow),
+    bronchitis = recode_binary(chccopd3),
+    stroke = recode_binary(cvdstrk3),
+    pregnant = recode_binary(pregnant),
+    state = cdlTools::fips(state, to = &quot;Name&quot;)
   ) |&gt; 
-  select(has_diabetes, age_onset, diab_type, prediabetic, insulin, high_chol, covid_test, high_bp, high_bs, a1c_check, any_exercise, heart_attack, chd, stroke, asthma_ever, asthma_now, bronchitis, depression, kidney_disease, pregnant, arthritis, smoker, state, education, sex_at_birth, weight_lbs, height, urbrural, smoker_now, age_category)</code></pre>
+  select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis, state)</code></pre>
 <pre><code>## Warning: There was 1 warning in `mutate()`.
 ## ℹ In argument: `height = case_when(...)`.
 ## Caused by warning:
 ## ! NAs introduced by coercion</code></pre>
+<p>Create the type 2 variable:</p>
+<pre class="r"><code>diabetes_recoded = 
+  diabetes_recoded |&gt; 
+  mutate(
+    eval_type = case_when(
+      sex_at_birth == &quot;Male&quot; &amp; !(age_category %in% c(&quot;18-24&quot;, &quot;25-29&quot;)) &amp; has_diabetes == &quot;Diabetic&quot; ~ &quot;Type 2&quot;,
+      sex_at_birth == &quot;Female&quot; &amp; (
+        (!(age_category %in% c(&quot;18-24&quot;, &quot;25-29&quot;)) &amp; pregnant == &quot;No&quot;) | 
+        !(age_category %in% c(&quot;18-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, &quot;40-44&quot;, &quot;45-49&quot;))
+        ) &amp; has_diabetes == &quot;Diabetic&quot; ~ &quot;Type 2&quot;,
+      age_category %in% c(&quot;18-24&quot;, &quot;25-29&quot;) &amp; has_diabetes == &quot;Diabetic&quot; ~ &quot;Type 1&quot;,
+      # If any of the conditions are not met (or NA), assign NA
+      (is.na(sex_at_birth) | is.na(age_category) | is.na(pregnant)) &amp; is.na(has_diabetes) ~ NA,
+      TRUE ~ &quot;Not diabetic&quot;
+    ),
+    eval_type = factor(eval_type, levels = c(&quot;Not diabetic&quot;, &quot;Type 1&quot;, &quot;Type 2&quot;))
+  )</code></pre>
 <p>The final dataset has the following variables.</p>
-<pre class="r"><code>colnames(diabetes_recoded_data)</code></pre>
-<pre><code>##  [1] &quot;has_diabetes&quot;   &quot;age_onset&quot;      &quot;diab_type&quot;      &quot;prediabetic&quot;   
-##  [5] &quot;insulin&quot;        &quot;high_chol&quot;      &quot;covid_test&quot;     &quot;high_bp&quot;       
-##  [9] &quot;high_bs&quot;        &quot;a1c_check&quot;      &quot;any_exercise&quot;   &quot;heart_attack&quot;  
-## [13] &quot;chd&quot;            &quot;stroke&quot;         &quot;asthma_ever&quot;    &quot;asthma_now&quot;    
-## [17] &quot;bronchitis&quot;     &quot;depression&quot;     &quot;kidney_disease&quot; &quot;pregnant&quot;      
-## [21] &quot;arthritis&quot;      &quot;smoker&quot;         &quot;state&quot;          &quot;education&quot;     
-## [25] &quot;sex_at_birth&quot;   &quot;weight_lbs&quot;     &quot;height&quot;         &quot;urbrural&quot;      
-## [29] &quot;smoker_now&quot;     &quot;age_category&quot;</code></pre>
+<pre class="r"><code>colnames(diabetes_recoded)</code></pre>
+<pre><code>##  [1] &quot;has_diabetes&quot;      &quot;diab_type&quot;         &quot;high_bp&quot;          
+##  [4] &quot;depression&quot;        &quot;height&quot;            &quot;obese&quot;            
+##  [7] &quot;michd&quot;             &quot;kidney_disease&quot;    &quot;chol_meds&quot;        
+## [10] &quot;blind&quot;             &quot;cancer&quot;            &quot;cncrage&quot;          
+## [13] &quot;cncrtyp2&quot;          &quot;chol_check&quot;        &quot;high_bs&quot;          
+## [16] &quot;prediabetic&quot;       &quot;a1c_check&quot;         &quot;insulin&quot;          
+## [19] &quot;covid&quot;             &quot;age_onset&quot;         &quot;age_category&quot;     
+## [22] &quot;sex_at_birth&quot;      &quot;education&quot;         &quot;race&quot;             
+## [25] &quot;good_health&quot;       &quot;income&quot;            &quot;urb_rural&quot;        
+## [28] &quot;physical_activity&quot; &quot;smoker&quot;            &quot;ecigs&quot;            
+## [31] &quot;heavy_drinking&quot;    &quot;binge_drinking&quot;    &quot;asthma_ever&quot;      
+## [34] &quot;asthma_now&quot;        &quot;bronchitis&quot;        &quot;stroke&quot;           
+## [37] &quot;pregnant&quot;          &quot;arthritis&quot;         &quot;state&quot;            
+## [40] &quot;eval_type&quot;</code></pre>
 <p>We can also check that our code ran as expected by checking if there
 are any columns that contain only NA values.</p>
-<pre class="r"><code>all_na_columns &lt;- colnames(diabetes_recoded_data)[colSums(is.na(diabetes_recoded_data)) == nrow(diabetes_recoded_data)]
+<pre class="r"><code>all_na_columns &lt;- colnames(diabetes_recoded)[colSums(is.na(diabetes_recoded)) == nrow(diabetes_recoded)]
 
 # Print the names of columns with all NA values
 if (length(all_na_columns) &gt; 0) {
@@ -519,7 +576,7 @@ if (length(all_na_columns) &gt; 0) {
 }</code></pre>
 <pre><code>## No columns with all NA values found.</code></pre>
 <p>Export the cleaned dataset (in case it’s needed in other pages).</p>
-<pre class="r"><code>write_csv(diabetes_recoded_data, &quot;data/cleaned_diabetes_data.csv&quot;)</code></pre>
+<pre class="r"><code>write_csv(diabetes_recoded, &quot;data/cleaned_diabetes_data.csv&quot;)</code></pre>
 
 
 
