@@ -3,8 +3,16 @@ output_dir: "."
 navbar:
   title: "Defining Diabetes"
   right:
-    - text: "About"
+    - text: "About Us"
       href: about.html
+    - text: "Data Processing"
+      href: data_cleaning.html
+    - text: "Exploratory Data Analysis"
+      href: eda_joined.html
+    - text: "Regressions"
+      href: 
+    - text: "Report"
+      href: 
 output:
   html_document:
-    theme: cosmo
+    theme: flatly
