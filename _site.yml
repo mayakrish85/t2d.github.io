@@ -1,0 +1,10 @@
+name: "Defining Diabetes"
+output_dir: "."
+navbar:
+  title: "Defining Diabetes"
+  right:
+    - text: "About"
+      href: about.html
+output:
+  html_document:
+    theme: cosmo

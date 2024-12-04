@@ -1,0 +1,75 @@
+---
+title: "Regression"
+author: "Arghya Kannadaguli (ak5357)"
+date: "2024-12-03"
+output: html_document
+---
+
+```{r include = FALSE}
+# Load libraries
+library(tidyverse)
+library(purrr)
+library(glmnet)
+library(dplyr)
+library(modelr)
+```
+
+We need to figure out a more efficient way of getting the cleaned data (with in-tact data types) into this Rmd. Perhaps we can transfer the data cleaning code to a .R script instead of .Rmd, and use the `source()` function.
+
+Also **NOTE TO MAYA**
+
+* We need to encode `smoker` variable in the `data_cleaning.Rmd`. I've done it here for now.
+* diab_type should be a factor variable
+
+```{r}
+rmarkdown::render("data_cleaning.Rmd")
+diabetes_df = diabetes_recoded |> 
+  mutate(
+    smoker = fct_relevel(smoker, c("Never smoked", "Former smoker", 
+                                   "Current smoker (some days)", "Current smoker (every day)")),
+    diab_type = as.factor(diab_type))
+```
+
+Get all non-outcome variables
+```{r}
+all_vars = 
+  diabetes_df |> 
+  select(-c(diab_type, has_diabetes, eval_type, prediabetic, where(is.character))) |> 
+  colnames()
+
+all_vars_str = all_vars |> 
+  paste(collapse = " + ")
+
+formula = reformulate(var, response = "diab_type")
+```
+
+TESTING to see which variables we can plug in a glm model, and which ones throw errors due to presence of NA values. This for loop has issues btw.
+```{r eval = FALSE}
+
+for (i in 1:length(all_vars)){
+  var = all_vars[[i]]
+  print(paste("Trying variable:", var))
+  formula = reformulate(var, response = "diab_type")
+  
+  diabetes_df |> 
+    filter(!is.na(!!var)) |> 
+    glm(formula, data = _, family = binomial()) |> 
+    broom::tidy()
+}
+```
+
+Exports a table with the number of null values in each column. Results looking bleak.
+```{r eval = FALSE}
+diabetes_df |> 
+  summarize(
+    across(everything(), ~ sum(is.na(.)), .names = "{col}")) |> 
+      pivot_longer(
+        everything(),
+        names_to = "colname",
+        values_to = "null_count"
+      ) |> 
+  mutate(null_prop = null_count / nrow(diabetes_df)) |> 
+  arrange(null_prop) |> 
+  write_csv("variable_null_counts.csv")
+```
+

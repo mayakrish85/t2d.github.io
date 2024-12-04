@@ -1,0 +1,128 @@
+---
+title: "About Us"
+author: ""
+date: ""
+output:
+  html_document 
+---
+
+# **Meet the Team**
+
+<br> 
+
+```{=html}
+<div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+  <img src="images/arghya.jpg" alt="Teammate 1" style="width: 200px; margin-right: 20px;">
+  <div>
+    <h1>Arghya Kannadaguli <i>(she/her)</i></h1>
+      <h5>Seattle, WA</h5>
+      <h4><b>M.S. Environmental Health Data Science</b></h4>
+  
+      <p>
+        <a href="https://github.com/ak5357">GitHub</a> | 
+        <a href="https://www.linkedin.com/in/arghya-k/">LinkedIn</a>
+      </p>
+  
+      <p>
+      <h5>I’m passionate about environmental health and using technology for social good. Outside school and work, I enjoy reading, dance, yoga, and spending time with friends and family.</h5>
+      </p>
+  </div>
+</div> 
+```
+
+---
+
+<br> 
+
+```{=html}
+<div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+  <img src="images/helen.jpg" alt="Teammate 1" style="width: 200px; margin-right: 20px;">
+  <div>
+    <h1>Helen Yousaf <i>(she/her)</i></h1>
+      <h5>Cologne, Germany</h5>
+      <h4><b>M.S. Environmental Health Data Science</b></h4>
+  
+      <p>
+        <a href="https://github.com/hy-3213">GitHub</a>
+      </p>
+  
+      <p>
+      <h5>I am determined to use public health and social theories to improve community outcomes. You can find me book shopping, deeply immersed in a new movie, or cooking when not working!</h5>
+      </p>
+  </div>
+</div> 
+```
+
+---
+
+<br> 
+
+```{=html}
+<div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+  <img src="images/riya.jpg" alt="Teammate 1" style="width: 200px; margin-right: 20px;">
+  <div>
+    <h1>Riya Kalra <i>(she/her)</i></h1>
+      <h5>Saratoga, CA</h5>
+      <h4><b>M.S. Biostatistics, Public Health Data Science</b></h4>
+  
+      <p>
+        <a href="https://github.com/rkalra3000">GitHub</a> | 
+        <a href="https://www.linkedin.com/in/riya-kalra/">LinkedIn</a>
+      </p>
+  
+      <p>
+      <h5>I am passionate about leveraging data science to improve personalized medicine and enhance healthcare outcomes through data-driven solutions. In my free time, I love to run, hike, and explore new places with my friends and family!</h5>
+      </p>
+  </div>
+</div> 
+```
+
+---
+
+<br> 
+
+```{=html}
+<div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+  <img src="images/maya.jpg" alt="Teammate 1" style="width: 200px; margin-right: 20px;">
+  <div>
+    <h1>Maya Krishnamoorthy <i>(she/her)</i></h1>
+      <h5>Raleigh, NC</h5>
+      <h4><b>M.S. Biostatistics, Public Health Data Science</b></h4>
+  
+      <p>
+        <a href="https://github.com/mayakrish85">GitHub</a> | 
+        <a href="http://www.linkedin.com/in/mayakrishn">LinkedIn</a>
+      </p>
+  
+      <p>
+      <h5>I am passionate about using data science to address the interplay between biological, social, and epigenetic factors in health outcomes. Beyond these interests, I love to read, dance, and travel in my free time!</h5>
+      </p>
+  </div>
+</div> 
+```
+
+---
+
+<br> 
+
+```{=html}
+<div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+  <img src="images/gokul.jpeg" alt="Teammate 1" style="width: 200px; margin-right: 20px;">
+  <div>
+    <h1>Gokul Pareek <i>(he/him)</i></h1>
+      <h5>New Delhi, India</h5>
+      <h4><b>M.S. Biostatistics, Public Health Data Science</b></h4>
+  
+      <p>
+        <a href="https://github.com/gp021200">GitHub</a> | 
+        <a href="www.linkedin.com/in/gokul-pareek">LinkedIn</a>
+      </p>
+  
+      <p>
+      <h5>I’m committed to utilizing data to fuel progress and innovation in healthcare and biotechnology. In my free time, I love playing badminton and savoring a warm cup of chai.</h5>
+      </p>
+  </div>
+</div> 
+```
+
+---
