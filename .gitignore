@@ -5,11 +5,5 @@
 data/raw_data
 .DS_Store
 
-# Ignore all .csv files
-*.csv
-
 # Ignore a folder
 large_data/
-
-# Ignore all log files
-*.log

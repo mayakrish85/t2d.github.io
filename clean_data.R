@@ -1,28 +1,10 @@
----
-title: "Data Cleaning"
-author: "mk4995"
-date: "2024-11-20"
-output: html_document
----
+# Put into an R script for ease of cleaning
 
-```{r setup, include=FALSE}
 library(tidyverse)
 
-# Do not eval anything, when the file is knit
-knitr::opts_chunk$set(eval = FALSE)
-```
-
-Import the data.
-
-```{r}
+# Import the data
 diabetes_data = read_csv("data/diabetes_data.csv")
-```
 
-The initial data contains 433,323 rows and 40 columns.
-
-We want to start by recoding the values that are not clear answers, "don't knows", refusals, and missing ALL as missing data. We will also recode variables into factor variables as needed.
-
-```{r}
 # Define a helper function for recoding
 recode_binary = function(var) {
   case_when(
@@ -30,12 +12,9 @@ recode_binary = function(var) {
     var == 2 ~ "No",
     var %in% c(7, 9, NA) ~ NA
   ) |> 
-  factor(levels = c("No", "Yes"))
+    factor(levels = c("No", "Yes"))
 }
-```
 
-
-```{r}
 diabetes_recoded = 
   diabetes_data |> 
   mutate(
@@ -119,15 +98,15 @@ diabetes_recoded =
     sex_at_birth = as.factor(sex_at_birth),
     educa = ifelse(educa == 9, NA, educa),
     education = factor(educa,
-      levels = c(1, 2, 3, 4, 5, 6),
-      labels = c(
-        "Kindergarten or less",
-        "Elementary",
-        "Some high school",
-        "High school graduate",
-        "Some college or technical school",
-        "College graduate"
-      )
+                       levels = c(1, 2, 3, 4, 5, 6),
+                       labels = c(
+                         "Kindergarten or less",
+                         "Elementary",
+                         "Some high school",
+                         "High school graduate",
+                         "Some college or technical school",
+                         "College graduate"
+                       )
     ),
     race = case_match(
       race,
@@ -184,12 +163,13 @@ diabetes_recoded =
     pregnant = recode_binary(pregnant),
     state = cdlTools::fips(state, to = "Name")
   ) |> 
-  select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis, state)
-```
+  select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, 
+         kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, 
+         chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, 
+         age_category, sex_at_birth, education, race, good_health, income, 
+         urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, 
+         asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis, state)
 
-Create the type 2 variable:
-
-```{r}
 diabetes_recoded = 
   diabetes_recoded |> 
   mutate(
@@ -197,8 +177,8 @@ diabetes_recoded =
       sex_at_birth == "Male" & !(age_category %in% c("18-24", "25-29")) & has_diabetes == "Diabetic" ~ "Type 2",
       sex_at_birth == "Female" & (
         (!(age_category %in% c("18-24", "25-29")) & pregnant == "No") | 
-        !(age_category %in% c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49"))
-        ) & has_diabetes == "Diabetic" ~ "Type 2",
+          !(age_category %in% c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49"))
+      ) & has_diabetes == "Diabetic" ~ "Type 2",
       age_category %in% c("18-24", "25-29") & has_diabetes == "Diabetic" ~ "Type 1",
       # If any of the conditions are not met (or NA), assign NA
       (is.na(sex_at_birth) | is.na(age_category) | is.na(pregnant)) & is.na(has_diabetes) ~ NA,
@@ -206,32 +186,3 @@ diabetes_recoded =
     ),
     eval_type = factor(eval_type, levels = c("Not diabetic", "Type 1", "Type 2"))
   )
-```
-
-
-The final dataset has the following variables.
-
-```{r}
-colnames(diabetes_recoded)
-```
-
-We can also check that our code ran as expected by checking if there are any columns that contain only NA values.
-
-```{r}
-all_na_columns <- colnames(diabetes_recoded)[colSums(is.na(diabetes_recoded)) == nrow(diabetes_recoded)]
-
-# Print the names of columns with all NA values
-if (length(all_na_columns) > 0) {
-  cat("Columns with all NA values:\n")
-  print(all_na_columns)
-} else {
-  cat("No columns with all NA values found.\n")
-}
-```
-
-Export the cleaned dataset (in case it's needed in other pages).
-
-```{r}
-write_csv(diabetes_recoded, "data/cleaned_diabetes_data.csv")
-```
-
