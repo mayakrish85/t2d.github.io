@@ -12,6 +12,9 @@ library(purrr)
 library(glmnet)
 library(dplyr)
 library(modelr)
+
+# Do not eval anything, when the file is knit
+knitr::opts_chunk$set(eval = FALSE)
 ```
 
 We need to figure out a more efficient way of getting the cleaned data (with in-tact data types) into this Rmd. Perhaps we can transfer the data cleaning code to a .R script instead of .Rmd, and use the `source()` function.

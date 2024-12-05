@@ -1,5 +1,5 @@
 ---
-title: "Type II Demographics"
+title: "Exploring Related Factors and Comorbidities of T2D"
 output: 
   html_document:
     toc: true
@@ -48,89 +48,6 @@ diabetes_df =
     eval_type = factor(eval_type, levels = c("Not diabetic", "Type 1", "Type 2")),
     diab_type = factor(diab_type, levels = c(1, 2), labels = c("Type 1", "Type 2"))
   )
-```
-
-# Defining Diabetes {.tabset}
-
-There are three variables that we are interested in understanding -- `has_diabetes`, `diab_type`, and `eval_type`. 
-
-**`has_diabetes`**: This variable describes the people in the survey who responded after being asked the question, "Have you ever been told you had diabetes?" Overall, 432,339 people responded to this question.
-
-**`diab_type`**: This variable comes directly from the dataset, where respondents who were diabetic per the `has_diabetes` question were asked "What type of diabetes do you have?" Only 22,027 participants answered this question out of the 59,786 people who responded that they had diabetes. Since there are over 60% of respondents unaccounted for, this measure may not tell us enough about risk factors or comorbidities of T2D in the general population.
-
-**`eval_type`**: Due to the missing data for `diab_type`, we created another variable `eval_type` that describes the person's diabetes type by using other demographic information from this dataset. We used [this paper](https://www.cdc.gov/pcd/issues/2019/19_0109.htm) published by the CDC that used the same BRFSS survey from 2014 to classify T2D diagnosis. In this paper, they classified a survey respondent to have type II diabetes if the respondent was older than 30, not pregnant, and answered yes to the question “Have you ever been told you have diabetes?” 
-
-We then classified a respondent to have type II diabetes if the respondent was older than 30, not pregnant, and were diabetic as per the `has_diabetes` question. We classified a respondent to have type I diabetes if the respondent was younger than 30 and were diabetic as per the `has_diabetes` question.
-
-## Diabetes Status (`has_diabetes`) {.tabset}
-
-```{r diabetes_distributions}
-diabetes_dist = function(df, var) {
-  df |> 
-    group_by({{ var }}) |> 
-    summarize(count = n()) |> 
-    knitr::kable()
-}
-
-diabetes_plot = function(df, var) {
-  diabetes_df |> 
-    ggplot(aes(x = {{ var }})) +
-    geom_bar(aes(fill = factor({{ var }})), color = "black", na.rm = FALSE) + 
-    geom_text(
-      stat = "count",  # Use the count statistic for frequencies
-      aes(label = ..count..),  # Access the count directly
-      vjust = -0.5,  # Adjust position of labels above the bars
-      na.rm = FALSE
-    ) + 
-    labs(
-      title = "Distribution of Diabetes", 
-      x = "Diabetes Status", 
-      y = "Count", 
-      fill = as.character(rlang::ensym(var))
-    ) +
-    theme_minimal() +
-    theme(legend.position="bottom", legend.title = element_blank())
-}
-```
-
-### Table
-
-```{r}
-diabetes_dist(df = diabetes_df, var = has_diabetes)
-```
-
-### Graph
-
-```{r}
-diabetes_plot(df = diabetes_df, var = has_diabetes)
-```
-
-## Reported Type (`diab_type`) {.tabset}
-
-### Table
-
-```{r}
-diabetes_dist(df = diabetes_df, var = diab_type)
-```
-
-### Graph
-
-```{r}
-diabetes_plot(df = diabetes_df, var = diab_type)
-```
-
-## Evaluated Type (`eval_type`) {.tabset}
-
-### Table
-
-```{r}
-diabetes_dist(df = diabetes_df, var = eval_type)
-```
-
-### Graph
-
-```{r}
-diabetes_plot(df = diabetes_df, var = eval_type)
 ```
 
 # Demographics {.tabset}

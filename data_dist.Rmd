@@ -1,0 +1,279 @@
+---
+title: "Data Cleaning and Distribution"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(plotly)
+library(maps)
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+diabetes_df = read_csv("data/cleaned_diabetes_data.csv") |> 
+  mutate(diab_type = factor(diab_type, levels = c(1, 2), labels = c("Type 1", "Type 2")))
+```
+
+
+# Defining Diabetes {.tabset}
+
+There are three variables that we are interested in understanding -- `has_diabetes`, `diab_type`, and `eval_type`. 
+
+**`has_diabetes`**: This variable describes the people in the survey who responded after being asked the question, "Have you ever been told you had diabetes?" Overall, 432,339 people responded to this question.
+
+**`diab_type`**: This variable comes directly from the dataset, where respondents who were diabetic per the `has_diabetes` question were asked "What type of diabetes do you have?" Only 22,027 participants answered this question out of the 59,786 people who responded that they had diabetes. Since there are over 60% of respondents unaccounted for, this measure may not tell us enough about risk factors or comorbidities of T2D in the general population.
+
+**`eval_type`**: Due to the missing data for `diab_type`, we created another variable `eval_type` that describes the person's diabetes type by using other demographic information from this dataset. We used [this paper](https://www.cdc.gov/pcd/issues/2019/19_0109.htm) published by the CDC that used the same BRFSS survey from 2014 to classify T2D diagnosis. In this paper, they classified a survey respondent to have type II diabetes if the respondent was older than 30, not pregnant, and answered yes to the question “Have you ever been told you have diabetes?” 
+
+We then classified a respondent to have type II diabetes if the respondent was older than 30, not pregnant, and were diabetic as per the `has_diabetes` question. We classified a respondent to have type I diabetes if the respondent was younger than 30 and were diabetic as per the `has_diabetes` question.
+
+
+```{r diabetes_distributions}
+diabetes_dist = function(df, var) {
+  df |> 
+    group_by({{ var }}) |> 
+    summarize(count = n()) |> 
+    knitr::kable()
+}
+
+diabetes_plot = function(df, var) {
+  diabetes_df |> 
+    ggplot(aes(x = {{ var }})) +
+    geom_bar(aes(fill = factor({{ var }})), color = "black", na.rm = FALSE) + 
+    geom_text(
+      stat = "count",  # Use the count statistic for frequencies
+      aes(label = ..count..),  # Access the count directly
+      vjust = -0.5,  # Adjust position of labels above the bars
+      na.rm = FALSE
+    ) + 
+    labs(
+      title = "Distribution of Diabetes", 
+      x = "Diabetes Status", 
+      y = "Count", 
+      fill = as.character(rlang::ensym(var))
+    ) +
+    theme_minimal() +
+    theme(legend.position="bottom", legend.title = element_blank())
+}
+```
+
+## Diabetes Status (`has_diabetes`) {.tabset}
+
+### Table
+
+```{r message=FALSE, warning=FALSE}
+diabetes_dist(df = diabetes_df, var = has_diabetes)
+```
+
+### Graph
+
+```{r message=FALSE, warning=FALSE}
+diabetes_plot(df = diabetes_df, var = has_diabetes)
+```
+
+## Reported Type (`diab_type`) {.tabset}
+
+### Table
+
+```{r message=FALSE, warning=FALSE}
+diabetes_dist(df = diabetes_df, var = diab_type)
+```
+
+### Graph
+
+```{r message=FALSE, warning=FALSE}
+diabetes_plot(df = diabetes_df, var = diab_type)
+```
+
+## Evaluated Type (`eval_type`) {.tabset}
+
+### Table
+
+```{r message=FALSE, warning=FALSE}
+diabetes_dist(df = diabetes_df, var = eval_type)
+```
+
+### Graph
+
+```{r message=FALSE, warning=FALSE}
+diabetes_plot(df = diabetes_df, var = eval_type)
+```
+
+# Diabetes in the U.S.
+
+```{r us_dist, message = FALSE, warning = FALSE}
+
+# Ensure state names/abbreviations match plotly's expected format
+state_abbreviation_map =
+  tibble(
+    state = c(tolower(state.name), "district of columbia", "puerto rico", "guam", "virgin islands"),
+    abb = c(state.abb, "DC", "PR", "GU", "VI")
+  )
+
+diabetes_by_state = 
+  diabetes_df |> 
+  mutate(state = tolower(state)) |>  # Convert state names to lowercase
+  group_by(state) |> 
+  summarize(
+    prevalence = round((sum(has_diabetes == "Diabetic", na.rm = TRUE) / n()) * 100, 2), # Calculate prevalence
+    .groups = "drop"
+  ) |> 
+  complete(
+    state = state_abbreviation_map$state,
+    fill = list(prevalence = NA)  # Fill missing states/territories with NA
+  ) |> 
+  left_join(state_abbreviation_map, by = "state")
+
+# Create the choropleth map
+plot_ly(
+  data = diabetes_by_state,
+  type = "choropleth",
+  locations = ~abb,  # Use two-letter state/territory abbreviations
+  z = ~prevalence,  # Color intensity based on prevalence
+  locationmode = "USA-states",  # Map mode for U.S. states and territories
+  colorscale = "Viridis",  # Use the Viridis color scale
+  colorbar = list(title = "Prevalence (%)"),
+  zmin = 0,  # Set minimum value for the color scale
+  zmax = max(diabetes_by_state$prevalence, na.rm = TRUE),  # Set max value
+  showscale = TRUE  # Show the color scale
+) |> 
+  layout(
+    title = "Diabetes Prevalence Across the U.S. and Territories",
+    geo = list(
+      scope = "usa",  # Focus on U.S. states and territories
+      projection = list(type = "albers usa"),  # Standard USA projection
+      showlakes = TRUE,  # Show lakes
+      lakecolor = "lightblue"  # Set lake color
+    )
+  ) 
+```
+
+Above is a map of the distribution of the prevalence of diabetes in the US, where the lowest prevalence is in Colorado (9.3%), and the highest prevalence of diabetes is in West Virginia (20.42%), assuming that the survey responses are representative of the general US population. There are no available data for Kentucky and Pennsylvania. In general, the South has the highest overall prevalence of diabetes in the U.S.
+
+# Sex at Birth and Diabetes
+
+Overall, diabetes diagnosis (as well as type) is pretty evenly spread between males and females (at birth).
+
+#### `has_diabetes` comparison
+
+```{r has_compare, warning=FALSE, message=FALSE}
+diabetes_df |> 
+  group_by(has_diabetes, sex_at_birth) |> 
+  summarize(has_diabetes_count = n()) |> 
+  pivot_wider(
+    names_from = has_diabetes,
+    values_from = has_diabetes_count
+  ) |> 
+  rename(`Sex at Birth` = sex_at_birth) |> 
+  knitr::kable()
+```
+
+#### `diab_type` comparison
+
+```{r diab_compare, warning=FALSE, message=FALSE}
+diabetes_df |> 
+  group_by(diab_type, sex_at_birth) |> 
+  summarize(diab_type_count = n()) |> 
+  pivot_wider(
+    names_from = diab_type,
+    values_from = diab_type_count
+  ) |> 
+  rename(`Sex at Birth` = sex_at_birth) |> 
+  knitr::kable()
+```
+
+#### `eval_type` comparison
+
+```{r eval_compare, warning=FALSE, message=FALSE}
+diabetes_df |> 
+  group_by(eval_type, sex_at_birth) |> 
+  summarize(eval_type_count = n()) |> 
+  pivot_wider(
+    names_from = eval_type,
+    values_from = eval_type_count
+  ) |> 
+  rename(`Sex at Birth` = sex_at_birth) |> 
+  knitr::kable()
+```
+
+# Age and Diabetes Relationship
+
+In the graph below, we see that as age increases, the count of diabetes cases increase (using the `has_diabetes` variable), with the highest number of cases being in the 65-74 age group. The number of diabetes cases decrease slightly after age 74. 
+
+```{r age_diab, warning=FALSE, message=FALSE}
+diabetes_df |> 
+  mutate(
+    age_category = factor(age_category, levels = c("18-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"), order = TRUE)
+  ) |> 
+  group_by(age_category) |> 
+  summarize(count = sum(has_diabetes == "Diabetic", na.rm = TRUE), .groups = "drop") |>
+  ggplot(aes(x = age_category, y = count, fill = age_category)) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(
+    title = "Distribution of Diabetes among Age Groups Surveyed",
+    x = "Age Category (5 years)",
+    y = "Count of Reported Diabetes Cases",
+    fill = "Age Category"
+  ) +
+  theme_minimal()
+```
+
+# Age of Onset and Type of Diabetes
+
+
+Comparing the two measures for type of diabetes (`eval_type` and `diab_type`), we don't see as many type I diagnoses for `eval_type`, which makes sense because of how we evaluate the variable. Since we categorize everyone over the age of 30 as having T2D, we must **proceed in our analysis with caution**, knowing that we are actively removing a small portion of type 1 cases for each year above 30.
+
+*Due to time constraints, we did not impute, but based on the results here, it may be useful to randomly impute a few type 1 cases per age group using these counts/percentages.*
+
+```{r report_diab, message=FALSE, warning=FALSE}
+diabetes_df |> 
+  filter(!(is.na(diab_type))) |> 
+  group_by(age_onset, diab_type) |> 
+  summarize(
+    count = n(),  # Count the number of rows for each combination
+    .groups = "drop"
+  ) |> 
+  ggplot(aes(x = age_onset, y = count, fill = diab_type)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(
+    title = "Reported Diabetes Type by Age of Onset",
+    x = "Age of Onset",
+    y = "Count",
+    fill = "Diabetes Type"
+  ) +
+  theme_minimal() +
+  theme(legend.position="bottom")
+```
+
+```{r onset_eval, message=FALSE, warning=FALSE}
+diabetes_df |> 
+  group_by(age_onset, eval_type) |> 
+  summarize(
+    count = n(),  # Count the number of rows for each combination
+    .groups = "drop"
+  ) |> 
+  filter(!(eval_type == "Not diabetic")) |> 
+  ggplot(aes(x = age_onset, y = count, fill = eval_type)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(
+    title = "Evaluated Diabetes Type by Age of Onset",
+    x = "Age of Onset",
+    y = "Count",
+    fill = "Diabetes Type"
+  ) +
+  theme_minimal() +
+  theme(legend.position="bottom")
+```
+

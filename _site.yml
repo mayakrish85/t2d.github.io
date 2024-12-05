@@ -1,18 +1,20 @@
-name: "Defining Diabetes"
+name: "Decoding Diabetes"
 output_dir: "."
 navbar:
-  title: "Defining Diabetes"
+  title: "Home"
   right:
     - text: "About Us"
       href: about.html
     - text: "Data Processing"
       href: data_cleaning.html
-    - text: "Exploratory Data Analysis"
-      href: eda_joined.html
+    - text: "EDA"
+      href: final_eda.html
+    - text: "Diabetes Distribution"
+      href: data_dist.html
     - text: "Regressions"
       href: 
     - text: "Report"
-      href: 
+      href: final_report.html
 output:
   html_document:
-    theme: flatly
+    theme: cosmo

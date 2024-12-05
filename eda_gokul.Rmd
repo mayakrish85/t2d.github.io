@@ -2,13 +2,16 @@
 title: "eda_gokul"
 author: "Gokul Pareek"
 date: "2024-12-01"
-output: html_document
+output: NULL
 ---
 ```{r}
 library(tidyverse)
 library(readr)
 library(dplyr)
 library(ggplot2)
+
+# Do not eval anything, when the file is knit
+knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ```{r setup, include=FALSE}
