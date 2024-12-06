@@ -243,20 +243,43 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="about.html">About Us</a>
 </li>
-<li>
-  <a href="data_cleaning.html">Data Processing</a>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Our Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_processing.html">Data Source &amp; Import</a>
+    </li>
+    <li>
+      <a href="data_cleaning.html">Data Cleaning</a>
+    </li>
+    <li>
+      <a href="variable_description.html">Data Dictionary</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="final_eda.html">EDA</a>
-</li>
-<li>
-  <a href="data_dist.html">Diabetes Distribution</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_dist.html">Overall Distribution</a>
+    </li>
+    <li>
+      <a href="final_eda.html">Demographic Distribution</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown-header">Regressions</li>
 <li>

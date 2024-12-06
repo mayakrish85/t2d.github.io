@@ -31,7 +31,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -218,7 +222,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -228,6 +298,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -244,20 +324,43 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="about.html">About Us</a>
 </li>
-<li>
-  <a href="data_cleaning.html">Data Processing</a>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Our Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_processing.html">Data Source &amp; Import</a>
+    </li>
+    <li>
+      <a href="data_cleaning.html">Data Cleaning</a>
+    </li>
+    <li>
+      <a href="variable_description.html">Data Dictionary</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="final_eda.html">EDA</a>
-</li>
-<li>
-  <a href="data_dist.html">Diabetes Distribution</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_dist.html">Overall Distribution</a>
+    </li>
+    <li>
+      <a href="final_eda.html">Demographic Distribution</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown-header">Regressions</li>
 <li>
@@ -270,6 +373,14 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Data Cleaning</h1>
@@ -279,12 +390,14 @@ $(document).ready(function () {
 </div>
 
 
-<p>Import the data.</p>
-<pre class="r"><code>diabetes_data = read_csv(&quot;data/diabetes_data.csv&quot;)</code></pre>
-<p>The initial data contains 433,323 rows and 40 columns.</p>
-<p>We want to start by recoding the values that are not clear answers,
-“don’t knows”, refusals, and missing ALL as missing data. We will also
-recode variables into factor variables as needed.</p>
+<div id="cleaning-the-data" class="section level2">
+<h2>Cleaning the data</h2>
+<p>We recoded variables with responses such as “refusal”, “don’t
+know/not sure”, and missing as NA. Binary variables were converted from
+(0,1) to (No, Yes). We referred to the BRFSS codebook to classify
+variables as binary or code numeric variables such as height or weight.
+Most variables were also re-coded as factor variables in the R Script
+available in our repo.</p>
 <pre class="r"><code># Define a helper function for recoding
 recode_binary = function(var) {
   case_when(
@@ -372,6 +485,7 @@ recode_binary = function(var) {
       diabtype == 2 ~ diabtype, 
       diabtype %in% c(7, 9, NA) ~ NA
     ),
+    diab_type = factor(diab_type, levels = c(1, 2), labels = c(&quot;Type 1&quot;, &quot;Type 2&quot;)),
     sex_at_birth = case_match(sexvar, 1 ~ &quot;Male&quot;, 2 ~ &quot;Female&quot;, NA ~ NA),
     sex_at_birth = as.factor(sex_at_birth),
     educa = ifelse(educa == 9, NA, educa),
@@ -430,6 +544,7 @@ recode_binary = function(var) {
       4 ~ &quot;Never smoked&quot;,
       9 ~ NA  # Code &quot;Don&#39;t know/Refused/Missing&quot; as NA
     ),
+    smoker = factor(smoker, levels = c(&quot;Current smoker (every day)&quot;, &quot;Current smoker (some days)&quot;, &quot;Former smoker&quot;, &quot;Never smoked&quot;)),
     ecigs = recode_binary(cureci2),
     heavy_drinking = recode_binary(rfdrhv8),
     binge_drinking = recode_binary(rfbing6),
@@ -441,7 +556,36 @@ recode_binary = function(var) {
     state = cdlTools::fips(state, to = &quot;Name&quot;)
   ) |&gt; 
   select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis, state)</code></pre>
-<p>Create the type 2 variable:</p>
+</div>
+<div id="defining-diabetes-measures" class="section level2">
+<h2>Defining Diabetes Measures</h2>
+<p>We identified three main variables for analysis related to diabetes:
+has_diabetes, diab_type, and eval_type.</p>
+<p><code>has_diabetes</code>: This variable describes the people in the
+survey who responded after being asked the question, “Have you ever been
+told you had diabetes?” Overall, 432,339 people responded to this
+question.</p>
+<p><code>diab_type</code>: This variable comes directly from the
+dataset, where respondents who were diabetic per the has_diabetes
+question were asked “What type of diabetes do you have?” Only 22,027
+participants answered this question out of the 59,786 people who
+responded that they had diabetes. Since there are over 60% of
+respondents unaccounted for, this measure may not tell us enough about
+risk factors or comorbidities of T2D in the general population.</p>
+<p><code>eval_type</code>: Due to the missing data for diab_type, we
+created another variable eval_type that describes the person’s diabetes
+type by using other demographic information from this dataset. We used
+this <a href="https://www.cdc.gov/pcd/issues/2019/19_0109.htm">paper by
+Xie et. al</a> published by the CDC that used the same BRFSS survey from
+2014 to classify T2D diagnosis. In this paper, they classified a survey
+respondent to have type II diabetes if the respondent was older than 30,
+not pregnant, and answered yes to the question “Have you ever been told
+you have diabetes?”</p>
+<p>Based on this, we classified a respondent to have type II diabetes if
+the respondent was older than 30, not pregnant, and were diabetic as per
+the has_diabetes question. We classified a respondent to have type I
+diabetes if the respondent was younger than 30 and were diabetic as per
+the has_diabetes question.</p>
 <pre class="r"><code>diabetes_recoded = 
   diabetes_recoded |&gt; 
   mutate(
@@ -460,9 +604,23 @@ recode_binary = function(var) {
   )</code></pre>
 <p>The final dataset has the following variables.</p>
 <pre class="r"><code>colnames(diabetes_recoded)</code></pre>
-<p>We can also check that our code ran as expected by checking if there
+<pre><code>##  [1] &quot;has_diabetes&quot;      &quot;diab_type&quot;         &quot;high_bp&quot;          
+##  [4] &quot;depression&quot;        &quot;height&quot;            &quot;obese&quot;            
+##  [7] &quot;michd&quot;             &quot;kidney_disease&quot;    &quot;chol_meds&quot;        
+## [10] &quot;blind&quot;             &quot;cancer&quot;            &quot;cncrage&quot;          
+## [13] &quot;cncrtyp2&quot;          &quot;chol_check&quot;        &quot;high_bs&quot;          
+## [16] &quot;prediabetic&quot;       &quot;a1c_check&quot;         &quot;insulin&quot;          
+## [19] &quot;covid&quot;             &quot;age_onset&quot;         &quot;age_category&quot;     
+## [22] &quot;sex_at_birth&quot;      &quot;education&quot;         &quot;race&quot;             
+## [25] &quot;good_health&quot;       &quot;income&quot;            &quot;urb_rural&quot;        
+## [28] &quot;physical_activity&quot; &quot;smoker&quot;            &quot;ecigs&quot;            
+## [31] &quot;heavy_drinking&quot;    &quot;binge_drinking&quot;    &quot;asthma_ever&quot;      
+## [34] &quot;asthma_now&quot;        &quot;bronchitis&quot;        &quot;stroke&quot;           
+## [37] &quot;pregnant&quot;          &quot;arthritis&quot;         &quot;state&quot;            
+## [40] &quot;eval_type&quot;</code></pre>
+<p>We also checked that our code ran as expected by checking if there
 are any columns that contain only NA values.</p>
-<pre class="r"><code>all_na_columns &lt;- colnames(diabetes_recoded)[colSums(is.na(diabetes_recoded)) == nrow(diabetes_recoded)]
+<pre class="r"><code>all_na_columns = colnames(diabetes_recoded)[colSums(is.na(diabetes_recoded)) == nrow(diabetes_recoded)]
 
 # Print the names of columns with all NA values
 if (length(all_na_columns) &gt; 0) {
@@ -471,11 +629,20 @@ if (length(all_na_columns) &gt; 0) {
 } else {
   cat(&quot;No columns with all NA values found.\n&quot;)
 }</code></pre>
-<p>Export the cleaned dataset (in case it’s needed in other pages).</p>
+<pre><code>## No columns with all NA values found.</code></pre>
+</div>
+<div id="final-dataset" class="section level2">
+<h2>Final dataset</h2>
+<p>The final cleaned dataset contains 40 columns and 433,323 rows. To
+access this data, users can find it in our GitHub repo at
+<code>data/cleaned_diabetes_data.csv</code>.</p>
 <pre class="r"><code>write_csv(diabetes_recoded, &quot;data/cleaned_diabetes_data.csv&quot;)</code></pre>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -507,7 +674,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

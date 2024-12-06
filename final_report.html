@@ -9,9 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="mk4995" />
 
-<meta name="date" content="2024-12-05" />
 
 <title>Final Report</title>
 
@@ -244,20 +242,43 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="about.html">About Us</a>
 </li>
-<li>
-  <a href="data_cleaning.html">Data Processing</a>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Our Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_processing.html">Data Source &amp; Import</a>
+    </li>
+    <li>
+      <a href="data_cleaning.html">Data Cleaning</a>
+    </li>
+    <li>
+      <a href="variable_description.html">Data Dictionary</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="final_eda.html">EDA</a>
-</li>
-<li>
-  <a href="data_dist.html">Diabetes Distribution</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_dist.html">Overall Distribution</a>
+    </li>
+    <li>
+      <a href="final_eda.html">Demographic Distribution</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown-header">Regressions</li>
 <li>
@@ -273,8 +294,6 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Final Report</h1>
-<h4 class="author">mk4995</h4>
-<h4 class="date">2024-12-05</h4>
 
 </div>
 
@@ -316,6 +335,16 @@ future.</p>
 </div>
 <div id="initial-questions" class="section level2">
 <h2>Initial Questions</h2>
+<p>Through our analysis, we aim to answer the following questions:</p>
+<ul>
+<li>How prevalent is diabetes in the United States, as well as the
+prevalence of Type 2 diabetes in particular?</li>
+<li>Which lifestyle factors and comorbidities have the strongest
+relationship with T2D? Is it justified to make generalizations about the
+age of onset for Type 2 Diabetes?</li>
+<li>By analyzing our data source, can we draw conclusions about how
+comprehensive common T2D questionnaires are?</li>
+</ul>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>

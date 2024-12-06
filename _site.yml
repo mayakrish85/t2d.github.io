@@ -2,15 +2,24 @@ name: "Decoding Diabetes"
 output_dir: "."
 navbar:
   title: "Home"
-  right:
+  left:
     - text: "About Us"
       href: about.html
-    - text: "Data Processing"
-      href: data_cleaning.html
+  right:
+    - text: "Our Data"
+      menu:
+        - text: "Data Source & Import"
+          href: data_processing.html
+        - text: "Data Cleaning"
+          href: data_cleaning.html
+        - text: "Data Dictionary"
+          href: variable_description.html
     - text: "EDA"
-      href: final_eda.html
-    - text: "Diabetes Distribution"
-      href: data_dist.html
+      menu: 
+        - text: "Overall Distribution"
+          href: data_dist.html
+        - text: "Demographic Distribution"
+          href: final_eda.html
     - text: "Regressions"
       href: 
     - text: "Report"

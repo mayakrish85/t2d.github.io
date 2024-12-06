@@ -15,6 +15,12 @@ T2D is among the leading causes of mortality in the U.S. Through our project, we
 
 ## Initial Questions
 
+Through our analysis, we aim to answer the following questions:
+
+- How prevalent is diabetes in the United States, as well as the prevalence of Type 2 diabetes in particular? 
+- Which lifestyle factors and comorbidities have the strongest relationship with T2D? Is it justified to make generalizations about the age of onset for Type 2 Diabetes? 
+- By analyzing our data source, can we draw conclusions about how comprehensive common T2D questionnaires are?
+
 ## Data
 ### Source
 Our data comes from the Behavioral Risk Factor Surveillance System (BRFSS) [https://www.cdc.gov/brfss/annual_data/annual_2023.html] developed and aggregated by the US Centers for Disease and Prevention (CDC). The data captures diabetes data as related to demographics, individual behaviors, chronic health conditions, health-care access, and use of preventive services. This longitudinal survey has been collecting data since 1984, and was recently updated in September 2024. The data was only available in an 'xpt' format. Hence, to make the data accessible for import and analysis in R, the haven package was used to read the xpt file and then write into an accessible csv format. 

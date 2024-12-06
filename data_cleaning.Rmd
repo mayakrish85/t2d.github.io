@@ -2,25 +2,22 @@
 title: "Data Cleaning"
 author: "mk4995"
 date: "2024-11-20"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
 library(tidyverse)
 
-# Do not eval anything, when the file is knit
-knitr::opts_chunk$set(eval = FALSE)
+knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = FALSE)
 ```
 
-Import the data.
+## Cleaning the data
 
-```{r}
-diabetes_data = read_csv("data/diabetes_data.csv")
-```
-
-The initial data contains 433,323 rows and 40 columns.
-
-We want to start by recoding the values that are not clear answers, "don't knows", refusals, and missing ALL as missing data. We will also recode variables into factor variables as needed.
+We recoded variables with responses such as “refusal”, “don’t know/not sure”, and missing as NA. Binary variables were converted from (0,1) to (No, Yes). We referred to the BRFSS codebook to classify variables as binary or code numeric variables such as height or weight. Most variables were also re-coded as factor variables in the R Script available in our repo. 
 
 ```{r}
 # Define a helper function for recoding
@@ -33,7 +30,6 @@ recode_binary = function(var) {
   factor(levels = c("No", "Yes"))
 }
 ```
-
 
 ```{r}
 diabetes_recoded = 
@@ -187,7 +183,18 @@ diabetes_recoded =
   select(has_diabetes, diab_type, high_bp, depression, height, obese, michd, kidney_disease, chol_meds, high_bp, blind, cancer, cncrage, cncrtyp2, chol_check, high_bs, prediabetic, a1c_check, insulin, covid, age_onset, age_category, sex_at_birth, education, race, good_health, income, urb_rural, physical_activity, smoker, ecigs, heavy_drinking, binge_drinking, asthma_ever, asthma_now, bronchitis, stroke, pregnant, arthritis, state)
 ```
 
-Create the type 2 variable:
+
+## Defining Diabetes Measures
+
+We identified three main variables for analysis related to diabetes: has_diabetes, diab_type, and eval_type.
+
+`has_diabetes`: This variable describes the people in the survey who responded after being asked the question, “Have you ever been told you had diabetes?” Overall, 432,339 people responded to this question.
+
+`diab_type`: This variable comes directly from the dataset, where respondents who were diabetic per the has_diabetes question were asked “What type of diabetes do you have?” Only 22,027 participants answered this question out of the 59,786 people who responded that they had diabetes. Since there are over 60% of respondents unaccounted for, this measure may not tell us enough about risk factors or comorbidities of T2D in the general population.
+
+`eval_type`: Due to the missing data for diab_type, we created another variable eval_type that describes the person’s diabetes type by using other demographic information from this dataset. We used this [paper by Xie et. al](https://www.cdc.gov/pcd/issues/2019/19_0109.htm) published by the CDC that used the same BRFSS survey from 2014 to classify T2D diagnosis. In this paper, they classified a survey respondent to have type II diabetes if the respondent was older than 30, not pregnant, and answered yes to the question “Have you ever been told you have diabetes?”
+
+Based on this, we classified a respondent to have type II diabetes if the respondent was older than 30, not pregnant, and were diabetic as per the has_diabetes question. We classified a respondent to have type I diabetes if the respondent was younger than 30 and were diabetic as per the has_diabetes question.
 
 ```{r}
 diabetes_recoded = 
@@ -215,10 +222,10 @@ The final dataset has the following variables.
 colnames(diabetes_recoded)
 ```
 
-We can also check that our code ran as expected by checking if there are any columns that contain only NA values.
+We also checked that our code ran as expected by checking if there are any columns that contain only NA values.
 
 ```{r}
-all_na_columns <- colnames(diabetes_recoded)[colSums(is.na(diabetes_recoded)) == nrow(diabetes_recoded)]
+all_na_columns = colnames(diabetes_recoded)[colSums(is.na(diabetes_recoded)) == nrow(diabetes_recoded)]
 
 # Print the names of columns with all NA values
 if (length(all_na_columns) > 0) {
@@ -229,7 +236,9 @@ if (length(all_na_columns) > 0) {
 }
 ```
 
-Export the cleaned dataset (in case it's needed in other pages).
+## Final dataset
+
+The final cleaned dataset contains 40 columns and 433,323 rows. To access this data, users can find it in our GitHub repo at `data/cleaned_diabetes_data.csv`. 
 
 ```{r}
 write_csv(diabetes_recoded, "data/cleaned_diabetes_data.csv")

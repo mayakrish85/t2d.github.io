@@ -1,5 +1,5 @@
 ---
-title: "Data Cleaning and Distribution"
+title: "Basic Diabetes Distribution"
 output: 
   html_document:
     toc: true
