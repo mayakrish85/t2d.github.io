@@ -44,6 +44,8 @@
 <script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -372,6 +374,12 @@ div.tocify {
 <li>
   <a href="final_report.html">Report</a>
 </li>
+<li>
+  <a href="https://github.com/mayakrish85/t2d.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -396,36 +404,20 @@ div.tocify {
 
 <div id="defining-diabetes" class="section level1 tabset">
 <h1 class="tabset">Defining Diabetes</h1>
-<p>There are three variables that we are interested in understanding –
-<code>has_diabetes</code>, <code>diab_type</code>, and
-<code>eval_type</code>.</p>
 <p><strong><code>has_diabetes</code></strong>: This variable describes
 the people in the survey who responded after being asked the question,
-“Have you ever been told you had diabetes?” Overall, 432,339 people
-responded to this question.</p>
+“Have you ever been told you had diabetes?”</p>
 <p><strong><code>diab_type</code></strong>: This variable comes directly
 from the dataset, where respondents who were diabetic per the
 <code>has_diabetes</code> question were asked “What type of diabetes do
-you have?” Only 22,027 participants answered this question out of the
-59,786 people who responded that they had diabetes. Since there are over
-60% of respondents unaccounted for, this measure may not tell us enough
-about risk factors or comorbidities of T2D in the general
-population.</p>
+you have?”</p>
 <p><strong><code>eval_type</code></strong>: Due to the missing data for
 <code>diab_type</code>, we created another variable
-<code>eval_type</code> that describes the person’s diabetes type by
-using other demographic information from this dataset. We used <a
-href="https://www.cdc.gov/pcd/issues/2019/19_0109.htm">this paper</a>
-published by the CDC that used the same BRFSS survey from 2014 to
-classify T2D diagnosis. In this paper, they classified a survey
-respondent to have type II diabetes if the respondent was older than 30,
-not pregnant, and answered yes to the question “Have you ever been told
-you have diabetes?”</p>
-<p>We then classified a respondent to have type II diabetes if the
-respondent was older than 30, not pregnant, and were diabetic as per the
-<code>has_diabetes</code> question. We classified a respondent to have
-type I diabetes if the respondent was younger than 30 and were diabetic
-as per the <code>has_diabetes</code> question.</p>
+<code>eval_type</code> that classifies a respondent to have type II
+diabetes if the respondent was older than 30, not pregnant, and were
+diabetic as per the <code>has_diabetes</code> question. We classified a
+respondent to have type I diabetes if the respondent was younger than 30
+and were diabetic as per the <code>has_diabetes</code> question.</p>
 <pre class="r"><code>diabetes_dist = function(df, var) {
   df |&gt; 
     group_by({{ var }}) |&gt; 
@@ -508,8 +500,16 @@ diabetes_plot = function(df, var) {
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">Type 1</td>
+<td align="right">1958</td>
+</tr>
+<tr class="even">
+<td align="left">Type 2</td>
+<td align="right">20069</td>
+</tr>
+<tr class="odd">
 <td align="left">NA</td>
-<td align="right">433323</td>
+<td align="right">411296</td>
 </tr>
 </tbody>
 </table>
@@ -605,7 +605,7 @@ plot_ly(
     )
   ) </code></pre>
 <div class="plotly html-widget html-fill-item" id="htmlwidget-727108b693cd9bde0f29" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-727108b693cd9bde0f29">{"x":{"visdat":{"71ef6ef53453":["function () ","plotlyVisDat"]},"cur_data":"71ef6ef53453","attrs":{"71ef6ef53453":{"locations":{},"z":{},"locationmode":"USA-states","colorscale":"Viridis","colorbar":{"title":"Prevalence (%)"},"zmin":0,"zmax":20.420000000000002,"showscale":true,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"choropleth"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Diabetes Prevalence Across the U.S. and Territories","geo":{"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"lightblue"},"scene":{"zaxis":{"title":"prevalence"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Prevalence (%)","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"Viridis","showscale":true,"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","GU","HI","ID","IL","IN","IA","KS","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PR","RI","SC","SD","TN","TX","UT","VT","VI","VA","WA","WV","WI","WY"],"z":[19.530000000000001,10.24,14.029999999999999,17.530000000000001,12.369999999999999,9.3000000000000007,11.199999999999999,15.529999999999999,10.17,16.010000000000002,17.260000000000002,19.18,12.58,10.960000000000001,12.48,16.190000000000001,13.52,13.51,18.100000000000001,14.24,15.109999999999999,10.25,14.289999999999999,12.140000000000001,16.739999999999998,14.74,12.33,12.91,12.15,12.69,11.82,15.279999999999999,11.75,14.109999999999999,12.640000000000001,16.739999999999998,14.82,12.24,18.609999999999999,13.300000000000001,17.859999999999999,15.550000000000001,16.949999999999999,15.220000000000001,10.48,9.8000000000000007,18.41,16.530000000000001,11.140000000000001,20.420000000000002,15.31,14.27],"locationmode":"USA-states","zmin":0,"zmax":20.420000000000002,"type":"choropleth","marker":{"line":{"color":"rgba(31,119,180,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-727108b693cd9bde0f29">{"x":{"visdat":{"84107c21d40e":["function () ","plotlyVisDat"]},"cur_data":"84107c21d40e","attrs":{"84107c21d40e":{"locations":{},"z":{},"locationmode":"USA-states","colorscale":"Viridis","colorbar":{"title":"Prevalence (%)"},"zmin":0,"zmax":20.420000000000002,"showscale":true,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"choropleth"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Diabetes Prevalence Across the U.S. and Territories","geo":{"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"lightblue"},"scene":{"zaxis":{"title":"prevalence"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Prevalence (%)","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"Viridis","showscale":true,"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","GU","HI","ID","IL","IN","IA","KS","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PR","RI","SC","SD","TN","TX","UT","VT","VI","VA","WA","WV","WI","WY"],"z":[19.530000000000001,10.24,14.029999999999999,17.530000000000001,12.369999999999999,9.3000000000000007,11.199999999999999,15.529999999999999,10.17,16.010000000000002,17.260000000000002,19.18,12.58,10.960000000000001,12.48,16.190000000000001,13.52,13.51,18.100000000000001,14.24,15.109999999999999,10.25,14.289999999999999,12.140000000000001,16.739999999999998,14.74,12.33,12.91,12.15,12.69,11.82,15.279999999999999,11.75,14.109999999999999,12.640000000000001,16.739999999999998,14.82,12.24,18.609999999999999,13.300000000000001,17.859999999999999,15.550000000000001,16.949999999999999,15.220000000000001,10.48,9.8000000000000007,18.41,16.530000000000001,11.140000000000001,20.420000000000002,15.31,14.27],"locationmode":"USA-states","zmin":0,"zmax":20.420000000000002,"type":"choropleth","marker":{"line":{"color":"rgba(31,119,180,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <p>Above is a map of the distribution of the prevalence of diabetes in
 the US, where the lowest prevalence is in Colorado (9.3%), and the
 highest prevalence of diabetes is in West Virginia (20.42%), assuming
@@ -675,17 +675,23 @@ between males and females (at birth).</p>
 <thead>
 <tr class="header">
 <th align="left">Sex at Birth</th>
+<th align="right">Type 1</th>
+<th align="right">Type 2</th>
 <th align="right">NA</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">Female</td>
-<td align="right">229541</td>
+<td align="right">939</td>
+<td align="right">10406</td>
+<td align="right">218196</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
-<td align="right">203782</td>
+<td align="right">1019</td>
+<td align="right">9663</td>
+<td align="right">193100</td>
 </tr>
 </tbody>
 </table>
@@ -730,8 +736,8 @@ between males and females (at birth).</p>
 </table>
 </div>
 </div>
-<div id="age-and-diabetes-relationship" class="section level1">
-<h1>Age and Diabetes Relationship</h1>
+<div id="age-and-diabetes-diagnosis" class="section level1">
+<h1>Age and Diabetes Diagnosis</h1>
 <p>In the graph below, we see that as age increases, the count of
 diabetes cases increase (using the <code>has_diabetes</code> variable),
 with the highest number of cases being in the 65-74 age group. The

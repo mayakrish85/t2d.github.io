@@ -36,6 +36,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -364,6 +366,12 @@ div.tocify {
 <li>
   <a href="final_report.html">Report</a>
 </li>
+<li>
+  <a href="https://github.com/mayakrish85/t2d.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -419,7 +427,7 @@ diabetes_df =
     age_category = factor(age_category, levels = c(&quot;18-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, &quot;40-44&quot;, &quot;45-49&quot;, &quot;50-54&quot;, &quot;55-59&quot;, &quot;60-64&quot;, &quot;65-69&quot;, &quot;70-74&quot;, &quot;75-79&quot;, &quot;80+&quot;), order = TRUE),
     pregnant = recode_factor(pregnant),
     eval_type = factor(eval_type, levels = c(&quot;Not diabetic&quot;, &quot;Type 1&quot;, &quot;Type 2&quot;)),
-    diab_type = factor(diab_type, levels = c(1, 2), labels = c(&quot;Type 1&quot;, &quot;Type 2&quot;))
+    diab_type = factor(diab_type, levels = c(&quot;Type 1&quot;, &quot;Type 2&quot;))
   )</code></pre>
 <div id="demographics" class="section level1 tabset">
 <h1 class="tabset">Demographics</h1>

@@ -1,10 +1,24 @@
 ---
 title: "Data Source and Import"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = FALSE)
+
+library(tidyverse)
+library(haven)
+library(rvest)
+library(dplyr)
+library(stringr)
+library(purrr)
+
+# Do not eval anything, when the file is knit
+knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ## CDC BRFSS Survey 2023
@@ -15,13 +29,26 @@ The BRFSS used Computer-Assisted Telephone Interviewing (CATI) systems to collec
 
 **For the purposes of our project, we are interested in collecting data related to diabetes, along with other general demographic data, in order to make conclusions about the significant relationships between certain lifestyle and health factors and diabetes.**
 
-
 ## Importing the data
 
 The BRFSS data, as well as the codebook are available [here](https://www.cdc.gov/brfss/annual_data/annual_2023.html). There are 433,323 rows of at least partial surveys. 
 
 We started by importing the data from the XPT format into a .csv. We placed it in our .gitignore because the file was too large.
 
+```{r import_data}
+data_xpt = read_xpt("/Users/mayakrishnamoorthy/Documents/Columbia Classes/P8105/data/LLCP2023.XPT")
+
+variables = c("BPHIGH6", "ADDEPEV3", "HEIGHT3", "_RFBMI5", "_MICHD", "CHCKDNY2", "CHOLMED3", "_RFHYPE6", "BLIND", "CNCRAGE", "CNCRTYP2", "HAVARTH4", "PDIABTS1", "PREDIAB2", "CHKHEMO3", "INSULIN1", "COVIDPO1", "DIABAGE4", "_AGEG5YR", "DIABETE4", "DIABTYPE", "SEXVAR", "EDUCA", "_RACE", "_RFHLTH", "_INCOMG1", "_URBSTAT", "_PACAT3", "_SMOKER3", "SMOKE100", "_CURECI2", "_RFDRHV8", "_RFBING6", "ASTHMA3", "ASTHNOW", "CHCCOPD3", "CVDSTRK3", "PREGNANT", "_RFCHOL3", "CHCOCNC1", "_STATE")
+
+diabetes_df = data_xpt |> 
+  select(!!variables) |> 
+  janitor::clean_names()
+```
+
 Then, in our repo at `data_import.rmd`, we chose only the necessary variables, which we decided on in our literature review, and saved it at `data/diabetes.csv` in the [repo](https://github.com/mayakrish85/t2d.github.io/tree/main/data).
+
+```{r export_data}
+write_csv(diabetes_df, "data/diabetes_data.csv")
+```
 
 ## *FINISH LITERATURE REVIEW SECTION*
