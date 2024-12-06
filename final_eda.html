@@ -410,6 +410,13 @@ options(
 
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d</code></pre>
+<p>In this section, we explored the relationship between lifestyle,
+health factors, and comorbidities and the different possible diagnoses
+of diabetes in our data. We compared each factor to one of our three
+outcome variables, <code>has_diabetes</code>, <code>diab_type</code>,
+and <code>eval_type</code>, to identify the overarching relationship
+between specific demographics and diabetes, along with similarities and
+differences between the various kinds of diagnosis.</p>
 <pre class="r"><code># Load and wrangle the overall data.
 diabetes_df = read_csv(&quot;data/cleaned_diabetes_data.csv&quot;)
 
@@ -519,6 +526,34 @@ comorbidities_plot = function(df, comorbidity, diabetes) {
     theme_minimal() +
     theme(legend.position=&quot;bottom&quot;)
 }</code></pre>
+<p>People with better health and physical activity practices have fewer
+diabetes diagnoses. Between type I and type II diagnoses, physical
+activity is about the same, based on the reported type. On the other
+hand, type II diagnoses have a higher percentage of inactive people,
+based on the evaluated type.</p>
+<p>Urban/rural status is pretty similar acoss the board, but that may be
+because the overall percentage of respondents is unevenly distributed
+between urban and rural populations. We would suggest checking that
+distribution.</p>
+<p>We see a similar case for race and ethnicity - a weighting procedure
+may better show if there is truly a difference in diabetes diagnosis
+between different races/ethnicities. We see that a higher percentage of
+Hispanic respondents had type I diabetes compared to type II in both the
+reported and evaluated type comparisons, whereas white respondents were
+more likely to have type II diabetes than type I diabetes.</p>
+<p>While we don’t see any major differences jumps in diabetes diagnosis,
+there are a few things to note:</p>
+<p>People making 50K-100K make up a large portion of the survey
+respondents According to the reported type, people making 50-100K made
+up a larger portion of the type II respondents than they did type I
+However, that looks relatively the same in the evaluated type
+comparison</p>
+<p>People with (at least) a college degree make up a larger proportion
+of the sample of people who are not diabetic than the sample of people
+who are diabetic. Surprisingly, accordiing to the evaluated type
+variable, a significantly larger percentage of people who graduated high
+school have type I diabetes, compared to the percentage of people who
+graduated high school with type II diabetes.</p>
 <div id="good-health" class="section level2 tabset">
 <h2 class="tabset">Good Health</h2>
 <pre class="r"><code>demo = &quot;In Good Health&quot;</code></pre>
@@ -677,10 +712,42 @@ diabetes diagnoses.</p>
 <li>History of stroke</li>
 <li>History of arthritis</li>
 <li>History of asthma</li>
-<li>Currently has asthma</li>
+<li>Currently has asthma (only asked of people who answered yes to
+history of asthma)</li>
 <li>Ever tested positive for COVID-19</li>
 <li>History of bronchitis</li>
 </ul>
+<p>A larger proportion of people with diabetes also have kidney disease
+than other groups. The reported type shows no significant difference in
+diagnosis across type of diabetes, but the evaluated type shows that
+people with kidney disease are more highly represented in the group with
+type II diabetes.</p>
+<p>Diabetes has no significant difference between groups who
+self-reported diabetes status, but according to our evaluated type,
+people with type I diabetes reported having depression more than other
+groups.</p>
+<p>Blindness is slightly more common in people who have diabetes
+compared to people who are not diabetic, but we see some opposition
+between reported and evaluated type I and II diabetes status.</p>
+<p>History of MI/CHD is more common in diabetics than non-diabetics.
+Reported type shows no difference, but evaluated status shows a
+significant increase in the percentage of people with MI/CHD in the type
+II group. Stroke is similar but less significant.</p>
+<p>Arthritis is more common in diabetics than non-diabetics. There seems
+to be a significant difference in type I vs. type II in both reported
+and evaluated diagnoses, but the evaluated type has a much more
+significant difference between groups.</p>
+<p>Since the people who currently have asthma are also included in the
+group of people who have a history of asthma, we will focus on the
+latter. A history of asthma does not seem to have a significant
+relationship across diabetes diagnoses.</p>
+<p>Getting COVID-19 is not super related to diagnosis, but there is a
+slightly lower percentage of positive tests in the diabetic group
+compared to non-diabetic. The evaluated type has a significantly higher
+percentage of positive covid-19 diagnoses in type I than type II.</p>
+<p>Bronchitis does not have any significant relationships except for the
+evaluated type, where there is a higher percentage of people with
+bronchitis in the type II group than type I.</p>
 <div id="kidney-disease" class="section level2 tabset">
 <h2 class="tabset">Kidney disease</h2>
 <pre class="r"><code>comorbidity = &quot;History of Kidney Disease&quot;</code></pre>
@@ -897,15 +964,34 @@ diabetes diagnoses.</p>
 diabetes diagnoses.</p>
 <ul>
 <li>High blood pressure</li>
-<li>High blood sugar</li>
 <li>High cholesterol</li>
-<li>Checked for A1C over the past year</li>
 <li>Smoking status</li>
 <li>Ever received a prediabetes diagnosis</li>
 <li>Overweight/obese</li>
 <li>Ever received a cancer diagnosis</li>
 <li>Drinking behavior</li>
 </ul>
+<p>We originally explored high blood sugar and A1C checks in this
+section, but decided not to publish those models because only people
+with diabetes (as per <code>has_diabetes</code>) were asked this
+question, severely skewing our results.</p>
+<p>People with low/normal blood pressure were represented much more in
+the group of people who are diabetic compared to any other group. There
+is a slight increase in high blood representation percentage in the type
+I group compared to the type II group in the reported cases, but that is
+heightened in comparing the evaluated type variable.</p>
+<p>High cholesterol is more common in the non-diabetic group than the
+diabetic group. There is a higher percentage of high cholesterol in type
+I patients than type II.</p>
+<p>In our smoking comparison, we examined both tobacco and e-cigarette
+users. Former smokers make up a higher percentage of the diabetic group
+than the non-diabetic group, with a higher percentage in the type II
+group.</p>
+<p>People who have been computed to be overweight/obese by BRFSS
+investigators are more represented in the type I group than the type II
+group. Cancer is significantly more associated with type II than type I
+diagnosis, according to the evaluated type variable. Drinking does not
+have a significant association with any of the data.</p>
 <div id="high-bp" class="section level2 tabset">
 <h2 class="tabset">High BP</h2>
 <pre class="r"><code>factor = &quot;High Blood Pressure&quot;</code></pre>

@@ -27,6 +27,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ```
 
+In this section, we explored the relationship between lifestyle, health factors, and comorbidities and the different possible diagnoses of diabetes in our data. We compared each factor to one of our three outcome variables, `has_diabetes`, `diab_type`, and `eval_type`, to identify the overarching relationship between specific demographics and diabetes, along with similarities and differences between the various kinds of diagnosis.
 
 ```{r load_data, message = FALSE}
 # Load and wrangle the overall data.
@@ -143,6 +144,20 @@ comorbidities_plot = function(df, comorbidity, diabetes) {
     theme(legend.position="bottom")
 }
 ```
+
+People with better health and physical activity practices have fewer diabetes diagnoses. Between type I and type II diagnoses, physical activity is about the same, based on the reported type. On the other hand, type II diagnoses have a higher percentage of inactive people, based on the evaluated type.
+
+Urban/rural status is pretty similar acoss the board, but that may be because the overall percentage of respondents is unevenly distributed between urban and rural populations. We would suggest checking that distribution. 
+
+We see a similar case for race and ethnicity - a weighting procedure may better show if there is truly a difference in diabetes diagnosis between different races/ethnicities. We see that a higher percentage of Hispanic respondents had type I diabetes compared to type II in both the reported and evaluated type comparisons, whereas white respondents were more likely to have type II diabetes than type I diabetes.
+
+While we don’t see any major differences jumps in diabetes diagnosis, there are a few things to note:
+
+People making 50K-100K make up a large portion of the survey respondents
+According to the reported type, people making 50-100K made up a larger portion of the type II respondents than they did type I
+However, that looks relatively the same in the evaluated type comparison
+
+People with (at least) a college degree make up a larger proportion of the sample of people who are not diabetic than the sample of people who are diabetic. Surprisingly, accordiing to the evaluated type variable, a significantly larger percentage of people who graduated high school have type I diabetes, compared to the percentage of people who graduated high school with type II diabetes.
 
 ## Good Health {.tabset}
 
@@ -332,9 +347,25 @@ This section explores the distribution of co-morbidities across diabetes diagnos
 - History of stroke
 - History of arthritis
 - History of asthma
-- Currently has asthma
+- Currently has asthma (only asked of people who answered yes to history of asthma)
 - Ever tested positive for COVID-19
 - History of bronchitis
+
+A larger proportion of people with diabetes also have kidney disease than other groups. The reported type shows no significant difference in diagnosis across type of diabetes, but the evaluated type shows that people with kidney disease are more highly represented in the group with type II diabetes.
+
+Diabetes has no significant difference between groups who self-reported diabetes status, but according to our evaluated type, people with type I diabetes reported having depression more than other groups.
+
+Blindness is slightly more common in people who have diabetes compared to people who are not diabetic, but we see some opposition between reported and evaluated type I and II diabetes status.
+
+History of MI/CHD is more common in diabetics than non-diabetics. Reported type shows no difference, but evaluated status shows a significant increase in the percentage of people with MI/CHD in the type II group. Stroke is similar but less significant.
+
+Arthritis is more common in diabetics than non-diabetics. There seems to be a significant difference in type I vs. type II in both reported and evaluated diagnoses, but the evaluated type has a much more significant difference between groups.
+
+Since the people who currently have asthma are also included in the group of people who have a history of asthma, we will focus on the latter. A history of asthma does not seem to have a significant relationship across diabetes diagnoses. 
+
+Getting COVID-19 is not super related to diagnosis, but there is a slightly lower percentage of positive tests in the diabetic group compared to non-diabetic. The evaluated type has a significantly higher percentage of positive covid-19 diagnoses in type I than type II.
+
+Bronchitis does not have any significant relationships except for the evaluated type, where there is a higher percentage of people with bronchitis in the type II group than type I.
 
 ## Kidney disease {.tabset}
 
@@ -551,7 +582,6 @@ comorbidities_plot(diabetes_comorbidities, comorbidity, "Reported Type")
 comorbidities_plot(diabetes_comorbidities, comorbidity, "Evaluated Type")
 ```
 
-
 # Associated Factors {.tabset}
 
 ```{r diabetes_factors}
@@ -593,14 +623,22 @@ diabetes_factors =
 This section explores the distribution of related factors across diabetes diagnoses.
 
 - High blood pressure
-- High blood sugar
 - High cholesterol
-- Checked for A1C over the past year
 - Smoking status
 - Ever received a prediabetes diagnosis
 - Overweight/obese
 - Ever received a cancer diagnosis
 - Drinking behavior
+
+We originally explored high blood sugar and A1C checks in this section, but decided not to publish those models because only people with diabetes (as per `has_diabetes`) were asked this question, severely skewing our results.
+
+People with low/normal blood pressure were represented much more in the group of people who are diabetic compared to any other group. There is a slight increase in high blood representation percentage in the type I group compared to the type II group in the reported cases, but that is heightened in comparing the evaluated type variable.
+
+High cholesterol is more common in the non-diabetic group than the diabetic group. There is a higher percentage of high cholesterol in type I patients than type II.
+
+In our smoking comparison, we examined both tobacco and e-cigarette users. Former smokers make up a higher percentage of the diabetic group than the non-diabetic group, with a higher percentage in the type II group.
+
+People who have been computed to be overweight/obese by BRFSS investigators are more represented in the type I group than the type II group. Cancer is significantly more associated with type II than type I diagnosis, according to the evaluated type variable. Drinking does not have a significant association with any of the data.
 
 ## High BP {.tabset}
 
@@ -742,4 +780,3 @@ comorbidities_plot(diabetes_factors, "Binge Drinking", "Reported Type")
 comorbidities_plot(diabetes_factors, "Heavy Drinking", "Evaluated Type")
 comorbidities_plot(diabetes_factors, "Binge Drinking", "Evaluated Type")
 ```
-
