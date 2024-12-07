@@ -4,3 +4,6 @@
 .Ruserdata
 data/raw_data
 .DS_Store
+
+# Ignore a folder
+large_data/

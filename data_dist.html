@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Basic Diabetes Distribution</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About Us</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Our Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_processing.html">Data Source &amp; Import</a>
+    </li>
+    <li>
+      <a href="data_cleaning.html">Data Cleaning</a>
+    </li>
+    <li>
+      <a href="variable_description.html">Data Dictionary</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_dist.html">Overall Distribution</a>
+    </li>
+    <li>
+      <a href="final_eda.html">Demographic Distribution</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown-header">Regressions</li>
+<li>
+  <a href="final_report.html">Report</a>
+</li>
+<li>
+  <a href="https://github.com/mayakrish85/t2d.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Basic Diabetes Distribution</h1>
+
+</div>
+
+
+<div id="defining-diabetes" class="section level1 tabset">
+<h1 class="tabset">Defining Diabetes</h1>
+<p><strong><code>has_diabetes</code></strong>: This variable describes
+the people in the survey who responded after being asked the question,
+“Have you ever been told you had diabetes?”</p>
+<p><strong><code>diab_type</code></strong>: This variable comes directly
+from the dataset, where respondents who were diabetic per the
+<code>has_diabetes</code> question were asked “What type of diabetes do
+you have?”</p>
+<p><strong><code>eval_type</code></strong>: Due to the missing data for
+<code>diab_type</code>, we created another variable
+<code>eval_type</code> that classifies a respondent to have type II
+diabetes if the respondent was older than 30, not pregnant, and were
+diabetic as per the <code>has_diabetes</code> question. We classified a
+respondent to have type I diabetes if the respondent was younger than 30
+and were diabetic as per the <code>has_diabetes</code> question.</p>
+<pre class="r"><code>diabetes_dist = function(df, var) {
+  df |&gt; 
+    group_by({{ var }}) |&gt; 
+    summarize(count = n()) |&gt; 
+    knitr::kable()
+}
+
+diabetes_plot = function(df, var) {
+  diabetes_df |&gt; 
+    ggplot(aes(x = {{ var }})) +
+    geom_bar(aes(fill = factor({{ var }})), color = &quot;black&quot;, na.rm = FALSE) + 
+    geom_text(
+      stat = &quot;count&quot;,  # Use the count statistic for frequencies
+      aes(label = ..count..),  # Access the count directly
+      vjust = -0.5,  # Adjust position of labels above the bars
+      na.rm = FALSE
+    ) + 
+    labs(
+      title = &quot;Distribution of Diabetes&quot;, 
+      x = &quot;Diabetes Status&quot;, 
+      y = &quot;Count&quot;, 
+      fill = as.character(rlang::ensym(var))
+    ) +
+    theme_minimal() +
+    theme(legend.position=&quot;bottom&quot;, legend.title = element_blank())
+}</code></pre>
+<div id="diabetes-status-has_diabetes" class="section level2 tabset">
+<h2 class="tabset">Diabetes Status (<code>has_diabetes</code>)</h2>
+<div id="table" class="section level3">
+<h3>Table</h3>
+<pre class="r"><code>diabetes_dist(df = diabetes_df, var = has_diabetes)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">has_diabetes</th>
+<th align="right">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Diabetic</td>
+<td align="right">59786</td>
+</tr>
+<tr class="even">
+<td align="left">Gestational</td>
+<td align="right">3253</td>
+</tr>
+<tr class="odd">
+<td align="left">Not diabetic</td>
+<td align="right">358706</td>
+</tr>
+<tr class="even">
+<td align="left">Pre-diabetic</td>
+<td align="right">10594</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="right">984</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="graph" class="section level3">
+<h3>Graph</h3>
+<pre class="r"><code>diabetes_plot(df = diabetes_df, var = has_diabetes)</code></pre>
+<p><img src="data_dist_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+</div>
+<div id="reported-type-diab_type" class="section level2 tabset">
+<h2 class="tabset">Reported Type (<code>diab_type</code>)</h2>
+<div id="table-1" class="section level3">
+<h3>Table</h3>
+<pre class="r"><code>diabetes_dist(df = diabetes_df, var = diab_type)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">diab_type</th>
+<th align="right">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Type 1</td>
+<td align="right">1958</td>
+</tr>
+<tr class="even">
+<td align="left">Type 2</td>
+<td align="right">20069</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="right">411296</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="graph-1" class="section level3">
+<h3>Graph</h3>
+<pre class="r"><code>diabetes_plot(df = diabetes_df, var = diab_type)</code></pre>
+<p><img src="data_dist_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+</div>
+<div id="evaluated-type-eval_type" class="section level2 tabset">
+<h2 class="tabset">Evaluated Type (<code>eval_type</code>)</h2>
+<div id="table-2" class="section level3">
+<h3>Table</h3>
+<pre class="r"><code>diabetes_dist(df = diabetes_df, var = eval_type)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">eval_type</th>
+<th align="right">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Not diabetic</td>
+<td align="right">372797</td>
+</tr>
+<tr class="even">
+<td align="left">Type 1</td>
+<td align="right">664</td>
+</tr>
+<tr class="odd">
+<td align="left">Type 2</td>
+<td align="right">59007</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="right">855</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="graph-2" class="section level3">
+<h3>Graph</h3>
+<pre class="r"><code>diabetes_plot(df = diabetes_df, var = eval_type)</code></pre>
+<p><img src="data_dist_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="diabetes-in-the-u.s." class="section level1">
+<h1>Diabetes in the U.S.</h1>
+<pre class="r"><code># Ensure state names/abbreviations match plotly&#39;s expected format
+state_abbreviation_map =
+  tibble(
+    state = c(tolower(state.name), &quot;district of columbia&quot;, &quot;puerto rico&quot;, &quot;guam&quot;, &quot;virgin islands&quot;),
+    abb = c(state.abb, &quot;DC&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)
+  )
+
+diabetes_by_state = 
+  diabetes_df |&gt; 
+  mutate(state = tolower(state)) |&gt;  # Convert state names to lowercase
+  group_by(state) |&gt; 
+  summarize(
+    prevalence = round((sum(has_diabetes == &quot;Diabetic&quot;, na.rm = TRUE) / n()) * 100, 2), # Calculate prevalence
+    .groups = &quot;drop&quot;
+  ) |&gt; 
+  complete(
+    state = state_abbreviation_map$state,
+    fill = list(prevalence = NA)  # Fill missing states/territories with NA
+  ) |&gt; 
+  left_join(state_abbreviation_map, by = &quot;state&quot;)
+
+# Create the choropleth map
+plot_ly(
+  data = diabetes_by_state,
+  type = &quot;choropleth&quot;,
+  locations = ~abb,  # Use two-letter state/territory abbreviations
+  z = ~prevalence,  # Color intensity based on prevalence
+  locationmode = &quot;USA-states&quot;,  # Map mode for U.S. states and territories
+  colorscale = &quot;Viridis&quot;,  # Use the Viridis color scale
+  colorbar = list(title = &quot;Prevalence (%)&quot;),
+  zmin = 0,  # Set minimum value for the color scale
+  zmax = max(diabetes_by_state$prevalence, na.rm = TRUE),  # Set max value
+  showscale = TRUE  # Show the color scale
+) |&gt; 
+  layout(
+    title = &quot;Diabetes Prevalence Across the U.S. and Territories&quot;,
+    geo = list(
+      scope = &quot;usa&quot;,  # Focus on U.S. states and territories
+      projection = list(type = &quot;albers usa&quot;),  # Standard USA projection
+      showlakes = TRUE,  # Show lakes
+      lakecolor = &quot;lightblue&quot;  # Set lake color
+    )
+  ) </code></pre>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-727108b693cd9bde0f29" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-727108b693cd9bde0f29">{"x":{"visdat":{"84107c21d40e":["function () ","plotlyVisDat"]},"cur_data":"84107c21d40e","attrs":{"84107c21d40e":{"locations":{},"z":{},"locationmode":"USA-states","colorscale":"Viridis","colorbar":{"title":"Prevalence (%)"},"zmin":0,"zmax":20.420000000000002,"showscale":true,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"choropleth"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Diabetes Prevalence Across the U.S. and Territories","geo":{"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"lightblue"},"scene":{"zaxis":{"title":"prevalence"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Prevalence (%)","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"Viridis","showscale":true,"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","GU","HI","ID","IL","IN","IA","KS","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PR","RI","SC","SD","TN","TX","UT","VT","VI","VA","WA","WV","WI","WY"],"z":[19.530000000000001,10.24,14.029999999999999,17.530000000000001,12.369999999999999,9.3000000000000007,11.199999999999999,15.529999999999999,10.17,16.010000000000002,17.260000000000002,19.18,12.58,10.960000000000001,12.48,16.190000000000001,13.52,13.51,18.100000000000001,14.24,15.109999999999999,10.25,14.289999999999999,12.140000000000001,16.739999999999998,14.74,12.33,12.91,12.15,12.69,11.82,15.279999999999999,11.75,14.109999999999999,12.640000000000001,16.739999999999998,14.82,12.24,18.609999999999999,13.300000000000001,17.859999999999999,15.550000000000001,16.949999999999999,15.220000000000001,10.48,9.8000000000000007,18.41,16.530000000000001,11.140000000000001,20.420000000000002,15.31,14.27],"locationmode":"USA-states","zmin":0,"zmax":20.420000000000002,"type":"choropleth","marker":{"line":{"color":"rgba(31,119,180,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>Above is a map of the distribution of the prevalence of diabetes in
+the US, where the lowest prevalence is in Colorado (9.3%), and the
+highest prevalence of diabetes is in West Virginia (20.42%), assuming
+that the survey responses are representative of the general US
+population. There are no available data for Kentucky and Pennsylvania.
+In general, the South has the highest overall prevalence of diabetes in
+the U.S.</p>
+</div>
+<div id="sex-at-birth-and-diabetes" class="section level1">
+<h1>Sex at Birth and Diabetes</h1>
+<p>Overall, diabetes diagnosis (as well as type) is pretty evenly spread
+between males and females (at birth).</p>
+<div id="has_diabetes-comparison" class="section level4">
+<h4><code>has_diabetes</code> comparison</h4>
+<pre class="r"><code>diabetes_df |&gt; 
+  group_by(has_diabetes, sex_at_birth) |&gt; 
+  summarize(has_diabetes_count = n()) |&gt; 
+  pivot_wider(
+    names_from = has_diabetes,
+    values_from = has_diabetes_count
+  ) |&gt; 
+  rename(`Sex at Birth` = sex_at_birth) |&gt; 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Sex at Birth</th>
+<th align="right">Diabetic</th>
+<th align="right">Gestational</th>
+<th align="right">Not diabetic</th>
+<th align="right">Pre-diabetic</th>
+<th align="right">NA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="right">30300</td>
+<td align="right">3233</td>
+<td align="right">189693</td>
+<td align="right">5861</td>
+<td align="right">454</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="right">29486</td>
+<td align="right">20</td>
+<td align="right">169013</td>
+<td align="right">4733</td>
+<td align="right">530</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="diab_type-comparison" class="section level4">
+<h4><code>diab_type</code> comparison</h4>
+<pre class="r"><code>diabetes_df |&gt; 
+  group_by(diab_type, sex_at_birth) |&gt; 
+  summarize(diab_type_count = n()) |&gt; 
+  pivot_wider(
+    names_from = diab_type,
+    values_from = diab_type_count
+  ) |&gt; 
+  rename(`Sex at Birth` = sex_at_birth) |&gt; 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Sex at Birth</th>
+<th align="right">Type 1</th>
+<th align="right">Type 2</th>
+<th align="right">NA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="right">939</td>
+<td align="right">10406</td>
+<td align="right">218196</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="right">1019</td>
+<td align="right">9663</td>
+<td align="right">193100</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="eval_type-comparison" class="section level4">
+<h4><code>eval_type</code> comparison</h4>
+<pre class="r"><code>diabetes_df |&gt; 
+  group_by(eval_type, sex_at_birth) |&gt; 
+  summarize(eval_type_count = n()) |&gt; 
+  pivot_wider(
+    names_from = eval_type,
+    values_from = eval_type_count
+  ) |&gt; 
+  rename(`Sex at Birth` = sex_at_birth) |&gt; 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Sex at Birth</th>
+<th align="right">Not diabetic</th>
+<th align="right">Type 1</th>
+<th align="right">Type 2</th>
+<th align="right">NA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="right">199031</td>
+<td align="right">319</td>
+<td align="right">29866</td>
+<td align="right">325</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="right">173766</td>
+<td align="right">345</td>
+<td align="right">29141</td>
+<td align="right">530</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="age-and-diabetes-diagnosis" class="section level1">
+<h1>Age and Diabetes Diagnosis</h1>
+<p>In the graph below, we see that as age increases, the count of
+diabetes cases increase (using the <code>has_diabetes</code> variable),
+with the highest number of cases being in the 65-74 age group. The
+number of diabetes cases decrease slightly after age 74.</p>
+<pre class="r"><code>diabetes_df |&gt; 
+  mutate(
+    age_category = factor(age_category, levels = c(&quot;18-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, &quot;40-44&quot;, &quot;45-49&quot;, &quot;50-54&quot;, &quot;55-59&quot;, &quot;60-64&quot;, &quot;65-69&quot;, &quot;70-74&quot;, &quot;75-79&quot;, &quot;80+&quot;), order = TRUE)
+  ) |&gt; 
+  group_by(age_category) |&gt; 
+  summarize(count = sum(has_diabetes == &quot;Diabetic&quot;, na.rm = TRUE), .groups = &quot;drop&quot;) |&gt;
+  ggplot(aes(x = age_category, y = count, fill = age_category)) +
+  geom_bar(stat = &quot;identity&quot;, color = &quot;black&quot;) +
+  labs(
+    title = &quot;Distribution of Diabetes among Age Groups Surveyed&quot;,
+    x = &quot;Age Category (5 years)&quot;,
+    y = &quot;Count of Reported Diabetes Cases&quot;,
+    fill = &quot;Age Category&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="data_dist_files/figure-html/age_diab-1.png" width="672" /></p>
+</div>
+<div id="age-of-onset-and-type-of-diabetes" class="section level1">
+<h1>Age of Onset and Type of Diabetes</h1>
+<p>Comparing the two measures for type of diabetes
+(<code>eval_type</code> and <code>diab_type</code>), we don’t see as
+many type I diagnoses for <code>eval_type</code>, which makes sense
+because of how we evaluate the variable. Since we categorize everyone
+over the age of 30 as having T2D, we must <strong>proceed in our
+analysis with caution</strong>, knowing that we are actively removing a
+small portion of type 1 cases for each year above 30.</p>
+<p><em>Due to time constraints, we did not impute, but based on the
+results here, it may be useful to randomly impute a few type 1 cases per
+age group using these counts/percentages.</em></p>
+<pre class="r"><code>diabetes_df |&gt; 
+  filter(!(is.na(diab_type))) |&gt; 
+  group_by(age_onset, diab_type) |&gt; 
+  summarize(
+    count = n(),  # Count the number of rows for each combination
+    .groups = &quot;drop&quot;
+  ) |&gt; 
+  ggplot(aes(x = age_onset, y = count, fill = diab_type)) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;stack&quot;) +
+  labs(
+    title = &quot;Reported Diabetes Type by Age of Onset&quot;,
+    x = &quot;Age of Onset&quot;,
+    y = &quot;Count&quot;,
+    fill = &quot;Diabetes Type&quot;
+  ) +
+  theme_minimal() +
+  theme(legend.position=&quot;bottom&quot;)</code></pre>
+<p><img src="data_dist_files/figure-html/report_diab-1.png" width="672" /></p>
+<pre class="r"><code>diabetes_df |&gt; 
+  group_by(age_onset, eval_type) |&gt; 
+  summarize(
+    count = n(),  # Count the number of rows for each combination
+    .groups = &quot;drop&quot;
+  ) |&gt; 
+  filter(!(eval_type == &quot;Not diabetic&quot;)) |&gt; 
+  ggplot(aes(x = age_onset, y = count, fill = eval_type)) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;stack&quot;) +
+  labs(
+    title = &quot;Evaluated Diabetes Type by Age of Onset&quot;,
+    x = &quot;Age of Onset&quot;,
+    y = &quot;Count&quot;,
+    fill = &quot;Diabetes Type&quot;
+  ) +
+  theme_minimal() +
+  theme(legend.position=&quot;bottom&quot;)</code></pre>
+<p><img src="data_dist_files/figure-html/onset_eval-1.png" width="672" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

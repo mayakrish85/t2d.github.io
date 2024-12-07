@@ -1,12 +1,10 @@
 ---
-title: "About Us"
+title: "Meet the Team"
 author: ""
 date: ""
 output:
   html_document 
 ---
-
-# **Meet the Team**
 
 <br> 
 
