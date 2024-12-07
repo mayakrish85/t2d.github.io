@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About Us</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Our Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_processing.html">Data Source &amp; Import</a>
+    </li>
+    <li>
+      <a href="data_cleaning.html">Data Cleaning</a>
+    </li>
+    <li>
+      <a href="variable_description.html">Data Dictionary</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_dist.html">Overall Distribution</a>
+    </li>
+    <li>
+      <a href="final_eda.html">Demographic Distribution</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="regression_final.html">Regressions</a>
+</li>
+<li>
+  <a href="final_report.html">Report</a>
+</li>
+<li>
+  <a href="https://github.com/mayakrish85/t2d.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Regression</h1>
+
+</div>
+
+
+<div id="addressing-missing-data" class="section level1">
+<h1><strong>Addressing Missing Data</strong></h1>
+<div
+id="step-1-calculate-missing-data-for-each-variable-and-sort-by-missing-percentage"
+class="section level2">
+<h2><strong>Step 1: Calculate missing data for each variable and sort by
+missing percentage </strong></h2>
+<p>In this step, the amount of data missing is calculated for each
+variable in the cleaned dataframe. Based on these percentages, a subset
+is created that includes only those variables with 80% or more of the
+data present. This helps filter out the variables with very large
+amounts of data that could bias our regression models.</p>
+<div id="subset-of-variables-with-20-missingness"
+class="section level4">
+<h4>Subset of Variables with &lt; 20% Missingness</h4>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:500px; ">
+<table class="table table-striped table-hover" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Variable
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Missing_Percentage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+sex_at_birth
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+state
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eval_type
+</td>
+<td style="text-align:right;">
+0.0019731
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+has_diabetes
+</td>
+<td style="text-align:right;">
+0.0022708
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+good_health
+</td>
+<td style="text-align:right;">
+0.0029124
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+stroke
+</td>
+<td style="text-align:right;">
+0.0034016
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+asthma_ever
+</td>
+<td style="text-align:right;">
+0.0039255
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+kidney_disease
+</td>
+<td style="text-align:right;">
+0.0043663
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+high_bp
+</td>
+<td style="text-align:right;">
+0.0044286
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bronchitis
+</td>
+<td style="text-align:right;">
+0.0047678
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+education
+</td>
+<td style="text-align:right;">
+0.0053655
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cancer
+</td>
+<td style="text-align:right;">
+0.0053932
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+arthritis
+</td>
+<td style="text-align:right;">
+0.0059078
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+depression
+</td>
+<td style="text-align:right;">
+0.0059701
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+michd
+</td>
+<td style="text-align:right;">
+0.0105810
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+age_category
+</td>
+<td style="text-align:right;">
+0.0179520
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+urb_rural
+</td>
+<td style="text-align:right;">
+0.0192074
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race
+</td>
+<td style="text-align:right;">
+0.0220851
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+blind
+</td>
+<td style="text-align:right;">
+0.0362547
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+height
+</td>
+<td style="text-align:right;">
+0.0510428
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+smoker
+</td>
+<td style="text-align:right;">
+0.0532213
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ecigs
+</td>
+<td style="text-align:right;">
+0.0536574
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+heavy_drinking
+</td>
+<td style="text-align:right;">
+0.0757518
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+binge_drinking
+</td>
+<td style="text-align:right;">
+0.0770995
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+covid
+</td>
+<td style="text-align:right;">
+0.0786803
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+obese
+</td>
+<td style="text-align:right;">
+0.0935445
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chol_check
+</td>
+<td style="text-align:right;">
+0.1271200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chol_meds
+</td>
+<td style="text-align:right;">
+0.1284284
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+physical_activity
+</td>
+<td style="text-align:right;">
+0.1961147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income
+</td>
+<td style="text-align:right;">
+0.1999040
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="step-2-chi-square-test-for-missingness."
+class="section level2">
+<h2><strong>Step 2: Chi Square Test for Missingness. </strong></h2>
+<div
+id="is-missingness-in-one-variable-associated-with-missingness-in-another-variable"
+class="section level3">
+<h3>Is missingness in one variable associated with missingness in
+another variable?</h3>
+<p>This test intends to determine if variables are Missing at Random
+(MAR) or Missing Not At Random (MNAR), so we can decide whether to
+include them in a regression model.</p>
+</div>
+<div id="test-1-smoking-vs.-asthma." class="section level3">
+<h3>Test 1: Smoking vs. Asthma.</h3>
+<p>Missingness of <code>asthma_ever</code>: 0.0039 <br> Missingness of
+<code>asthma_now</code> : 0.856 Missingness of <code>smoker</code>:
+0.0532 </p>
+<p><code>asthma_now</code> has over 85% missingness, which does not bode
+well for any kind of model building or data analysis. However, we can
+analyze if this missingness is related to the <code>smoker</code>
+variable, which has low missingness.</p>
+<div id="smoking-vs.-asthma-now" class="section level4">
+<h4>Smoking vs. Asthma Now:</h4>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  data$missing_indicator and data$smoker
+## X-squared = 372.22, df = 3, p-value &lt; 2.2e-16</code></pre>
+<p>We <strong>reject</strong> the null hypothesis, as the p-value
+2.3008962^{-80} is very small, indicating that missingness in
+<code>asthma_now</code> is associated with missingness in
+<code>smoker</code> and probably MNAR. The results of the chi-square
+test show that using <code>asthma_now</code> in our regression is likely
+to bias our results.</p>
+</div>
+</div>
+<div id="test-2-education-and-income-vs.-urbanrural"
+class="section level3">
+<h3>Test 2: Education and Income vs. Urban/Rural</h3>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  data$missing_indicator and data$urb_rural
+## X-squared = 31.129, df = 1, p-value = 2.414e-08</code></pre>
+<p>We reject the null hypothesis, as the p-value 2.4143979^{-8} is very
+small, indicating that missingness in <code>education</code> is
+associated with missingness in <code>urb_rural</code>. Both these
+variables have low missingness independently, but the results of the
+chi-square test show that using these variables in our regression could
+bias our results or that a trend we see in one could be affected by the
+other.</p>
+<p>Let’s test for income vs. urban/rural.</p>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  data$missing_indicator and data$urb_rural
+## X-squared = 43.056, df = 1, p-value = 5.319e-11</code></pre>
+<p>We reject the null hypothesis, as the p-value 5.318595^{-11} is very
+small, indicating that missingness in <code>income</code> is associated
+with missingness in <code>urb_rural</code>. <code>urb_rural</code> has
+low missingness independently, and <code>income</code> just below 20%
+missingness, but the results of the chi-square test show that
+missingness in one could be related to the other. In this case we choose
+not to include these variables in the model, furthered by our
+conclusions from our EDA, showing no significant relationship.</p>
+</div>
+<div id="test-3-covid-19-vs.-bronchitis" class="section level3">
+<h3>Test 3: COVID-19 vs. Bronchitis</h3>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  data$missing_indicator and data$bronchitis
+## X-squared = 45.436, df = 1, p-value = 1.577e-11</code></pre>
+<p>We <strong>reject</strong> the null hypothesis, as the p-value
+1.5773734^{-11} is very small, indicating that missingness in
+<code>covid</code> is associated with missingness in
+<code>bronchitis</code>. Both these variables have low missingness
+independently, so this result shows us that these two variables could be
+strongly associated and perhaps used as an interaction consideration in
+our regression model.</p>
+</div>
+<div id="chi-square-test-covid-vs.-bronchitis-interaction"
+class="section level3">
+<h3>Chi Square Test Covid vs. Bronchitis Interaction</h3>
+<p>Here we test for the significance of this interaction. Based on this
+result, with p-value 3.7306598^{-123} being very small, we can proceed
+with including this interaction in our regression model.</p>
+</div>
+</div>
+</div>
+<div id="regression" class="section level1">
+<h1><strong>Regression</strong></h1>
+<div id="generalized-linear-models" class="section level2">
+<h2><strong>Generalized Linear Models</strong></h2>
+<p>We choose to run two GLM models, one for <code>has_diabetes</code>,
+whether someone has diabetes or not, and one for <code>eval_type</code>,
+the type of diabetes that someone has.</p>
+<p><strong>Variables Chosen and Rationale:</strong></p>
+<p><code>sex_at_birth</code>: no missingness, widely known predictor of
+diabetes risk; for men and women at the same BMI, <a
+href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4220585/">men have a
+higher risk</a>.</p>
+<p><code>age_category</code>: age and type of diabetes tend to be
+related.</p>
+<p><code>obese</code>: has much lower missingness and a similar effect
+as <code>physical_activity</code> on T2D risk.</p>
+<p><code>race</code>: <a
+href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5241767/">has been known
+to affect predisposition to diabetes</a>.</p>
+<p><code>good_health</code>: does being in generally good health
+mitigate risk of diabetes.</p>
+<p><code>kidney_disease</code>: <a
+href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10588295/#sec3">there is
+a bidirectional link between diabetes and kidney disease</a>.</p>
+<p><code>stroke</code>: diabetes is associated with risk of
+cardiovascular complication like <a
+href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9911852/#:~:text=Diabetes%20is%20associated%20with%20an,risk%20increasing%20with%20diabetes%20duration.">stroke</a>.</p>
+<p><code>bronchitis</code>: <a
+href="https://pubmed.ncbi.nlm.nih.gov/26044811/">bronchitis is a
+comorbidity of T2D</a>, and covid and bronchitis may interact.</p>
+<p><code>covid</code>: <a
+href="https://diabetes.org/getting-sick-with-diabetes/coronavirus-covid-19/how-coronavirus-impacts-people-with-diabetes#:~:text=Q%3A%20Does%20COVID%2D19%20cause,after%20their%20COVID%2D19%20infection.">between
+diabetes and covid, risk of one may increase risk of the other</a>.</p>
+<pre><code>## Warning: `as.tibble()` was deprecated in tibble 2.0.0.
+## ℹ Please use `as_tibble()` instead.
+## ℹ The signature and semantics have changed, see `?as_tibble`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<div id="model-1-has-diabetes-vs.-does-not-have-diabetes"
+class="section level3">
+<h3>Model 1: Has Diabetes vs. Does Not Have Diabetes</h3>
+<p>First, let us generate an initial model based on the predictive
+variables identified through our literature review. Through this model,
+we will assess which of the predictive variables actually have a
+statistically significant association with the <code>has_diabetes</code>
+variable in our dataset.</p>
+<pre class="r"><code># Fit a GLM model
+glm_model_db &lt;- glm(
+  has_diabetes ~ 
+    sex_at_birth + age_category + race + obese + good_health +
+    kidney_disease + stroke + covid * bronchitis,
+  data = data,
+  family = binomial(link = &quot;logit&quot;) # Logistic regression
+)</code></pre>
+<p>Based on the GLM above, we conclude that the following variables have
+a statistically significant association with the
+<code>has_diabetes</code> variable.</p>
+<ul>
+<li>Age (especially any age category over 55)</li>
+<li>Obesity</li>
+<li>Overall health</li>
+<li>Kidney disease</li>
+<li>History of Stroke</li>
+<li>Race (especially if White)</li>
+<li>Sex</li>
+<li>History of Bronchitis</li>
+</ul>
+<p>Here is a table of these significant predictors, arranged by
+significance (smallest to largest p-value).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">Coefficient</th>
+<th align="left">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">age_category55-59</td>
+<td align="left">2.659</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="even">
+<td align="left">age_category60-64</td>
+<td align="left">2.820</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category65-69</td>
+<td align="left">2.990</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="even">
+<td align="left">age_category70-74</td>
+<td align="left">3.077</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category75-79</td>
+<td align="left">3.135</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="even">
+<td align="left">age_category80+</td>
+<td align="left">2.936</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">obeseYes</td>
+<td align="left">-1.006</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="even">
+<td align="left">good_healthYes</td>
+<td align="left">-1.024</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">kidney_diseaseYes</td>
+<td align="left">0.925</td>
+<td align="left">0.00e+00</td>
+</tr>
+<tr class="even">
+<td align="left">age_category50-54</td>
+<td align="left">2.412</td>
+<td align="left">4.94e-277</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category45-49</td>
+<td align="left">2.083</td>
+<td align="left">7.53e-200</td>
+</tr>
+<tr class="even">
+<td align="left">age_category40-44</td>
+<td align="left">1.624</td>
+<td align="left">6.17e-117</td>
+</tr>
+<tr class="odd">
+<td align="left">strokeYes</td>
+<td align="left">0.432</td>
+<td align="left">1.17e-101</td>
+</tr>
+<tr class="even">
+<td align="left">raceWhite</td>
+<td align="left">-0.644</td>
+<td align="left">4.31e-70</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category35-39</td>
+<td align="left">1.244</td>
+<td align="left">7.29e-65</td>
+</tr>
+<tr class="even">
+<td align="left">sex_at_birthMale</td>
+<td align="left">0.157</td>
+<td align="left">2.10e-50</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category30-34</td>
+<td align="left">0.766</td>
+<td align="left">1.87e-22</td>
+</tr>
+<tr class="even">
+<td align="left">raceMultiracial</td>
+<td align="left">-0.393</td>
+<td align="left">6.62e-15</td>
+</tr>
+<tr class="odd">
+<td align="left">raceOther</td>
+<td align="left">-0.477</td>
+<td align="left">7.03e-12</td>
+</tr>
+<tr class="even">
+<td align="left">bronchitisYes</td>
+<td align="left">0.110</td>
+<td align="left">5.29e-07</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category25-29</td>
+<td align="left">0.321</td>
+<td align="left">2.74e-04</td>
+</tr>
+<tr class="even">
+<td align="left">raceHispanic</td>
+<td align="left">-0.125</td>
+<td align="left">1.72e-03</td>
+</tr>
+<tr class="odd">
+<td align="left">raceNative Hawaiian/Pacific Islander</td>
+<td align="left">0.166</td>
+<td align="left">3.00e-02</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="model-2-identifying-type-2-diabetes" class="section level3">
+<h3>Model 2: Identifying Type 2 Diabetes</h3>
+<p>Let us now generate an model based on the same predictive variables
+as before. However, this model will assess which of the predictive
+variables actually have a statistically significant association with the
+<code>diab_type</code> variable in our dataset.</p>
+<pre class="r"><code># Fit a GLM model
+glm_model_dbtype = diabetes_df |&gt; 
+  filter(!is.na(diab_type)) |&gt; 
+  mutate(diab_type = case_match(diab_type, &quot;Type 1&quot; ~ 0, &quot;Type 2&quot; ~ 1)) |&gt; 
+  glm(diab_type ~ sex_at_birth + age_category + race + obese + good_health + 
+        kidney_disease + stroke + covid * bronchitis,
+      data = _,
+      family = binomial(link = &quot;logit&quot;) # Logistic regression
+)</code></pre>
+<p>Based on the GLM above, we conclude that the following variables have
+a statistically significant association with the <code>diab_type</code>
+variable.</p>
+<ul>
+<li>Obesity</li>
+<li>Age (especially any age category over 30)</li>
+<li>Race (especially if Hispanic, White, or Black)</li>
+<li>Sex</li>
+<li>History of Bronchitis</li>
+<li>History of Covid</li>
+<li>Interaction effect of Bronchitis and Covid History</li>
+</ul>
+<p>Here is a table of these significant predictors, arranged by
+significance (smallest to largest p-value).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">Coefficient</th>
+<th align="left">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">age_category30-34</td>
+<td align="left">1.163</td>
+<td align="left">6.43e-05</td>
+</tr>
+<tr class="even">
+<td align="left">age_category35-39</td>
+<td align="left">1.682</td>
+<td align="left">2.11e-09</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category40-44</td>
+<td align="left">1.692</td>
+<td align="left">2.14e-10</td>
+</tr>
+<tr class="even">
+<td align="left">age_category45-49</td>
+<td align="left">2.189</td>
+<td align="left">9.18e-17</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category50-54</td>
+<td align="left">2.341</td>
+<td align="left">1.01e-19</td>
+</tr>
+<tr class="even">
+<td align="left">age_category55-59</td>
+<td align="left">2.455</td>
+<td align="left">4.42e-22</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category60-64</td>
+<td align="left">2.894</td>
+<td align="left">5.70e-30</td>
+</tr>
+<tr class="even">
+<td align="left">age_category65-69</td>
+<td align="left">2.850</td>
+<td align="left">1.22e-29</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category70-74</td>
+<td align="left">3.195</td>
+<td align="left">5.74e-36</td>
+</tr>
+<tr class="even">
+<td align="left">age_category75-79</td>
+<td align="left">3.304</td>
+<td align="left">2.12e-37</td>
+</tr>
+<tr class="odd">
+<td align="left">age_category80+</td>
+<td align="left">3.355</td>
+<td align="left">5.24e-38</td>
+</tr>
+<tr class="even">
+<td align="left">bronchitisYes</td>
+<td align="left">0.338</td>
+<td align="left">4.97e-03</td>
+</tr>
+<tr class="odd">
+<td align="left">covidYes</td>
+<td align="left">0.120</td>
+<td align="left">3.80e-02</td>
+</tr>
+<tr class="even">
+<td align="left">covidYes:bronchitisYes</td>
+<td align="left">-0.336</td>
+<td align="left">4.78e-02</td>
+</tr>
+<tr class="odd">
+<td align="left">obeseYes</td>
+<td align="left">-0.948</td>
+<td align="left">1.40e-47</td>
+</tr>
+<tr class="even">
+<td align="left">raceBlack</td>
+<td align="left">-0.687</td>
+<td align="left">5.23e-03</td>
+</tr>
+<tr class="odd">
+<td align="left">raceHispanic</td>
+<td align="left">-0.839</td>
+<td align="left">4.96e-04</td>
+</tr>
+<tr class="even">
+<td align="left">raceWhite</td>
+<td align="left">-0.683</td>
+<td align="left">3.50e-03</td>
+</tr>
+<tr class="odd">
+<td align="left">sex_at_birthMale</td>
+<td align="left">-0.158</td>
+<td align="left">3.30e-03</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="cross-validation" class="section level1">
+<h1><strong>Cross-Validation</strong></h1>
+<p>First, let us generate test-training pairs from the diabetes data for
+cross-validation, using the <code>crossv_mc</code> function. In this
+k-fold cross validation method, we are generating 100 random partitions,
+splitting the dataset into two subsets, holding out a test subset of the
+data for training.</p>
+<pre class="r"><code>crossval_df = diabetes_df |&gt; 
+  filter(!is.na(diab_type)) |&gt; 
+  mutate(diab_type = case_match(diab_type, &quot;Type 1&quot; ~ 0, &quot;Type 2&quot; ~ 1)) |&gt; 
+  crossv_mc(100) |&gt; 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  )</code></pre>
+<p>Next, let us finalize our two models, fit them to the train subsets,
+and extract root-mean-squared-error (RMSE) to assess predictive accuracy
+of the models.</p>
+<pre class="r"><code># GLM model for predicting has_diabetes
+db_model = glm(db_formula, data = diabetes_df, family = binomial(link = &quot;logit&quot;))
+
+# GLM model for predicting diab_type
+dbtype_model = diabetes_df |&gt; 
+  filter(!is.na(diab_type)) |&gt; 
+  mutate(diab_type = case_match(diab_type, &quot;Type 1&quot; ~ 0, &quot;Type 2&quot; ~ 1)) |&gt; 
+  glm(dbtype_formula,
+      data = _,
+      family = binomial(link = &quot;logit&quot;))</code></pre>
+<p>Constructing a dataframe with the RMSEs for each model.</p>
+<pre class="r"><code># Construct dataframe with extracted RMSE
+crossval_results = crossval_df |&gt; 
+  mutate(
+    db_pred = map(train, \(x) glm(db_formula, data = x)),
+    dbtype_pred = map(train, \(x) glm(dbtype_formula, data = x))
+  ) |&gt; 
+  mutate(
+    rmse_db = map2_dbl(db_pred, test, rmse),
+    rmse_dbtype = map2_dbl(dbtype_pred, test, rmse)
+  )</code></pre>
+<p>Finding the average RMSE for each model.</p>
+<pre class="r"><code>crossval_results |&gt; 
+  summarize(
+    `RMSE for has_diabetes model` = format(mean(rmse_db), scientific = TRUE, digits = 3),
+    `RMSE for diab_type model` = format(mean(rmse_dbtype), digits = 3)
+  ) |&gt; 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">RMSE for has_diabetes model</th>
+<th align="left">RMSE for diab_type model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2.31e-13</td>
+<td align="left">0.276</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="discussion" class="section level1">
+<h1><strong>Discussion</strong></h1>
+<p>From the results of our cross validation and error assessment, we can
+see that the second model, which predicts <code>diab_type</code> appears
+to perform relatively well, especially considering the volume of missing
+data we were dealing with. This model had a mean RMSE of less than 30%
+across the 100-fold validation we performed.</p>
+<p>On the other hand, we can see that there are likely some issues with
+the first model, which predicts <code>has_diabetes</code>. The mean RMSE
+appears to be very low, close to 0, which is highly unrealistic. It
+hints at deeper issues within the model, perhaps stemming from the
+unusually low p-values of significance shown by several of the predictor
+variables of that model. Unfortunately, due to limited timeframe and
+project scope, we were not able to pursue this issue further. In future
+exploration, we would dedicate more time to investigating, correcting,
+and refining our models.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

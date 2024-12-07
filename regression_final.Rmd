@@ -1,6 +1,5 @@
 ---
 title: "Regression"
-author: "Riya Kalra"
 output: html_document
 ---
 
@@ -16,7 +15,9 @@ library(modelr)
 \n
 \n
 
-## Step 1: Calculate missing data for each variable and sort by missing percentage  
+# **Addressing Missing Data**
+
+## **Step 1: Calculate missing data for each variable and sort by missing percentage  **
 
 In this step, the amount of data missing is calculated for each variable in the cleaned dataframe. Based on these percentages, a subset is created that includes only those variables with 80% or more of the data present. This helps filter out the variables with very large amounts of data that could bias our regression models.  
 
@@ -69,7 +70,7 @@ data$has_diabetes <- ifelse(data$has_diabetes == "Diabetic", 1,
 
 ```
 
-## Step 2: Chi Square Test for Missingness.  
+## **Step 2: Chi Square Test for Missingness.  **
 
 ### Is missingness in one variable associated with missingness in another variable?  
 
@@ -139,7 +140,9 @@ chisq_result_bronch <- chisq.test(table_interaction)
 
 Here we test for the significance of this interaction. Based on this result, with p-value `r chisq_result_bronch$p.value` being very small, we can proceed with including this interaction in our regression model.
 
-## Step 3: Generalized Linear Models 
+# **Regression**
+
+## **Generalized Linear Models**
 
 We choose to run two GLM models, one for `has_diabetes`, whether someone has diabetes or not, and one for `eval_type`, the type of diabetes that someone has.
 
@@ -215,9 +218,9 @@ db_pred_vars = c("age_category", "bronchitis", "good_health", "kidney_disease", 
 db_formula = reformulate(db_pred_vars, response = "has_diabetes")
 ```
 
-### Model 2: No Diabetes vs. Type 2 Diabetes
+### Model 2: Identifying Type 2 Diabetes
 
-First, let us now generate an initial model based on the same predictive variables as before. However, this model will assess which of the predictive variables actually have a statistically significant association with the `diab_type` variable in our dataset. 
+Let us now generate an model based on the same predictive variables as before. However, this model will assess which of the predictive variables actually have a statistically significant association with the `diab_type` variable in our dataset. 
 ```{r}
 # Fit a GLM model
 glm_model_dbtype = diabetes_df |> 
@@ -263,14 +266,14 @@ dbtype_pred_vars = c("age_category", "obese", "race", "sex_at_birth", "bronchiti
 dbtype_formula = reformulate(db_pred_vars, response = "diab_type")
 ```
 
-## Step 4: Cross-Validation
+# **Cross-Validation**
 
-First, let us generate test-training pairs from the diabetes data for cross-validation, using the `crossv_mc` function.
+First, let us generate test-training pairs from the diabetes data for cross-validation, using the `crossv_mc` function. In this k-fold cross validation method, we are generating 100 random partitions, splitting the dataset into two subsets, holding out a test subset of the data for training.
 ```{r message = FALSE, warning = FALSE}
 crossval_df = diabetes_df |> 
   filter(!is.na(diab_type)) |> 
   mutate(diab_type = case_match(diab_type, "Type 1" ~ 0, "Type 2" ~ 1)) |> 
-  crossv_mc(10) |> 
+  crossv_mc(100) |> 
   mutate(
     train = map(train, as_tibble),
     test = map(test, as_tibble)
@@ -278,7 +281,6 @@ crossval_df = diabetes_df |>
 ```
 
 Next, let us finalize our two models, fit them to the train subsets, and extract root-mean-squared-error (RMSE) to assess predictive accuracy of the models.
-
 ```{r}
 # GLM model for predicting has_diabetes
 db_model = glm(db_formula, data = diabetes_df, family = binomial(link = "logit"))
@@ -292,28 +294,33 @@ dbtype_model = diabetes_df |>
       family = binomial(link = "logit"))
 ```
 
-
-```{r eval = FALSE}
-#crossval_results =
-crossval_df |> 
+Constructing a dataframe with the RMSEs for each model.
+```{r}
+# Construct dataframe with extracted RMSE
+crossval_results = crossval_df |> 
   mutate(
     db_pred = map(train, \(x) glm(db_formula, data = x)),
     dbtype_pred = map(train, \(x) glm(dbtype_formula, data = x))
   ) |> 
   mutate(
-    rmse_db = map2_dbl(db_model, test, rmse)
-    #rmse_dbtype = map2_dbl(dbtype_model, test, rmse)
+    rmse_db = map2_dbl(db_pred, test, rmse),
+    rmse_dbtype = map2_dbl(dbtype_pred, test, rmse)
   )
 ```
 
+Finding the average RMSE for each model.
+```{r}
+crossval_results |> 
+  summarize(
+    `RMSE for has_diabetes model` = format(mean(rmse_db), scientific = TRUE, digits = 3),
+    `RMSE for diab_type model` = format(mean(rmse_dbtype), digits = 3)
+  ) |> 
+  knitr::kable()
+```
 
+# **Discussion**
 
+From the results of our cross validation and error assessment, we can see that the second model, which predicts `diab_type` appears to perform relatively well, especially considering the volume of missing data we were dealing with. This model had a mean RMSE of less than 30% across the 100-fold validation we performed.
 
-
-
-
-
-
-
-
+On the other hand, we can see that there are likely some issues with the first model, which predicts `has_diabetes`. The mean RMSE appears to be very low, close to 0, which is highly unrealistic. It hints at deeper issues within the model, perhaps stemming from the unusually low p-values of significance shown by several of the predictor variables of that model. Unfortunately, due to limited timeframe and project scope, we were not able to pursue this issue further. In future exploration, we would dedicate more time to investigating, correcting, and refining our models.
 
