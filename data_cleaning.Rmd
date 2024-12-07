@@ -13,6 +13,8 @@ output:
 library(tidyverse)
 
 knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = FALSE)
+
+diabetes_data = read_csv("data/diabetes_data.csv")
 ```
 
 ## Cleaning the data

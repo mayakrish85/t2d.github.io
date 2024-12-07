@@ -29,7 +29,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -218,7 +222,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -228,6 +298,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -282,7 +362,9 @@ $(document).ready(function () {
     </li>
   </ul>
 </li>
-<li class="dropdown-header">Regressions</li>
+<li>
+  <a href="regression_riya.html">Regressions</a>
+</li>
 <li>
   <a href="final_report.html">Report</a>
 </li>
@@ -298,6 +380,14 @@ $(document).ready(function () {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -441,6 +531,93 @@ found in Appendix A.</p>
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2>Exploratory analysis</h2>
+<div id="overall-distribution" class="section level3">
+<h3>Overall distribution</h3>
+<p>We started by examining the overall distributions of each of our
+outcome variables.</p>
+<p><img src="data_dist_files/figure-html/unnamed-chunk-2-1.png" /></p>
+<p>Of the 433,323 respondents, 59,786 are actually diabetic.</p>
+<p><img src="data_dist_files/figure-html/unnamed-chunk-4-1.png" /></p>
+<p><img src="data_dist_files/figure-html/unnamed-chunk-6-1.png" /></p>
+<p>Of the people that said they had diabetes, we have just over ~20K
+responses regarding the type of diabetes they have, and over ~410K
+missing responses. Because of this missing data, we more heavily relied
+on the evaluated type. However, it is worth noting that we are actively
+excluding people diagnosed with type I diabetes after the age of 30 (as
+shown below).</p>
+<p><img src="data_dist_files/figure-html/onset_eval-1.png" /></p>
+<p><img src="data_dist_files/figure-html/report_diab-1.png" /></p>
+<p>In the graphs above, we could conclude that the overall distribution
+is relatively normal related to the age of onset of diabetes diagnosis.
+However, if we just consider real-time age and diabetes, we see a
+different distribution. In the graph below, we see that as age
+increases, the count of diabetes cases increase (using the has_diabetes
+variable), with the highest number of cases being in the 65-74 age
+group. The number of diabetes cases decrease slightly after age 74.</p>
+<p><img src="data_dist_files/figure-html/age_diab-1.png" /></p>
+</div>
+<div id="demographics" class="section level3">
+<h3>Demographics</h3>
+<p>We also explored other demographic information in relation to
+diabetes diagnosis. We compared each factor to one of our three outcome
+variables, has_diabetes, diab_type, and eval_type, to identify the
+overarching relationship between specific demographics and diabetes,
+along with similarities and differences between the various kinds of
+diagnosis.</p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-6-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-7-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-8-1.png" /></p>
+<p>People with better health and physical activity practices have fewer
+diabetes diagnoses. Between type I and type II diagnoses, physical
+activity is about the same, based on the reported type. On the other
+hand, type II diagnoses have a higher percentage of inactive people,
+based on the evaluated type.</p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-22-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-23-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-24-1.png" /></p>
+<p>People with (at least) a college degree make up a larger proportion
+of the sample of people who are not diabetic than the sample of people
+who are diabetic. Surprisingly, accordiing to the evaluated type
+variable, a significantly larger percentage of people who graduated high
+school have type I diabetes, compared to the percentage of people who
+graduated high school with type II diabetes.</p>
+</div>
+<div id="related-factors" class="section level3">
+<h3>Related Factors</h3>
+<p>We also explored related factors to diabetes diagnosis, one of which
+being blood pressure.</p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-61-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-62-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-63-1.png" /></p>
+<p>People with low/normal blood pressure were represented much more in
+the group of people who are diabetic compared to any other group. There
+is a slight increase in high blood representation percentage in the type
+I group compared to the type II group in the reported cases, but that is
+heightened in comparing the evaluated type variable.</p>
+<p>We originally explored high blood sugar and A1C checks in this
+section, but decided not to publish those models because only people
+with diabetes (as per has_diabetes) were asked this question, severely
+skewing our results.</p>
+</div>
+<div id="comorbidities" class="section level3">
+<h3>Comorbidities</h3>
+<p>Finally, we explored comorbidities known to be shared with diabetes
+diagnosis.</p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-26-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-27-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-28-1.png" /></p>
+<p>A larger proportion of people with diabetes also have kidney disease
+than other groups. The reported type shows no significant difference in
+diagnosis across type of diabetes, but the evaluated type shows that
+people with kidney disease are more highly represented in the group with
+type II diabetes.</p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-34-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-35-1.png" /></p>
+<p><img src="final_eda_files/figure-html/unnamed-chunk-36-1.png" /></p>
+<p>Blindness is slightly more common in people who have diabetes
+compared to people who are not diabetic, but we see some opposition
+between reported and evaluated type I and II diabetes status.</p>
+</div>
 </div>
 <div id="additional-analysis" class="section level2">
 <h2>Additional analysis</h2>
@@ -451,21 +628,41 @@ found in Appendix A.</p>
 <div id="limitations" class="section level2">
 <h2>Limitations</h2>
 <p>As with any analysis, our project too, faced limitations because of
-restrictions in our data source. Despite being conducted by the U.S.
-CDC, the data was not as comprehensive as we had hoped and were limited
-by the narrow focus of some survey questions and a lack of strict
-follow-up among participants. In addition, the metrics of some questions
-were unclear and it was unknown how many participants and/or what
-subgroup of participants were asked a question. For example, only people
-that were reported diabetic were asked if they had received an A1c-level
+restrictions in our data source.</p>
+<p>Despite being conducted by the U.S. CDC, the data was not as
+comprehensive as we had hoped and were limited by the narrow focus of
+some survey questions and a lack of strict follow-up among participants.
+No questions related to family history or environmental exposures were
+asked, which would be relevant to better being able to diagnose
+respondents with type I diabetes.</p>
+<p>Taking a closer look at our data, we are missing ~40,000 rows related
+to the specific type of diabetes diagnosis (difference between
+has_diabetes == Diabetes and diab_type != NA). Because of this, we felt
+the need to create a new variable that could better represent our
+population. We were not sure imputation would be the best way to handle
+this because of the large amount of missing data, so we decided to
+depend on another data source to create a justifiable evaluated
+variable. However, the constraints of the variable that were defined in
+our literature review caused us to exclude any respondents above the age
+of 30 who were diagnosed with type I diabetes as per the reported type
+variable. Therefore, the distribution of the evaluated type is skewed
+heavily towards type II diagnosis for certain age groups and
+demographics. Moving forward, the constraints on the onset can be a
+major limitation for all of our analysis.</p>
+<p>In addition, the metrics of some questions were unclear and it was
+unknown how many participants and/or what subgroup of participants were
+asked a question. For example, inquiries regarding high blood sugar and
+A1C were only asked to people that did not have diabetes. Only people
+that were reported diabetic were asked if they had received an A1C-level
 check within the last 12 months. In addition, for the small subset of
 participants who were questioned, they were not mandated to report their
-specific A1c result. Further, inquiries regarding high blood sugar were
-only asked to people that did not have diabetes.</p>
+specific A1C result.</p>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -497,7 +694,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

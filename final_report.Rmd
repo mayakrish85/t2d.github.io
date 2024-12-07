@@ -1,9 +1,14 @@
 ---
 title: "Final Report"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
 ---
 
 ## Overview 
+
 In this project, we aim to analyze Type II Diabetes (T2D) in the U.S. Our group’s inherent interest in public health and chronic disease epidemiology prompts us to explore the context of T2D in this project. Our analysis is informed by a non-scoping literature review to understand previous analysis performed on the distribution and prevalence of T2D in the United States. Most relevantly, our approach and reasoning for the variables we chose for our EDA and regression models are inspired by [Cicek et al.](https://www.sciencedirect.com/science/article/pii/S0889852921000463?via%3Dihub) (2021) in their paper. In addition, all group members are simultaneously enrolled in BIST8130: Biostatistical Methods I. As such, we wanted to apply the statistical analysis skills and methods learned in that class, to this project. 
 
 ## Motivation
@@ -46,10 +51,89 @@ The final cleaned dataset `cleaned_diabetes_data.csv` contains 40 columns and 43
 
 ## Exploratory analysis
 
+### Overall distribution
+We started by examining the overall distributions of each of our outcome variables. 
+
+![](data_dist_files/figure-html/unnamed-chunk-2-1.png)
+
+Of the 433,323 respondents, 59,786 are actually diabetic.
+
+![](data_dist_files/figure-html/unnamed-chunk-4-1.png)
+
+![](data_dist_files/figure-html/unnamed-chunk-6-1.png)
+
+Of the people that said they had diabetes, we have just over ~20K responses regarding the type of diabetes they have, and over ~410K missing responses. Because of this missing data, we more heavily relied on the evaluated type. However, it is worth noting that we are actively excluding people diagnosed with type I diabetes after the age of 30 (as shown below).
+
+![](data_dist_files/figure-html/onset_eval-1.png)
+
+![](data_dist_files/figure-html/report_diab-1.png)
+
+In the graphs above, we could conclude that the overall distribution is relatively normal related to the age of onset of diabetes diagnosis. However, if we just consider real-time age and diabetes, we see a different distribution. In the graph below, we see that as age increases, the count of diabetes cases increase (using the has_diabetes variable), with the highest number of cases being in the 65-74 age group. The number of diabetes cases decrease slightly after age 74.
+
+![](data_dist_files/figure-html/age_diab-1.png)
+
+### Demographics
+We also explored other demographic information in relation to diabetes diagnosis. We compared each factor to one of our three outcome variables, has_diabetes, diab_type, and eval_type, to identify the overarching relationship between specific demographics and diabetes, along with similarities and differences between the various kinds of diagnosis.
+
+![](final_eda_files/figure-html/unnamed-chunk-6-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-7-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-8-1.png)
+
+People with better health and physical activity practices have fewer diabetes diagnoses. Between type I and type II diagnoses, physical activity is about the same, based on the reported type. On the other hand, type II diagnoses have a higher percentage of inactive people, based on the evaluated type.
+
+![](final_eda_files/figure-html/unnamed-chunk-22-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-23-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-24-1.png)
+
+People with (at least) a college degree make up a larger proportion of the sample of people who are not diabetic than the sample of people who are diabetic. Surprisingly, accordiing to the evaluated type variable, a significantly larger percentage of people who graduated high school have type I diabetes, compared to the percentage of people who graduated high school with type II diabetes.
+
+### Related Factors 
+
+We also explored related factors to diabetes diagnosis, one of which being blood pressure.
+
+![](final_eda_files/figure-html/unnamed-chunk-61-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-62-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-63-1.png)
+
+People with low/normal blood pressure were represented much more in the group of people who are diabetic compared to any other group. There is a slight increase in high blood representation percentage in the type I group compared to the type II group in the reported cases, but that is heightened in comparing the evaluated type variable.
+
+We originally explored high blood sugar and A1C checks in this section, but decided not to publish those models because only people with diabetes (as per has_diabetes) were asked this question, severely skewing our results.
+
+### Comorbidities
+Finally, we explored comorbidities known to be shared with diabetes diagnosis.
+
+![](final_eda_files/figure-html/unnamed-chunk-26-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-27-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-28-1.png)
+
+A larger proportion of people with diabetes also have kidney disease than other groups. The reported type shows no significant difference in diagnosis across type of diabetes, but the evaluated type shows that people with kidney disease are more highly represented in the group with type II diabetes.
+
+![](final_eda_files/figure-html/unnamed-chunk-34-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-35-1.png)
+
+![](final_eda_files/figure-html/unnamed-chunk-36-1.png)
+
+Blindness is slightly more common in people who have diabetes compared to people who are not diabetic, but we see some opposition between reported and evaluated type I and II diabetes status.
+
 ## Additional analysis
 
 ## Discussion
 
 ## Limitations 
 
-As with any analysis, our project too, faced limitations because of restrictions in our data source. Despite being conducted by the U.S. CDC, the data was not as comprehensive as we had hoped and were limited by the narrow focus of some survey questions and a lack of strict follow-up among participants. In addition, the metrics of some questions were unclear and it was unknown how many participants and/or what subgroup of participants were asked a question. For example, only people that were reported diabetic were asked if they had received an A1c-level check within the last 12 months. In addition, for the small subset of participants who were questioned, they were not mandated to report their specific A1c result. Further, inquiries regarding high blood sugar were only asked to people that did not have diabetes. 
+As with any analysis, our project too, faced limitations because of restrictions in our data source. 
+
+Despite being conducted by the U.S. CDC, the data was not as comprehensive as we had hoped and were limited by the narrow focus of some survey questions and a lack of strict follow-up among participants. No questions related to family history or environmental exposures were asked, which would be relevant to better being able to diagnose respondents with type I diabetes.
+
+Taking a closer look at our data, we are missing ~40,000 rows related to the specific type of diabetes diagnosis (difference between has_diabetes == Diabetes and diab_type != NA). Because of this, we felt the need to create a new variable that could better represent our population. We were not sure imputation would be the best way to handle this because of the large amount of missing data, so we decided to depend on another data source to create a justifiable evaluated variable. However, the constraints of the variable that were defined in our literature review caused us to exclude any respondents above the age of 30 who were diagnosed with type I diabetes as per the reported type variable. Therefore, the distribution of the evaluated type is skewed heavily towards type II diagnosis for certain age groups and demographics. Moving forward, the constraints on the onset can be a major limitation for all of our analysis. 
+
+In addition, the metrics of some questions were unclear and it was unknown how many participants and/or what subgroup of participants were asked a question. For example, inquiries regarding high blood sugar and A1C were only asked to people that did not have diabetes. Only people that were reported diabetic were asked if they had received an A1C-level check within the last 12 months. In addition, for the small subset of participants who were questioned, they were not mandated to report their specific A1C result. 
