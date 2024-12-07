@@ -21,7 +21,7 @@ navbar:
         - text: "Demographic Distribution"
           href: final_eda.html
     - text: "Regressions"
-      href: regression_riya.html
+      href: regression_final.html
     - text: "Report"
       href: final_report.html
     - icon: fa-github fa-lg

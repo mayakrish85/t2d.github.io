@@ -304,7 +304,6 @@ crossval_df |>
     rmse_db = map2_dbl(db_model, test, rmse)
     #rmse_dbtype = map2_dbl(dbtype_model, test, rmse)
   )
-
 ```
 
 
