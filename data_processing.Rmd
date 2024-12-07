@@ -51,4 +51,3 @@ Then, in our repo at `data_import.rmd`, we chose only the necessary variables, w
 write_csv(diabetes_df, "data/diabetes_data.csv")
 ```
 
-## *FINISH LITERATURE REVIEW SECTION*
