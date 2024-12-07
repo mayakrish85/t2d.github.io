@@ -1,0 +1,320 @@
+---
+title: "Regression"
+author: "Riya Kalra"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+library(modelr)
+```
+\n
+\n
+\n
+
+## Step 1: Calculate missing data for each variable and sort by missing percentage  
+
+In this step, the amount of data missing is calculated for each variable in the cleaned dataframe. Based on these percentages, a subset is created that includes only those variables with 80% or more of the data present. This helps filter out the variables with very large amounts of data that could bias our regression models.  
+
+```{r echo=FALSE}
+data <- read.csv("data/cleaned_diabetes_data.csv", stringsAsFactors = FALSE)
+
+# make eval_type binary for model 
+type_binary_data <- data |>
+  mutate(
+    eval_type = case_when(
+      eval_type == "Not diabetic" ~ 0,
+      eval_type == "Type 2" ~ 1
+    )
+  ) |>
+  filter(!is.na(eval_type))  # Ensure eval_type is not NA
+
+# Calculate the percentage of missing data for each column
+missing_percentage <- colSums(is.na(data)) / nrow(data)
+
+# Sort by least missing percentage
+missing_sorted <- sort(missing_percentage, decreasing = FALSE)
+
+# Combine the results into a data frame
+missing_df <- data.frame(
+  Variable = names(missing_sorted),
+  Missing_Percentage = missing_sorted
+)
+
+# Find the combination of variables that covers 80% of missing data
+subset_80 <- missing_df |>
+  filter(Missing_Percentage <= .20)
+```
+
+#### Subset of Variables with < 20% Missingness   
+
+```{r echo=FALSE}
+# Readable Scrollable Kable
+subset_80 |>
+  kbl(row.names = FALSE) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) |>
+  scroll_box(width = "500px", height = "500px")  # Restrict width and height
+
+# Drop missing rows after analysis
+data <- data |>
+  filter(!is.na(has_diabetes))
+
+# Convert to binary: Replace "No" and "Yes" with 0 and 1
+data$has_diabetes <- ifelse(data$has_diabetes == "Diabetic", 1, 
+                            ifelse(data$has_diabetes == "Not diabetic", 0, NA))
+
+```
+
+## Step 2: Chi Square Test for Missingness.  
+
+### Is missingness in one variable associated with missingness in another variable?  
+
+This test intends to determine if variables are Missing at Random (MAR) or Missing Not At Random (MNAR), so we can decide whether to include them in a regression model. 
+
+### Test 1: Smoking vs. Asthma. 
+
+Missingness of `asthma_ever`: 0.0039 <br>
+Missingness of `asthma_now` : 0.856 \n
+Missingness of  `smoker`: 0.0532 \n
+
+`asthma_now` has over 85% missingness, which does not bode well for any kind of model building or data analysis. However, we can analyze if this missingness is related to the `smoker` variable, which has low missingness.
+
+#### Smoking vs. Asthma Now:  
+```{r echo=FALSE}
+# Create a binary missingness indicator for asthma_now variable
+data$missing_indicator <- ifelse(is.na(data$asthma_now), 1, 0)
+
+# Perform chi-square test with smoker variable
+chisq_result_asthma_now <- chisq.test(data$missing_indicator, data$smoker)
+print(chisq_result_asthma_now)
+```
+We **reject** the null hypothesis, as the p-value `r chisq_result_asthma_now$p.value` is very small, indicating that missingness in `asthma_now` is associated with missingness in `smoker` and probably MNAR. The results of the chi-square test show that using `asthma_now` in our regression is likely to bias our results. 
+
+
+### Test 2: Education and Income vs. Urban/Rural   
+
+```{r echo=FALSE}
+# Create a binary missingness indicator for education variable
+data$missing_indicator <- ifelse(is.na(data$education), 1, 0)
+
+# Perform chi-square test with urban/rural variable
+chisq_result_urb_rur <- chisq.test(data$missing_indicator, data$urb_rural)
+print(chisq_result_urb_rur)
+```
+We reject the null hypothesis, as the p-value `r chisq_result_urb_rur$p.value` is very small, indicating that missingness in `education` is associated with missingness in `urb_rural`. Both these variables have low missingness independently, but the results of the chi-square test show that using these variables in our regression could bias our results or that a trend we see in one could be affected by the other.
+
+Let's test for income vs. urban/rural.
+```{r echo=FALSE}
+# Create a binary missingness indicator for income variable
+data$missing_indicator <- ifelse(is.na(data$income), 1, 0)
+
+# Perform chi-square test with urban/rural variable
+chisq_result_income <- chisq.test(data$missing_indicator, data$urb_rural)
+print(chisq_result_income)
+```
+We reject the null hypothesis, as the p-value `r chisq_result_income$p.value` is very small, indicating that missingness in `income` is associated with missingness in `urb_rural`. `urb_rural` has low missingness independently, and `income` just below 20% missingness, but the results of the chi-square test show that missingness in one could be related to the other. In this case we choose not to include these variables in the model, furthered by our conclusions from our EDA, showing no significant relationship.
+
+### Test 3: COVID-19 vs. Bronchitis  
+
+```{r echo=FALSE}
+# Create a binary missingness indicator for covid variable
+data$missing_indicator <- ifelse(is.na(data$covid), 1, 0)
+
+# Perform chi-square test with bronchitis variable
+chisq_result_bronch <- chisq.test(data$missing_indicator, data$bronchitis)
+print(chisq_result_bronch)
+```
+We **reject** the null hypothesis, as the p-value `r chisq_result_bronch$p.value` is very small, indicating that missingness in `covid` is associated with missingness in `bronchitis`. Both these variables have low missingness independently, so this result shows us that these two variables could be strongly associated and perhaps used as an interaction consideration in our regression model.
+
+### Chi Square Test Covid vs. Bronchitis Interaction   
+```{r echo=FALSE}
+table_interaction <- table(data$covid, data$bronchitis)
+chisq_result_bronch <- chisq.test(table_interaction)
+
+```
+
+Here we test for the significance of this interaction. Based on this result, with p-value `r chisq_result_bronch$p.value` being very small, we can proceed with including this interaction in our regression model.
+
+## Step 3: Generalized Linear Models 
+
+We choose to run two GLM models, one for `has_diabetes`, whether someone has diabetes or not, and one for `eval_type`, the type of diabetes that someone has.
+
+**Variables Chosen and Rationale:**   
+
+`sex_at_birth`: no missingness, widely known predictor of diabetes risk; for men and women at the same BMI, [men have a higher risk](https://pmc.ncbi.nlm.nih.gov/articles/PMC4220585/).  
+
+`age_category`: age and type of diabetes tend to be related.    
+
+`obese`: has much lower missingness and a similar effect as `physical_activity` on T2D risk.   
+
+`race`: [has been known to affect predisposition to diabetes](https://pmc.ncbi.nlm.nih.gov/articles/PMC5241767/). 
+
+`good_health`: does being in generally good health mitigate risk of diabetes.   
+
+`kidney_disease`: [there is a bidirectional link between diabetes and kidney disease](https://pmc.ncbi.nlm.nih.gov/articles/PMC10588295/#sec3).  
+
+`stroke`: diabetes is associated with risk of cardiovascular complication like [stroke](https://pmc.ncbi.nlm.nih.gov/articles/PMC9911852/#:~:text=Diabetes%20is%20associated%20with%20an,risk%20increasing%20with%20diabetes%20duration.). 
+
+`bronchitis`: [bronchitis is a comorbidity of T2D](https://pubmed.ncbi.nlm.nih.gov/26044811/), and covid and bronchitis may interact.  
+
+`covid`: [between diabetes and covid, risk of one may increase risk of the other](https://diabetes.org/getting-sick-with-diabetes/coronavirus-covid-19/how-coronavirus-impacts-people-with-diabetes#:~:text=Q%3A%20Does%20COVID%2D19%20cause,after%20their%20COVID%2D19%20infection.). 
+
+```{r echo = FALSE}
+diabetes_df = data |>
+  as.tibble()
+```
+
+### Model 1: Has Diabetes vs. Does Not Have Diabetes
+
+First, let us generate an initial model based on the predictive variables identified through our literature review. Through this model, we will assess which of the predictive variables actually have a statistically significant association with the `has_diabetes` variable in our dataset. 
+```{r}
+# Fit a GLM model
+glm_model_db <- glm(
+  has_diabetes ~ 
+    sex_at_birth + age_category + race + obese + good_health +
+    kidney_disease + stroke + covid * bronchitis,
+  data = data,
+  family = binomial(link = "logit") # Logistic regression
+)
+```
+
+Based on the GLM above, we conclude that the following variables have a statistically significant association with the `has_diabetes` variable.
+
+* Age (especially any age category over 55)
+* Obesity
+* Overall health
+* Kidney disease
+* History of Stroke
+* Race (especially if White)
+* Sex
+* History of Bronchitis
+
+Here is a table of these significant predictors, arranged by significance (smallest to largest p-value).
+```{r echo = FALSE}
+db_predictors = glm_model_db |> 
+  broom::tidy() |> 
+  filter(p.value < 0.05) |> 
+  arrange(p.value) |> 
+  select(term, estimate, p.value)
+
+# Reader friendly table
+db_predictors |> 
+  filter(term != "(Intercept)") |> 
+  mutate(
+    estimate = format(estimate, digits = 3),
+    p.value = format(p.value, scientific = TRUE, digits = 3)) |> 
+  rename(Variable = term, Coefficient = estimate, `P-value` = `p.value`) |> 
+  knitr::kable(digits = 3)
+
+# Save the variables to a formula
+db_pred_vars = c("age_category", "bronchitis", "good_health", "kidney_disease", "obese", "race", "sex_at_birth", "stroke")
+db_formula = reformulate(db_pred_vars, response = "has_diabetes")
+```
+
+### Model 2: No Diabetes vs. Type 2 Diabetes
+
+First, let us now generate an initial model based on the same predictive variables as before. However, this model will assess which of the predictive variables actually have a statistically significant association with the `diab_type` variable in our dataset. 
+```{r}
+# Fit a GLM model
+glm_model_dbtype = diabetes_df |> 
+  filter(!is.na(diab_type)) |> 
+  mutate(diab_type = case_match(diab_type, "Type 1" ~ 0, "Type 2" ~ 1)) |> 
+  glm(diab_type ~ sex_at_birth + age_category + race + obese + good_health + 
+        kidney_disease + stroke + covid * bronchitis,
+      data = _,
+      family = binomial(link = "logit") # Logistic regression
+)
+```
+
+Based on the GLM above, we conclude that the following variables have a statistically significant association with the `diab_type` variable.
+
+* Obesity
+* Age (especially any age category over 30)
+* Race (especially if Hispanic, White, or Black)
+* Sex
+* History of Bronchitis
+* History of Covid
+* Interaction effect of Bronchitis and Covid History
+
+Here is a table of these significant predictors, arranged by significance (smallest to largest p-value).
+```{r echo = FALSE}
+dbtype_predictors = glm_model_dbtype |> 
+  broom::tidy() |> 
+  filter(p.value < 0.05) |> 
+  arrange(p.value) |> 
+  select(term, estimate, p.value) 
+
+# Reader friendly table
+dbtype_predictors |> 
+  filter(term != "(Intercept)") |> 
+  mutate(
+    estimate = format(estimate, digits = 3),
+    p.value = format(p.value, scientific = TRUE, digits = 3)) |> 
+  rename(Variable = term, Coefficient = estimate, `P-value` = `p.value`) |> 
+  arrange(Variable) |> 
+  knitr::kable()
+
+# Save the variables to a formula
+dbtype_pred_vars = c("age_category", "obese", "race", "sex_at_birth", "bronchitis * covid")
+dbtype_formula = reformulate(db_pred_vars, response = "diab_type")
+```
+
+## Step 4: Cross-Validation
+
+First, let us generate test-training pairs from the diabetes data for cross-validation, using the `crossv_mc` function.
+```{r message = FALSE, warning = FALSE}
+crossval_df = diabetes_df |> 
+  filter(!is.na(diab_type)) |> 
+  mutate(diab_type = case_match(diab_type, "Type 1" ~ 0, "Type 2" ~ 1)) |> 
+  crossv_mc(10) |> 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  )
+```
+
+Next, let us finalize our two models, fit them to the train subsets, and extract root-mean-squared-error (RMSE) to assess predictive accuracy of the models.
+
+```{r}
+# GLM model for predicting has_diabetes
+db_model = glm(db_formula, data = diabetes_df, family = binomial(link = "logit"))
+
+# GLM model for predicting diab_type
+dbtype_model = diabetes_df |> 
+  filter(!is.na(diab_type)) |> 
+  mutate(diab_type = case_match(diab_type, "Type 1" ~ 0, "Type 2" ~ 1)) |> 
+  glm(dbtype_formula,
+      data = _,
+      family = binomial(link = "logit"))
+```
+
+
+```{r eval = FALSE}
+#crossval_results =
+crossval_df |> 
+  mutate(
+    db_pred = map(train, \(x) glm(db_formula, data = x)),
+    dbtype_pred = map(train, \(x) glm(dbtype_formula, data = x))
+  ) |> 
+  mutate(
+    rmse_db = map2_dbl(db_model, test, rmse)
+    #rmse_dbtype = map2_dbl(dbtype_model, test, rmse)
+  )
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
