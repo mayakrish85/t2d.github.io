@@ -17,7 +17,7 @@ library(modelr)
 
 # **Addressing Missing Data**
 
-## **Step 1: Calculate missing data for each variable and sort by missing percentage  **
+## Step 1: Calculate missing data for each variable and sort by missing percentage
 
 In this step, the amount of data missing is calculated for each variable in the cleaned dataframe. Based on these percentages, a subset is created that includes only those variables with 80% or more of the data present. This helps filter out the variables with very large amounts of data that could bias our regression models.  
 
@@ -70,7 +70,7 @@ data$has_diabetes <- ifelse(data$has_diabetes == "Diabetic", 1,
 
 ```
 
-## **Step 2: Chi Square Test for Missingness.  **
+## Step 2: Chi Square Test for Missingness.
 
 ### Is missingness in one variable associated with missingness in another variable?  
 
@@ -142,7 +142,7 @@ Here we test for the significance of this interaction. Based on this result, wit
 
 # **Regression**
 
-## **Generalized Linear Models**
+## Generalized Linear Models
 
 We choose to run two GLM models, one for `has_diabetes`, whether someone has diabetes or not, and one for `eval_type`, the type of diabetes that someone has.
 

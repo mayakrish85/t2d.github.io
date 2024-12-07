@@ -15,13 +15,17 @@ In this project, we aim to analyze Type II Diabetes (T2D) in the U.S. Our group�
 
 T2D is among the leading causes of mortality in the U.S. Through our project, we want to consider potential the impact of covariates and comorbidities through linear and multivariate regression models.  
 
-# Related Work
+# Related Work / Literature Review
 
 Type II Diabetes remains a prevalent and prioritized issue in both public health and clinical medicine fields. The disease is characterized by two challenges in the biochemical pathway to insulin, the body’s hormone involved in transporting sugar to our cells. Patients with T2D have a pancreas that both produces insufficient amounts of insulin and whose cells react poorly to the insulin that is produced [2]. As a result, their cells take in less amounts of sugar. These cellular mechanisms differentiate it from Type I Diabetes, in which the patient’s pancreas is unable to produce insulin. 
 
 The US Centers for Disease Control and Prevention estimates that nearly 10% of Americans - that is, 38 million people, are currently diagnosed with diabetes, of which close to 95% have type 2 diabetes [1]. Our initial questions and goals of this project were to analyze the relationship between previously identified risk factors for T2D, such as being overweight, having a family history, and physical inactivity, and the prevalence of the disease [1]. 
 
 In addition to the risk factors identified by the CDC, previous research has found associations between the development of T2D and other cardiometabolic comorbidities, including hypertension and ischemic heart disease, in addition to depression and osteoarthritis [3]. The temporality of these disease developments continues to remain of interest in scientific research, as understanding the role of one disease in the development of the other would offer valuable information to public health, medical, and scientific experts looking for interventions that optimize a reduction in disease development. As a cross-sectional, ecological study, our project will unfortunately not be able to offer insight into the causality between comorbidities and type II diabetes, but will contribute to knowledge on observed associations between patients with multimorbidity. 
+
+_The diagram below depicts a variety of risk factors associated with diabetes (Cicek et al., 2021)._
+
+![](images/t2d_risk_factors.jpg)
 
 # Guiding Questions
 
