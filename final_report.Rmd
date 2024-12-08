@@ -39,12 +39,18 @@ Through our analysis, we aim to answer the following questions:
 
 ### Source
 
-Our data comes from the Behavioral Risk Factor Surveillance System (BRFSS) [https://www.cdc.gov/brfss/annual_data/annual_2023.html] developed and aggregated by the US Centers for Disease and Prevention (CDC). The data captures diabetes data as related to demographics, individual behaviors, chronic health conditions, health-care access, and use of preventive services. This longitudinal survey has been collecting data since 1984, and was recently updated in September 2024. The data was only available in an 'xpt' format. Hence, to make the data accessible for import and analysis in R, the haven package was used to read the xpt file and then write into an accessible csv format. 
+Our data comes from the Behavioral Risk Factor Surveillance System [(BRFSS)](https://www.cdc.gov/brfss/annual_data/annual_2023.html) developed and aggregated by the US Centers for Disease and Prevention (CDC). The data captures diabetes data as related to demographics, individual behaviors, chronic health conditions, health-care access, and use of preventive services. 
 
-The Behavioral Risk Factor Surveillance System (BRFSS) was a nationwide survey conducted by the Centers for Disease Control and Prevention (CDC) to gather data on health-related risk behaviors, chronic health conditions, and preventive health practices among adults in the United States. The primary purpose of the BRFSS was to inform public health policy, monitor health trends, and support the development of health interventions. It was one of the largest continuously conducted telephone health surveys in the world, providing critical insights into the health status and needs of U.S. residents. The BRFSS used Computer-Assisted Telephone Interviewing (CATI) systems to collect data, with respondents selected through a probability sampling method to ensure results are representative of the U.S. adult population. In 2023, 54 states and territories participated, though data from Pennsylvania and Kentucky were excluded due to insufficient collection. Data collection occurred year-round, spanning all 12 months, and interviews were conducted seven days a week, both during the day and in the evening, to maximize response rates. Interviews lasted an average of 17 minutes for the core questionnaire, with additional time required for optional modules and state-specific questions. The survey incorporated both landline and cellular samples, adjusting for demographic factors such as age, gender, race/ethnicity, education, and marital status through a process known as iterative proportional fitting or raking. This methodology ensured that the BRFSS data was nationally representative and reflective of the diverse U.S. population, making it a valuable tool for understanding and addressing public health challenges.
+The primary purpose of the BRFSS was to inform public health policy, monitor health trends, and support the development of health interventions. It was one of the largest continuously conducted telephone health surveys in the world, providing critical insights into the health status and needs of U.S. residents. The BRFSS used Computer-Assisted Telephone Interviewing (CATI) systems to collect data, with respondents selected through a probability sampling method to ensure results are representative of the U.S. adult population. In 2023, 54 states and territories participated, though data from Pennsylvania and Kentucky were excluded due to insufficient collection. Data collection occurred year-round, spanning all 12 months, and interviews were conducted seven days a week, both during the day and in the evening, to maximize response rates. Interviews lasted an average of 17 minutes for the core questionnaire, with additional time required for optional modules and state-specific questions. The survey incorporated both landline and cellular samples, adjusting for demographic factors such as age, gender, race/ethnicity, education, and marital status through a process known as iterative proportional fitting or raking. 
+
+This methodology ensured that the BRFSS data was nationally representative and reflective of the diverse U.S. population, making it a valuable tool for understanding and addressing public health challenges.
 
 ### Import
 To clean the data, we first had to import the large XPT file and select only the variables we were interested in analyzing related to diabetes. We selected variables after conducting a thorough literature review to identify which factors and comorbidities were the most relevant to a diabetes (and specifically T2D) diagnosis. 
+
+*Below is a graphic that shows the general reasoning behind our choice of variables, as developed in [Cicek et. al](https://www.sciencedirect.com/science/article/pii/S0889852921000463?via%3Dihub#fig2).*
+
+![](https://ars.els-cdn.com/content/image/1-s2.0-S0889852921000463-gr2.jpg)
 
 ### Cleaning
 For the coding process of cleaning the data, we recoded variables with responses such as “refusal”, “don’t know/not sure”, and missing as NA. Binary variables were converted from (0,1) to (No, Yes). Other variables, including binary variables, were also re-coded as factor variables. We identified three main variables for analysis related to diabetes: `has_diabetes`, `diab_type`, and `eval_type`. 
@@ -134,17 +140,28 @@ A larger proportion of people with diabetes also have kidney disease than other 
 
 Blindness is slightly more common in people who have diabetes compared to people who are not diabetic, but we see some opposition between reported and evaluated type I and II diabetes status.
 
-# Additional Analysis
+# Regression
 
-Due to the formatting and order of the questions in the questionnaire, some variables were only asked of certain people, leading to a large amount of missing values. Since so much of our data was missing, we decided to run some tests for the significance of the missing data. First we ranked the variables of interest by rate of missingness. We decided to keep those that had at least 80% of the data present. Next, we used the chi square test for missingness to compare variables with differing rates of missingness and see if they could be interacting or if their missingness could be related (not at random). After these tests, we found possible interactions between COVID-19 and bronchitis, both of which are independently known to increase diabetes risk. We ran one more chi square test to make sure this interaction was statistically significant. 
+One of our goals for this project was to explore associations between diabetes prevalence, type of diabetes, and various lifestyle factors through regression. When deciding which variables to use as predictive factors in our generalized linear models, we looked to existing literature about lifestyle factors associated with diabetes and also considered how much of the data for that variable was present or missing in our dataset. On the [Regression](regression_final.html) page of our website, we have briefly defined the variables we used as predictors in our models and have also provided peer-reviewed sources as evidence to support our decisions. 
 
-At this point we created two  Generalized Linear Models (GLM) using sex, age, obesity, race, good health, kidney disease, stroke, bronchitis, and COVID-19 as main effects, with COVID-19 and bronchitis as an interaction. We chose this model to try to prevent overfitting and handle distributions that are not Gaussian, such as that of variables like age, which is skewed due to Type 2 Diabetes being more common in older adults.
+We used generalized linear models to predict two outcomes:
 
-The first GLM models the risk of any type of diabetes, and the second one models the risk of Type 2 Diabetes in particular. We encountered a significant limitation for the second model because almost 100 times as many people reported Type 2 Diabetes as opposed to Type 1, so our model as proposed converged and was not significant in analyzing comparative risk.
+* `has_diabetes`: Does a study participant have any form of diabetes?
+* `diab_type`: If a study participant does have diabetes, then which type?
+
+Due to the formatting and order of the questions in the questionnaire, some variables were only asked of certain people, leading to a large amount of missing values. Since so much of our data was missing, we decided to run some tests for the significance of the missing data. First we ranked the variables of interest by rate of missingness. We decided to keep those that had at least 80% of the data present. Next, we used the chi square test for missingness to compare variables with differing rates of missingness and see if they could be interacting or if their missingness could be related (not at random). After these tests, we found possible interactions between COVID-19 and bronchitis, both of which are independently known to increase diabetes risk. We ran one more chi square test to make sure this interaction was statistically significant.
+
+At this point we created two Generalized Linear Models (GLM) using sex, age, obesity, race, good health, kidney disease, stroke, bronchitis, and COVID-19 as main effects, with COVID-19 and bronchitis as an interaction. We chose this model to try to prevent overfitting and handle distributions that are not Gaussian, such as that of variables like age, which is skewed due to Type 2 Diabetes being more common in older adults.
+
+Through this process, we found that several lifestyle and demographic variables were strongly associated with these outcomes. These included age, race, sex, obesity, overall health, and certain comorbidities (ie. covid, bronchitis, stroke).
+
+The first GLM modeled the risk of any type of diabetes, and the second one modeled the risk of Type 2 Diabetes in particular. We encountered a significant limitation for the second model because almost 100 times as many people reported Type 2 Diabetes as opposed to Type 1, so our model as proposed converged and was not significant in analyzing comparative risk.
+
+In order to assess our models, we performed 100-fold cross-validation and extracted RMSE for each model. From the results of our cross validation and error assessment, we saw that our second model, which predicts `diab_type` appeared to perform relatively well, especially considering the volume of missing data we were dealing with. This model had a mean RMSE of less than 30% across the 100-fold validation we performed.
+
+On the other hand, we saw that there were likely some issues with the first model, which predicts `has_diabetes`. The mean RMSE appears to be very low, close to 0, which is highly unrealistic. It hints at deeper issues within the model, perhaps stemming from the unusually low p-values of significance shown by several of the predictor variables of that model. Unfortunately, due to limited timeframe and project scope, we were not able to pursue this issue further. In future exploration, we would dedicate more time to investigating, correcting, and refining our models.
 
 Some other limitations for regression include linearity, independence, multicollinearity, and homoscedasticity. Predictors and outcomes may have a non-linear relationship, and our model may not properly account for those. Additionally, outliers and observations being dependent on each other can cause misleading results. Multicollinearity, or predictors being correlated with one another, can also inflate standard error and coefficient estimates. Additionally, if the variance of residuals is not constant, or not homoscedastic, our results could be biased. 
-
-Overall, the limitations of any regression model will always be that regression does not establish causation. Despite our efforts to test significant relationships, changes in a predictor cannot be correlated with changes in the outcome based purely on this model. However, regression models remain an essential tool to help us predict risk and inform further research.
 
 # Discussion
 
@@ -163,21 +180,6 @@ Two factors that did not follow this pattern were depression and blindness. In b
 The best way that we were able to analyze the data source was by comparing these different outcome variables. Overall, has_diabetes performed well in our models and led to generally fair models. However, as seen in our EDA, there were some differences in performance for evaluated and reported type.
 
 Overall, the reported and evaluated type variables perform similarly in identifying any significant differences in type across different lifestyle factors and comorbidities. However, the eval_type results in higher skews in either diagnosis compared to the reported type. Suppose a factor is associated with type II more than it is associated with type I in the reported type. In that case, it is heavily skewed towards type II in the evaluated type comparison. If a factor is generally associated with both, it is more heavily skewed towards type I. This can be dangerous in performing significance test and may be one reason for why our models are generally inconclusive.
-
-# Regression
-
-One of our goals for this project was to explore associations between diabetes prevalence, type of diabetes, and various lifestyle factors through regression. When deciding which variables to use as predictive factors in our generalized linear models, we looked to existing literature about lifestyle factors associated with diabetes and also considered how much of the data for that variable was present or missing in our dataset. On the [Regression](regression_final.html) page of our website, we have briefly defined the variables we used as predictors in our models and have also provided peer-reviewed sources as evidence to support our decisions. 
-
-We used generalized linear models to predict two outcomes:
-
-* `has_diabetes`: Does a study participant have any form of diabetes?
-* `diab_type`: If a study participant does have diabetes, then which type?
-
-Through this process, we found that several lifestyle and demographic variables were strongly associated with these outcomes. These included age, race, sex, obesity, overall health, and certain comorbidities (ie. covid, bronchitis, stroke).
-
-In order to assess our models, we performed 100-fold cross-validation and extracted RMSE for each model. From the results of our cross validation and error assessment, we saw that our second model, which predicts `diab_type` appeared to perform relatively well, especially considering the volume of missing data we were dealing with. This model had a mean RMSE of less than 30% across the 100-fold validation we performed.
-
-On the other hand, we saw that there were likely some issues with the first model, which predicts `has_diabetes`. The mean RMSE appears to be very low, close to 0, which is highly unrealistic. It hints at deeper issues within the model, perhaps stemming from the unusually low p-values of significance shown by several of the predictor variables of that model. Unfortunately, due to limited timeframe and project scope, we were not able to pursue this issue further. In future exploration, we would dedicate more time to investigating, correcting, and refining our models.
 
 # Limitations 
 
